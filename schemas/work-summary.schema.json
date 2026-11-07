@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:local:dsh-memory:work-draft:1",
+  "title": "Work summary draft input",
+  "$comment": "Wire draft only. Server adds scope, sources, generation, assertion provenance and evidence states. Runtime also checks calendar validity, secrets, source authority and limits; this declaration never grants authorization.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["itemType", "title"],
+  "properties": {
+    "itemType": { "enum": ["project", "requirement", "problem"] },
+    "title": { "type": "string", "minLength": 1, "maxLength": 512 },
+    "goal": { "$ref": "#/$defs/text" },
+    "myContribution": { "$ref": "#/$defs/text" },
+    "processOrConclusion": { "$ref": "#/$defs/text" },
+    "result": { "$ref": "#/$defs/text" },
+    "projectRef": { "$ref": "#/$defs/reference" },
+    "requirementRef": { "$ref": "#/$defs/reference" },
+    "problemRef": { "$ref": "#/$defs/reference" },
+    "problemState": { "enum": ["exploring", "solved", "not_reproduced", "inconclusive"] },
+    "time": {
+      "type": "object", "additionalProperties": false, "required": ["precision"],
+      "properties": {
+        "precision": { "enum": ["unknown", "year", "month", "day"] },
+        "start": { "type": ["string", "null"], "maxLength": 10 },
+        "end": { "type": ["string", "null"], "maxLength": 10 }
+      }
+    }
+  },
+  "$defs": {
+    "text": { "type": "string", "minLength": 1, "maxLength": 4000 },
+    "reference": { "type": "string", "minLength": 1, "maxLength": 512 }
+  }
+}

@@ -1,0 +1,500 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-06",
+  "stage": "Task 3 current-event admission and decision-return recall",
+  "full_plugin_complete": false,
+  "actual_profile_loaded": false,
+  "real_provider_called": false,
+  "declaration_basis": "Synthetic test call paths and fake adapters, not OS-wide access or wire monitoring",
+  "design_agent": "/root/design",
+  "initial_reviewer": "/root/hooks_review",
+  "independent_reviewer": "/root/memory_task2_review",
+  "review_result": "Accepted narrow component and mechanism explanation; no open Critical or Important findings",
+  "node26": {
+    "tests": 110,
+    "pass": 110,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "exit_code": 0,
+    "exit_code_basis": "Observed exec session 61828 exit 0",
+    "tap": "evidence/task3-hooks-node26.tap"
+  },
+  "host24": {
+    "tests": 126,
+    "pass": 126,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "component_tests": 110,
+    "installed_library_tests": 16,
+    "exit_code": 0,
+    "tap": "evidence/task3-hooks-host24.tap",
+    "receipt": "evidence/task3-hooks-host24.json"
+  },
+  "independent": {
+    "node26_tests": 110,
+    "node26_report_basis": "Independent reviewer final result, 14.58 seconds; after unit delta 25/25 in 2.72 seconds",
+    "native_tests": 8,
+    "native_tap": "evidence/task3-hooks-native-independent-review.tap",
+    "native_receipt": "evidence/task3-hooks-native-independent-review.json"
+  },
+  "source_proof": {
+    "new_files": 7,
+    "verified": true,
+    "receipt": "evidence/task3-hooks-source-proof.json",
+    "included_historical_copies": 30
+  },
+  "remaining": [
+    "Trusted scope, route and admission configuration",
+    "Job scheduler plus execution/commit permission checks",
+    "Final Host projection/dispatch revalidation",
+    "03 lifecycle event consumption",
+    "Management UI, proof reminders, dimension mapping, annual export",
+    "Full bundle/profile/API/wire validation"
+  ],
+  "previous_snapshot": {
+    "path": "evidence/task3-provider-verification.json",
+    "sha256": "d981648b2be144f697f28708ce76f79918b044ff7f40c85937852e11119629ff"
+  },
+  "snapshot_scope": "Implementation, tests, schemas, runtime, vendor/license, hook plan/mechanisms, current receipts and source copies; excludes this file, closing review and root status files",
+  "files": [
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "sha256": "c055bd796660fc8092de63fd3a32bf5467b40d0dd44106edd745138e701d6433",
+      "size": 1035
+    },
+    {
+      "path": "docs/task3-hooks-mechanisms.md",
+      "sha256": "de0e1b5644989ca9f6dd1c8bd98a08913821e735f4b4b00d2e4415f2523f61d6",
+      "size": 13601
+    },
+    {
+      "path": "docs/task3-hooks-plan.md",
+      "sha256": "532e4e191472569c64216389ddb2fcd24383b019e36736c6e3e4072960878ce0",
+      "size": 6914
+    },
+    {
+      "path": "evidence/host-api/cordis/lib/index.js",
+      "sha256": "6a9394c0877ff45218818c6e815edd038f8057e1a1deb390a8d43ec81c57691e",
+      "size": 60361
+    },
+    {
+      "path": "evidence/host-api/cordis/package.json",
+      "sha256": "b73831b926b16cbd684aa1b277461e7800a2b35e2dd351ad3c2c8c0db158589d",
+      "size": 1242
+    },
+    {
+      "path": "evidence/host-api/dsh-agent/lib/index.js",
+      "sha256": "7b59cf82c2784c25bdce4e3e24e5e5303b02b9f1003efacf50255492d17baf8b",
+      "size": 28257
+    },
+    {
+      "path": "evidence/host-api/dsh-agent/package.json",
+      "sha256": "ce5841f6b3e481dea24983385ac088cff7aff27d29fefa625f7b19aed6f6cbf2",
+      "size": 1978
+    },
+    {
+      "path": "evidence/host-api/dsh-llm/lib/index.js",
+      "sha256": "d18d8ae4c8d961e628708c1e4698e09716a0ebb80e55a672e0bde1029bec1155",
+      "size": 105272
+    },
+    {
+      "path": "evidence/host-api/dsh-llm/package.json",
+      "sha256": "228ece44843bf5458292c7dda285599188dd6d6137ea032749a8374d2cc7954b",
+      "size": 2099
+    },
+    {
+      "path": "evidence/host-api/dsh-scope/lib/index.js",
+      "sha256": "2829df71d76e08941457d4dd173eac60783e55354921137c8b75e8b5c0d2ecca",
+      "size": 12151
+    },
+    {
+      "path": "evidence/host-api/dsh-scope/package.json",
+      "sha256": "cac362b325c17c6e2917247d42f795dfcede561b375a8fde2e6368e4800cc153",
+      "size": 864
+    },
+    {
+      "path": "evidence/host-api/dsh-session/lib/index.js",
+      "sha256": "2f5dd07cb5c744a29abbb8003a8a4cefd9e582c6e2538074ca299a0ddd02a3bf",
+      "size": 94982
+    },
+    {
+      "path": "evidence/host-api/dsh-session/package.json",
+      "sha256": "c8355a542c9cd2be07746445ba49c54b0bba0baf195fd39f95632d9dc8b7fa41",
+      "size": 1576
+    },
+    {
+      "path": "evidence/host-api/dsh-tools/lib/index.js",
+      "sha256": "1e53932e7c4213ea24a7d87f06960b7a7702cb21f8a5741c97242b4a470a442a",
+      "size": 162201
+    },
+    {
+      "path": "evidence/host-api/dsh-tools/package.json",
+      "sha256": "5ebfb49032068284f7ac422d01dc31833fea778b80fcf433d54c4866a32fb8b5",
+      "size": 2383
+    },
+    {
+      "path": "evidence/host-api/source-manifest.json",
+      "sha256": "5b9ce99475fbfddbe79e01572faee756c10c06041a832b6304d752b553a3e831",
+      "size": 2115
+    },
+    {
+      "path": "evidence/task3-hook-host-api/dsh-api-session-controller/lib/index.js",
+      "sha256": "a9801acb577b03053c5d5a3191ff555c5f1d791d0acddec113bea4511e33b386",
+      "size": 132150
+    },
+    {
+      "path": "evidence/task3-hook-host-api/dsh-api-session-controller/lib/types/index.js",
+      "sha256": "616ced16623b7448afa908ff65093eb6ef2a478d32e5ef9bc22634bfa9f80472",
+      "size": 38199
+    },
+    {
+      "path": "evidence/task3-hook-host-api/dsh-api-session-controller/package.json",
+      "sha256": "f3b8d8badbdd33e312196cd0fc9392d04f55a352131934bf1c2cdc1f4cb3d5e1",
+      "size": 6164
+    },
+    {
+      "path": "evidence/task3-hook-host-api/dsh-client-ui-conversation/lib/index.js",
+      "sha256": "046ea85e5fa3b6bb2950b6a0ce55cd06ae516f37e8b6a84497c2ca74a3364c31",
+      "size": 1524
+    },
+    {
+      "path": "evidence/task3-hook-host-api/dsh-client-ui-conversation/package.json",
+      "sha256": "5c3a55a24285b0b974075a1bb67faaba559e7f4b995266aa432135b6e9406953",
+      "size": 3603
+    },
+    {
+      "path": "evidence/task3-hook-host-api/dsh-client-ui-input-trigger/lib/index.js",
+      "sha256": "6a92938333d5cf9120e793701fed4ca1c68d2b95b6cdb9eae8df631fc68d529c",
+      "size": 410
+    },
+    {
+      "path": "evidence/task3-hook-host-api/dsh-client-ui-input-trigger/package.json",
+      "sha256": "a7e2aac63ae774d02ed17712c2c6f0cc36bcd7d8817b70159e5b98223348fab8",
+      "size": 2061
+    },
+    {
+      "path": "evidence/task3-hook-host-api/source-manifest.json",
+      "sha256": "4e73f65f910c32987a60554d2a3298aa1b39f03c197da1b4c42c3b1d3f943cb6",
+      "size": 1556
+    },
+    {
+      "path": "evidence/task3-hooks-host24.json",
+      "sha256": "ffb66e4ecf23ed8d3ac523dc47a1d269ffd1a192f74bbe3ec356fb116e701cbf",
+      "size": 2567
+    },
+    {
+      "path": "evidence/task3-hooks-host24.tap",
+      "sha256": "e40c7b2b8681c6231d64822bd8ce8947a04ce96c0aed1be5b9ee7bbf17f7fbdb",
+      "size": 29520
+    },
+    {
+      "path": "evidence/task3-hooks-native-independent-review.json",
+      "sha256": "d41856ee56f50a24a2876293132f29c388f6d28edb4fa38b09e1a2c7a2c6636d",
+      "size": 2056
+    },
+    {
+      "path": "evidence/task3-hooks-native-independent-review.tap",
+      "sha256": "9dfc5eeab6bd6c483bfa5649f29632f698b877818c9e5cc69654fe33732b2e16",
+      "size": 2016
+    },
+    {
+      "path": "evidence/task3-hooks-node26.tap",
+      "sha256": "eb2baee893336e1415d7bdaee6fa6866e129ccac5a8b8a0bdb8d54d095fd16e6",
+      "size": 25675
+    },
+    {
+      "path": "evidence/task3-hooks-red.tap",
+      "sha256": "c7313062f7142f25bf6a349aff794dbe779d12314cd59e21dcf70cb6287fa5b4",
+      "size": 15731
+    },
+    {
+      "path": "evidence/task3-hooks-source-proof.json",
+      "sha256": "c9ff5b3ef63f19ff17bcc88993b0d56c4f523bfda00d220b85a3cbe1febfc244",
+      "size": 1891
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-agent-loop/lib/index.js",
+      "sha256": "cf57e3ecd487ac5c2553455aaa5cef2c6fb41e6bd61be5aa455675d1d7193033",
+      "size": 74599
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-agent-loop/package.json",
+      "sha256": "e103d718f1bc8693e449676e65b3527d984d657795a5fc4fcc7b14fe3ff72cf5",
+      "size": 1986
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-app-boot/lib/index.js",
+      "sha256": "5135179ac810e4f626f32ec3bdc3293dc7d2028e8aa92e5e0c006f1a33b78e76",
+      "size": 203572
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-app-boot/package.json",
+      "sha256": "f34353b3a01474130493e6c7d3469e8347b88895068dfd36fba0580134334375",
+      "size": 2189
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-credentials/lib/index.js",
+      "sha256": "1b6afdb04e966285e0732eb766eb0a12f3f9c0821c8caacfd192ce1ac88bee7a",
+      "size": 6780
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-credentials/package.json",
+      "sha256": "e46b528e168e90824e37847852e738478aa139d3638aa5ced966a216f1e299d8",
+      "size": 1081
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-llm-deepseek-api-key/lib/index.js",
+      "sha256": "67f9cbc26ce0ea07009e0c36ee4a7cc058542cdf85b873549885922646cacd35",
+      "size": 6600
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-llm-deepseek-api-key/package.json",
+      "sha256": "86388d8aca0d12e3bc5b448708b4ee9cf5ac3670a869b744c39a6f602b78e7a8",
+      "size": 1578
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-llm-pi-ai/lib/index.js",
+      "sha256": "99b5c20830a52f69641df8a18a39206079b0c725201958cce2c4a934f1d4f7cd",
+      "size": 125589
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-llm-pi-ai/package.json",
+      "sha256": "7294267a74c0f4528012bd053da9b555bc06f64569dbc86dbdf45da366da0969",
+      "size": 2225
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-llm-retry/lib/index.js",
+      "sha256": "cbb99f1c5038e4a9167aedf333343cb3e3adfb5c9f45a37ef7562b024429d050",
+      "size": 6280
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-llm-retry/package.json",
+      "sha256": "b77137c2019c15c4b4aadc20a3d2ceacac5f0ca632911ba0323e2bd79386cda8",
+      "size": 2176
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-plugin-manager/lib/index.js",
+      "sha256": "1b8bf9eb266d7b3b7f899175e3f435c89ed8baa8aabc677212759f8c6cd23132",
+      "size": 102561
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-plugin-manager/package.json",
+      "sha256": "b652cb265453970de1f2e09b89e1f719a2d8c7309ae26a0c2a5d893ed456220e",
+      "size": 3591
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-settings/lib/index.js",
+      "sha256": "9432b872597b7a31473072eb38a55979ab23375c76bd1d86d751388a692a0136",
+      "size": 22636
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-settings/package.json",
+      "sha256": "4ad7b33480ee08189669afef9f1a17e77a4182d58eb5aa3740b0badff51f5e42",
+      "size": 1751
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-workspace/lib/index.js",
+      "sha256": "931ca0cb10c5102066c7723690a887f0e6e8e7ab0ffdee1a782686745b0b934f",
+      "size": 39257
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-workspace/package.json",
+      "sha256": "e5d6331549368b0df96c6475051600eb92d4867f959d38da1583dad47d57a959",
+      "size": 1727
+    },
+    {
+      "path": "evidence/task3-host-api/source-manifest.json",
+      "sha256": "cbfa1ba3cfac5cf8153b9dff043dbf2924539e19d90ce70eaa20618062a3f161",
+      "size": 3685
+    },
+    {
+      "path": "evidence/task3-provider-verification.json",
+      "sha256": "d981648b2be144f697f28708ce76f79918b044ff7f40c85937852e11119629ff",
+      "size": 6745
+    },
+    {
+      "path": "licenses/Apache-2.0.txt",
+      "sha256": "074e6e32c86a4c0ef8b3ed25b721ca23aca83df277cd88106ef7177c354615ff",
+      "size": 10280
+    },
+    {
+      "path": "licenses/kovey-package.json",
+      "sha256": "7b988c63272cbbe6f1b4ee68c503cdbc5532ce6495ec7b159183881a82caf242",
+      "size": 2032
+    },
+    {
+      "path": "package.json",
+      "sha256": "613534c10028128c44a6f1d67cbe58cdaf7d4628815a37765c20b15b64953016",
+      "size": 303
+    },
+    {
+      "path": "plugin/harness-provider.mjs",
+      "sha256": "f63fc69df3c85a167a85fefc4b7fc552e3fcbd944e049b2c3f9d1cea271e9f32",
+      "size": 12010
+    },
+    {
+      "path": "plugin/session-hooks.mjs",
+      "sha256": "e435937e689d5a3b31fa428a91700e4cdcdb2e3ccfbbe77461ebac1d4d60f07a",
+      "size": 15071
+    },
+    {
+      "path": "runtime/node.exe",
+      "sha256": "14319838b3f355e0398c13569a90270bce4fc68f25189f58c59b03dadae0e6d5",
+      "size": 100097864
+    },
+    {
+      "path": "schemas/work-summary.schema.json",
+      "sha256": "6fcff5b15873ba74f10929f79cf524ef7219f8bb8903b4e37e9af53882c75df4",
+      "size": 1561
+    },
+    {
+      "path": "source-lock.json",
+      "sha256": "9d732ce280ca6dc9a42315cec4f89040812700765050870a519c50f89f64cd54",
+      "size": 1820
+    },
+    {
+      "path": "src/backend.mjs",
+      "sha256": "3dfca144e7099c19e8dd7112646c0bf3bd68366b99c116fe3c360172802eb187",
+      "size": 11468
+    },
+    {
+      "path": "src/jobs.mjs",
+      "sha256": "1975abc317465c4ae14ad12038e13217ce6031b03a4956e23bf19912829f449b",
+      "size": 14883
+    },
+    {
+      "path": "src/lifecycle.mjs",
+      "sha256": "49e1762b80e58310e3739358376eb3f5b57da6de73a7c353ff9b380c87d19e20",
+      "size": 9660
+    },
+    {
+      "path": "src/provider.mjs",
+      "sha256": "24acda11f39fd1101548e7ba04b6ce07ad6b97d0e9bc74af5264268fb1d1003a",
+      "size": 2654
+    },
+    {
+      "path": "src/schema.mjs",
+      "sha256": "e1e505538339eba17d2a27c3deb150fccefdd84b20c9983f6dd850c134676c02",
+      "size": 4469
+    },
+    {
+      "path": "src/scope.mjs",
+      "sha256": "80c65e8271579953eaed5f19533508511cddb7002f4a5ec91c046126f01da4da",
+      "size": 3119
+    },
+    {
+      "path": "src/source-lock.mjs",
+      "sha256": "d255aff3e5b72717bee07a09bf0e2113bb4baa8418063bb6fbc48dd1b30ed57e",
+      "size": 3103
+    },
+    {
+      "path": "src/store-internals.mjs",
+      "sha256": "45f252a7403cb4f2b0b90d341195a5a173bb3b9c3689e2e794643053b7499052",
+      "size": 8873
+    },
+    {
+      "path": "src/validation.mjs",
+      "sha256": "75b5c10999c9f7aa560baf299a0bd1541e8194271589c559bb365216fd67eab9",
+      "size": 1972
+    },
+    {
+      "path": "src/work-summary-evidence.mjs",
+      "sha256": "262c5a2d9b6eda3cd6c914ad9df3ed9de6d9992f6a700bccc844724186966488",
+      "size": 1143
+    },
+    {
+      "path": "src/work-summary.mjs",
+      "sha256": "ddbff1df54337e9b7978a7520e3d488911a2223895d0a332c18561a7b01f8b10",
+      "size": 16732
+    },
+    {
+      "path": "tests/backend.test.mjs",
+      "sha256": "21e050a4686ca103097344648740c32cb5b80d664e3d10e672fb193ec83af388",
+      "size": 11048
+    },
+    {
+      "path": "tests/fixtures/task1-schema.sql",
+      "sha256": "997ffad4038e4dc4e412d7c52e452439c3d9165430d2cb51e2d0495cb00c9da4",
+      "size": 1029
+    },
+    {
+      "path": "tests/harness-provider.test.mjs",
+      "sha256": "78153d5a7bccc1b08036d71a5b5fd9098c77e317fed3cec788f20b5db7377244",
+      "size": 19345
+    },
+    {
+      "path": "tests/helpers.mjs",
+      "sha256": "0fa1e40a6ad408ad0013d5529e95c4b06a7cc6e472d5be255af9d7f2b7f2f10c",
+      "size": 2242
+    },
+    {
+      "path": "tests/jobs.test.mjs",
+      "sha256": "02012bc6c40d0185190c2da57e6a11b14b58127b3237daaf51290300f410afc7",
+      "size": 13455
+    },
+    {
+      "path": "tests/lifecycle.test.mjs",
+      "sha256": "864eb32204c0fc4d74ccbf83e9800b70bebf187c8ca124220fa428b351581d3f",
+      "size": 8501
+    },
+    {
+      "path": "tests/migration.test.mjs",
+      "sha256": "da50cfae2739db1011b5bfca9fd98237ea8dc0a73bf0328044f1dd64d2fbd932",
+      "size": 2039
+    },
+    {
+      "path": "tests/session-hooks.test.mjs",
+      "sha256": "48e0df749ef972d8e572fef0207fa8c884401b15471bfb24656f8a25d1652fcd",
+      "size": 18551
+    },
+    {
+      "path": "tests/source-lock.test.mjs",
+      "sha256": "07211942864697b8c64962623419bec4bef6504bdd89ee3207a26b8d6486a3f7",
+      "size": 3582
+    },
+    {
+      "path": "tests/work-summary.test.mjs",
+      "sha256": "55d29b3aa250a885a457c13a51c3987e58b3146f69dae4e59464af43882791dd",
+      "size": 11619
+    },
+    {
+      "path": "tools/host-api/deny-network.cjs",
+      "sha256": "eb6a3c6295f7b95593505768afa0754792e53415cc0d69e7bceb1c5760dcce3e",
+      "size": 853
+    },
+    {
+      "path": "tools/host-api/hooks.test.mjs",
+      "sha256": "f8e278e07eec760c249f804f5eb4293972694ee6e3a22d9a5409b63bbb0ab7bf",
+      "size": 8167
+    },
+    {
+      "path": "tools/host-api/provider.test.mjs",
+      "sha256": "3b1eceda9002751e59b6371278f1d841e7f28622b3037dac002000fc85fdfe70",
+      "size": 6192
+    },
+    {
+      "path": "tools/test-harness-provider.mjs",
+      "sha256": "98482cb8ff683a6290c7015945a35bf7a08b25d1412ff514ee01d19d38f37095",
+      "size": 3338
+    },
+    {
+      "path": "tools/test-session-hooks.mjs",
+      "sha256": "79d4355cd97a471b30273040af26ca6b29395dbdef026fd0bb4b69088a989c4b",
+      "size": 3355
+    },
+    {
+      "path": "tools/verify-hook-sources.mjs",
+      "sha256": "b1c7dce2c7ba9ecf3a3cd325ef4dc69cc01b8d846ce633995338b08a0db1eb21",
+      "size": 2456
+    },
+    {
+      "path": "vendor/kovey/cjk.js",
+      "sha256": "95d0db52226fa4719d679a4a4cc2ed0de7f232cf8e2e0d304c9d752af2b6c8cb",
+      "size": 5058
+    }
+  ]
+}

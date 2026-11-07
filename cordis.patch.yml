@@ -1,0 +1,22 @@
+# Bundle patch: the Host half is a plain Cordis plugin (plugin/index.mjs); the
+# `dsh.client` declaration makes the Web app load ./client.js as its browser half.
+# `config` is validated by plugin/configuration.mjs; omit it to use defaults.
+- insert:
+    - id: dsh-local-memory-linqu
+      name: dsh-local-memory-linqu
+      config: {}
+      # Example overrides (uncomment and adapt):
+      # config:
+      #   dataRoot: 'E:/dsh-data/05-local-memory'
+      #   routes:
+      #     - routeRef: 'memory-default'
+      #       provider: 'deepseek-official'
+      #       model: 'deepseek-flash'
+      #   projects:
+      #     - name: 'demo-project'
+      #       repositories:
+      #         - repoId: 'main'
+      #           canonicalRoot: 'E:/code/demo'
+      #           worktreeRoot: 'E:/code/demo'
+      #           revision: 'workspace'
+      #           buildVariant: 'win-node24'

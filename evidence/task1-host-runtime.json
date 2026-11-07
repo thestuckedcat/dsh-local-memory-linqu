@@ -1,0 +1,18 @@
+{
+  "node": "24.21.0",
+  "electron": "44.7.0",
+  "modules": {
+    "dsh-llm": {
+      "createUserMessage": "function",
+      "BlockAssembler": "function",
+      "LlmRuntime": "function"
+    },
+    "dsh-tools": {
+      "defineTool": "function",
+      "ToolRuntime": "function"
+    },
+    "dsh-agent": {
+      "AgentRegistry": "function"
+    }
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-05",
+  "startedAtUtc": "2026-11-05T14:59:51.232Z",
+  "durationMs": 269.6401,
+  "purpose": "isolated installed-library API audit; not full Host activation",
+  "executable": "E:/dsh/DeepSeek Harness.exe",
+  "archive": "E:/dsh/resources/app.asar",
+  "hashes": {
+    "executable": "7ae939b5a82b220fbd8ad04dfbafaaedb5a49ab43dc884a5db6381f678dd0cc4",
+    "archive": "e1b6f25fa937da98086c3e77af77aa14791105963c4d337a1c42179d232c6915"
+  },
+  "artifacts": [
+    {
+      "path": "tools/probe-host-api.mjs",
+      "sha256": "e53c57d2f2e2290f2b82ec6f15a673f24cd9c4a810a1ce569b2bf3821d4705cf"
+    },
+    {
+      "path": "tools/host-api/probe.test.mjs",
+      "sha256": "76b2d75bd1007f642a42d25d6802ecd8df302dc91d17f6c28185b9b70f97453f"
+    },
+    {
+      "path": "tools/host-api/deny-network.cjs",
+      "sha256": "eb6a3c6295f7b95593505768afa0754792e53415cc0d69e7bceb1c5760dcce3e"
+    }
+  ],
+  "args": [
+    "--expose-internals",
+    "--require",
+    "E:\\dsh\\plugin\\05-local-memory\\tools\\host-api\\deny-network.cjs",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "--test-reporter-destination=E:\\dsh\\plugin\\05-local-memory\\evidence\\task3-host-contract.tap",
+    "E:\\dsh\\plugin\\05-local-memory\\tools\\host-api\\probe.test.mjs"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "errorCode": null,
+  "tapSummary": {
+    "tests": 10,
+    "pass": 10,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "verified": true,
+  "profileLoaded": false,
+  "realProviderCalled": false,
+  "declarationBasis": "The two false flags follow the inspected probe call path: no profile boot or real adapter registration. They are not file-access or Provider-call monitoring results.",
+  "networkGuard": "tools/host-api/deny-network.cjs; covered API sinks only; not OS policy",
+  "tapSha256": "350b9c00165edc43ac9e6f5f4b79a19a6f1405ba28d26b151631ea2e0c1d2c4f"
+}

@@ -1,0 +1,63 @@
+{
+  "name": "dsh-local-memory-linqu",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "main": "plugin/index.mjs",
+  "description": "Local long-term memory plugin for DeepSeek Harness: verified-scope experiences, annual work records, explicit delete/archive, approved-provider extraction and recall.",
+  "icon": "icon.svg",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=24.9.0",
+    "dsh": ">=0.2.1-rc.2"
+  },
+  "exports": {
+    ".": "./plugin/index.mjs",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "plugin",
+    "src",
+    "vendor",
+    "client.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "source-lock.json",
+    "README.md",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md",
+    "licenses"
+  ],
+  "scripts": {
+    "test": "node --test tests/*.test.mjs"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-settings"
+      ]
+    },
+    "compatibility": {
+      "dshReleases": {
+        "0.2.1-rc.5+": "compatible"
+      }
+    }
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "memory",
+    "local-first",
+    "sqlite"
+  ]
+}

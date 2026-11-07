@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-06",
+  "archive": "E:/dsh/resources/app.asar",
+  "archiveSha256": "e1b6f25fa937da98086c3e77af77aa14791105963c4d337a1c42179d232c6915",
+  "purpose": "Read-only byte comparison; source copies are never imported",
+  "files": [
+    {
+      "path": "dsh/node_modules/@deepseek-ai/dsh-api-session-controller/package.json",
+      "sha256": "f3b8d8badbdd33e312196cd0fc9392d04f55a352131934bf1c2cdc1f4cb3d5e1",
+      "size": 6164,
+      "verified": true
+    },
+    {
+      "path": "dsh/node_modules/@deepseek-ai/dsh-api-session-controller/lib/index.js",
+      "sha256": "a9801acb577b03053c5d5a3191ff555c5f1d791d0acddec113bea4511e33b386",
+      "size": 132150,
+      "verified": true
+    },
+    {
+      "path": "dsh/node_modules/@deepseek-ai/dsh-api-session-controller/lib/types/index.js",
+      "sha256": "616ced16623b7448afa908ff65093eb6ef2a478d32e5ef9bc22634bfa9f80472",
+      "size": 38199,
+      "verified": true
+    },
+    {
+      "path": "dsh/node_modules/@deepseek-ai/dsh-client-ui-conversation/package.json",
+      "sha256": "5c3a55a24285b0b974075a1bb67faaba559e7f4b995266aa432135b6e9406953",
+      "size": 3603,
+      "verified": true
+    },
+    {
+      "path": "dsh/node_modules/@deepseek-ai/dsh-client-ui-conversation/lib/index.js",
+      "sha256": "046ea85e5fa3b6bb2950b6a0ce55cd06ae516f37e8b6a84497c2ca74a3364c31",
+      "size": 1524,
+      "verified": true
+    },
+    {
+      "path": "dsh/node_modules/@deepseek-ai/dsh-client-ui-input-trigger/package.json",
+      "sha256": "a7e2aac63ae774d02ed17712c2c6f0cc36bcd7d8817b70159e5b98223348fab8",
+      "size": 2061,
+      "verified": true
+    },
+    {
+      "path": "dsh/node_modules/@deepseek-ai/dsh-client-ui-input-trigger/lib/index.js",
+      "sha256": "6a92938333d5cf9120e793701fed4ca1c68d2b95b6cdb9eae8df631fc68d529c",
+      "size": 410,
+      "verified": true
+    }
+  ],
+  "verified": true
+}

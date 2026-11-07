@@ -1,0 +1,376 @@
+TAP version 13
+# Subtest: CJK recall and management export stay inside explicit project/worktree/version scopes
+ok 1 - CJK recall and management export stay inside explicit project/worktree/version scopes
+  ---
+  duration_ms: 320.6306
+  type: 'test'
+  ...
+# Subtest: records survive reopen without a model or network dependency
+ok 2 - records survive reopen without a model or network dependency
+  ---
+  duration_ms: 124.6165
+  type: 'test'
+  ...
+# Subtest: missing scope, caller scope override, and source identity overwrite fail closed
+ok 3 - missing scope, caller scope override, and source identity overwrite fail closed
+  ---
+  duration_ms: 97.5092
+  type: 'test'
+  ...
+# Subtest: same source/version/content yields one evidence record across reopen
+ok 4 - same source/version/content yields one evidence record across reopen
+  ---
+  duration_ms: 125.9945
+  type: 'test'
+  ...
+# Subtest: FTS operators do not widen recall and empty query never lists all records
+ok 5 - FTS operators do not widen recall and empty query never lists all records
+  ---
+  duration_ms: 100.3005
+  type: 'test'
+  ...
+# Subtest: secret-like material and model-assigned path fields cannot enter local records
+ok 6 - secret-like material and model-assigned path fields cannot enter local records
+  ---
+  duration_ms: 34.8515
+  type: 'test'
+  ...
+# Subtest: unknown future schema and damaged FTS do not silently fall back to raw LIKE
+ok 7 - unknown future schema and damaged FTS do not silently fall back to raw LIKE
+  ---
+  duration_ms: 91.1006
+  type: 'test'
+  ...
+# Subtest: scope identity is deterministic and keeps worktree/revision/build distinctions
+ok 8 - scope identity is deterministic and keeps worktree/revision/build distinctions
+  ---
+  duration_ms: 25.4042
+  type: 'test'
+  ...
+# Subtest: quoted credential labels in JSON snippets are rejected before persistence
+ok 9 - quoted credential labels in JSON snippets are rejected before persistence
+  ---
+  duration_ms: 35.5105
+  type: 'test'
+  ...
+# Subtest: a bounded snapshot rejects overflow rather than silently dropping saved records
+ok 10 - a bounded snapshot rejects overflow rather than silently dropping saved records
+  ---
+  duration_ms: 16498.6222
+  type: 'test'
+  ...
+# Subtest: missing or rewritten index triggers and changed FTS definition are refused before writing
+ok 11 - missing or rewritten index triggers and changed FTS definition are refused before writing
+  ---
+  duration_ms: 221.6389
+  type: 'test'
+  ...
+# Subtest: common prefixed and camelCase credential labels never reach storage or export
+ok 12 - common prefixed and camelCase credential labels never reach storage or export
+  ---
+  duration_ms: 33.6536
+  type: 'test'
+  ...
+# Subtest: ordinary assignments cannot hide a later credential assignment
+ok 13 - ordinary assignments cannot hide a later credential assignment
+  ---
+  duration_ms: 30.7941
+  type: 'test'
+  ...
+# Subtest: a quoted value cannot hide its own credential assignment from input filtering
+ok 14 - a quoted value cannot hide its own credential assignment from input filtering
+  ---
+  duration_ms: 26.855
+  type: 'test'
+  ...
+# Subtest: single CJK character recall is preserved
+ok 15 - single CJK character recall is preserved
+  ---
+  duration_ms: 58.77
+  type: 'test'
+  ...
+# Subtest: UNC, device, relative and unapproved drives fail before filesystem access
+ok 16 - UNC, device, relative and unapproved drives fail before filesystem access
+  ---
+  duration_ms: 0.6782
+  type: 'test'
+  ...
+# Subtest: ancestor reparse metadata is rejected before any access below it
+ok 17 - ancestor reparse metadata is rejected before any access below it
+  ---
+  duration_ms: 4.8284
+  type: 'test'
+  ...
+# Subtest: persistent queue binds original route and request identity despite active model switching
+ok 18 - persistent queue binds original route and request identity despite active model switching
+  ---
+  duration_ms: 269.5631
+  type: 'test'
+  ...
+# Subtest: revoked or changed route fails before dispatch with no fallback
+ok 19 - revoked or changed route fails before dispatch with no fallback
+  ---
+  duration_ms: 95.5374
+  type: 'test'
+  ...
+# Subtest: timeout becomes outcome_unknown and ignored late result never writes back
+ok 20 - timeout becomes outcome_unknown and ignored late result never writes back
+  ---
+  duration_ms: 151.3892
+  type: 'test'
+  ...
+# Subtest: an unresolved timed-out dispatch holds the root gate until it actually settles
+ok 21 - an unresolved timed-out dispatch holds the root gate until it actually settles
+  ---
+  duration_ms: 226.7059
+  type: 'test'
+  ...
+# Subtest: foreign scopes cannot clear quarantine and a late old callback cannot clear the new owner lock
+ok 22 - foreign scopes cannot clear quarantine and a late old callback cannot clear the new owner lock
+  ---
+  duration_ms: 369.7783
+  type: 'test'
+  ...
+# Subtest: forget during a model request rejects its late result under the old epoch
+ok 23 - forget during a model request rejects its late result under the old epoch
+  ---
+  duration_ms: 167.1937
+  type: 'test'
+  ...
+# Subtest: ordinary and annual jobs share durable daily and session budgets
+ok 24 - ordinary and annual jobs share durable daily and session budgets
+  ---
+  duration_ms: 73.9728
+  type: 'test'
+  ...
+# Subtest: global concurrency one leaves a second request queued instead of dispatching twice
+ok 25 - global concurrency one leaves a second request queued instead of dispatching twice
+  ---
+  duration_ms: 250.8178
+  type: 'test'
+  ...
+# Subtest: model scope/path overrides and secret output are rejected atomically
+ok 26 - model scope/path overrides and secret output are rejected atomically
+  ---
+  duration_ms: 150.1185
+  type: 'test'
+  ...
+# Subtest: worker death is recovered as unknown without replay
+ok 27 - worker death is recovered as unknown without replay
+  ---
+  duration_ms: 341.3194
+  type: 'test'
+  ...
+# Subtest: restoring a pre-completion body database never dispatches the completed request again
+ok 28 - restoring a pre-completion body database never dispatches the completed request again
+  ---
+  duration_ms: 148.4594
+  type: 'test'
+  ...
+# Subtest: queued requests expire at the next Shanghai budget day instead of spending yesterday reservation
+ok 29 - queued requests expire at the next Shanghai budget day instead of spending yesterday reservation
+  ---
+  duration_ms: 62.6368
+  type: 'test'
+  ...
+# Subtest: cancellation of a dispatched request is unknown and provider errors cannot expose raw secrets
+ok 30 - cancellation of a dispatched request is unknown and provider errors cannot expose raw secrets
+  ---
+  duration_ms: 96.1357
+  type: 'test'
+  ...
+# Subtest: work model output is an unverified draft in its own collection
+ok 31 - work model output is an unverified draft in its own collection
+  ---
+  duration_ms: 109.0101
+  type: 'test'
+  ...
+# Subtest: forget invalidates warm readers, late generations, snapshots and index reconstruction
+ok 32 - forget invalidates warm readers, late generations, snapshots and index reconstruction
+  ---
+  duration_ms: 280.5134
+  type: 'test'
+  ...
+# Subtest: correction supersedes old body and archive is distinct from irreversible forget
+ok 33 - correction supersedes old body and archive is distinct from irreversible forget
+  ---
+  duration_ms: 315.4048
+  type: 'test'
+  ...
+# Subtest: restoring an entire old body file cannot roll back the independent deletion authority
+ok 34 - restoring an entire old body file cannot roll back the independent deletion authority
+  ---
+  duration_ms: 169.6737
+  type: 'test'
+  ...
+# Subtest: missing or corrupt authority refuses opening and warm cache never becomes a fallback
+ok 35 - missing or corrupt authority refuses opening and warm cache never becomes a fallback
+  ---
+  duration_ms: 98.6913
+  type: 'test'
+  ...
+# Subtest: source invalidation is scoped, replay safe and closes warm recall
+ok 36 - source invalidation is scoped, replay safe and closes warm recall
+  ---
+  duration_ms: 204.0276
+  type: 'test'
+  ...
+# Subtest: DDL damage on an open content database cannot be hidden by a warm recall cache
+ok 37 - DDL damage on an open content database cannot be hidden by a warm recall cache
+  ---
+  duration_ms: 88.6715
+  type: 'test'
+  ...
+# Subtest: all lifecycle invalidation and an old body restore purge queued plaintext inputs
+ok 38 - all lifecycle invalidation and an old body restore purge queued plaintext inputs
+  ---
+  duration_ms: 169.2682
+  type: 'test'
+  ...
+# Subtest: forget clears unique tokens from current FTS shadow blocks and current database bytes
+ok 39 - forget clears unique tokens from current FTS shadow blocks and current database bytes
+  ---
+  duration_ms: 90.1157
+  type: 'test'
+  ...
+# Subtest: reopening an old insecure FTS index removes already deleted historical segments
+ok 40 - reopening an old insecure FTS index removes already deleted historical segments
+  ---
+  duration_ms: 61.1908
+  type: 'test'
+  ...
+# Subtest: a disabled secure-delete policy is unavailable until a verified reopen rebuilds it
+ok 41 - a disabled secure-delete policy is unavailable until a verified reopen rebuilds it
+  ---
+  duration_ms: 116.108
+  type: 'test'
+  ...
+# Subtest: session removal always invalidates its registered session even with empty affected refs
+ok 42 - session removal always invalidates its registered session even with empty affected refs
+  ---
+  duration_ms: 83.6342
+  type: 'test'
+  ...
+# Subtest: valid Task1 databases require explicit migration and retain their scoped records
+ok 43 - valid Task1 databases require explicit migration and retain their scoped records
+  ---
+  duration_ms: 165.8941
+  type: 'test'
+  ...
+# Subtest: explicit Task1 migration clears legacy deleted FTS segments before serving reads
+ok 44 - explicit Task1 migration clears legacy deleted FTS segments before serving reads
+  ---
+  duration_ms: 89.4721
+  type: 'test'
+  ...
+# Subtest: admission accepts fixed source and refuses another host or runtime
+ok 45 - admission accepts fixed source and refuses another host or runtime
+  ---
+  duration_ms: 8.9136
+  type: 'test'
+  ...
+# Subtest: changed vendor bytes fail before any vendor code can load
+ok 46 - changed vendor bytes fail before any vendor code can load
+  ---
+  duration_ms: 34.5168
+  type: 'test'
+  ...
+# Subtest: undeclared executable file and removed license are rejected
+ok 47 - undeclared executable file and removed license are rejected
+  ---
+  duration_ms: 38.4493
+  type: 'test'
+  ...
+# Subtest: a lock cannot introduce an alternative vendor or network module
+ok 48 - a lock cannot introduce an alternative vendor or network module
+  ---
+  duration_ms: 27.7809
+  type: 'test'
+  ...
+# Subtest: backend import verifies bytes before a modified vendor can cause a side effect
+ok 49 - backend import verifies bytes before a modified vendor can cause a side effect
+  ---
+  duration_ms: 171.2514
+  type: 'test'
+  ...
+# Subtest: manual work drafts persist independently with unknown dates and missing proof
+ok 50 - manual work drafts persist independently with unknown dates and missing proof
+  ---
+  duration_ms: 165.0476
+  type: 'test'
+  ...
+# Subtest: a model supplied calendar date remains inferred and pending until explicit user confirmation
+ok 51 - a model supplied calendar date remains inferred and pending until explicit user confirmation
+  ---
+  duration_ms: 169.1365
+  type: 'test'
+  ...
+# Subtest: contradictory dates remain visible without overwriting a confirmed date and replay is a no-op
+ok 52 - contradictory dates remain visible without overwriting a confirmed date and replay is a no-op
+  ---
+  duration_ms: 167.2712
+  type: 'test'
+  ...
+# Subtest: goal and association changes become explicit candidates instead of disappearing from a merge
+ok 53 - goal and association changes become explicit candidates instead of disappearing from a merge
+  ---
+  duration_ms: 97.2255
+  type: 'test'
+  ...
+# Subtest: evidence registration never certifies claims; explicit review is limited to one claim and version
+ok 54 - evidence registration never certifies claims; explicit review is limited to one claim and version
+  ---
+  duration_ms: 200.9326
+  type: 'test'
+  ...
+# Subtest: source replay avoids duplicate items and model merges preserve user confirmation
+ok 55 - source replay avoids duplicate items and model merges preserve user confirmation
+  ---
+  duration_ms: 175.9737
+  type: 'test'
+  ...
+# Subtest: replaying the same work merge does not advance lifecycle epoch or content revision
+ok 56 - replaying the same work merge does not advance lifecycle epoch or content revision
+  ---
+  duration_ms: 105.321
+  type: 'test'
+  ...
+# Subtest: a new version of the same source anchor requires a revision rather than a new work item
+ok 57 - a new version of the same source anchor requires a revision rather than a new work item
+  ---
+  duration_ms: 132.3282
+  type: 'test'
+  ...
+# Subtest: reviewing a new version for one claim cannot refresh another claims obsolete proof
+ok 58 - reviewing a new version for one claim cannot refresh another claims obsolete proof
+  ---
+  duration_ms: 186.4935
+  type: 'test'
+  ...
+# Subtest: registering the same document for another claim extends links without increasing proof count
+ok 59 - registering the same document for another claim extends links without increasing proof count
+  ---
+  duration_ms: 136.8733
+  type: 'test'
+  ...
+# Subtest: revoked proof read authorization prevents automatic content revalidation
+ok 60 - revoked proof read authorization prevents automatic content revalidation
+  ---
+  duration_ms: 131.1933
+  type: 'test'
+  ...
+# Subtest: work forget, source invalidation and restore use the same independent authority
+ok 61 - work forget, source invalidation and restore use the same independent authority
+  ---
+  duration_ms: 161.6588
+  type: 'test'
+  ...
+1..61
+# tests 61
+# suites 0
+# pass 61
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 17955.3204

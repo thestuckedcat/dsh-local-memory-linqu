@@ -1,0 +1,58 @@
+TAP version 13
+# Subtest: real accepted Session events enqueue once and the hook never dispatches a Provider by itself
+ok 1 - real accepted Session events enqueue once and the hook never dispatches a Provider by itself
+  ---
+  duration_ms: 148.5488
+  type: 'test'
+  ...
+# Subtest: real pre-step rejection or removal preserves its decision and produces no queued job
+ok 2 - real pre-step rejection or removal preserves its decision and produces no queued job
+  ---
+  duration_ms: 77.3405
+  type: 'test'
+  ...
+# Subtest: real SDK recall source is separate from loop runtime context and self-commit is never extracted
+ok 3 - real SDK recall source is separate from loop runtime context and self-commit is never extracted
+  ---
+  duration_ms: 142.7181
+  type: 'test'
+  ...
+# Subtest: live scope changes before deferred admission do not write into the other scope
+ok 4 - live scope changes before deferred admission do not write into the other scope
+  ---
+  duration_ms: 56.3096
+  type: 'test'
+  ...
+# Subtest: actual fiber teardown drops deferred events and leaves no duplicate owner after replacement
+ok 5 - actual fiber teardown drops deferred events and leaves no duplicate owner after replacement
+  ---
+  duration_ms: 71.615
+  type: 'test'
+  ...
+# Subtest: actual warm recall is removed from the next returned decision after forget
+ok 6 - actual warm recall is removed from the next returned decision after forget
+  ---
+  duration_ms: 135.5936
+  type: 'test'
+  ...
+# Subtest: native same-ID edited appends cannot create an additional extraction reservation
+ok 7 - native same-ID edited appends cannot create an additional extraction reservation
+  ---
+  duration_ms: 77.0765
+  type: 'test'
+  ...
+# Subtest: the hook installed-library cases never invoke the covered network API sinks
+ok 8 - the hook installed-library cases never invoke the covered network API sinks
+  ---
+  duration_ms: 0.4073
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 889.9364

@@ -1,0 +1,49 @@
+{
+  "startedAtUtc": "2026-11-05T15:53:54.589Z",
+  "durationMs": 672.3180000000001,
+  "args": [
+    "--expose-internals",
+    "--require",
+    "E:\\dsh\\plugin\\05-local-memory\\tools\\host-api\\deny-network.cjs",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "--test-reporter-destination=E:\\dsh\\plugin\\05-local-memory\\evidence\\task3-provider-native-independent-review.tap",
+    "E:\\dsh\\plugin\\05-local-memory\\tools\\host-api\\provider.test.mjs"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "errorCode": null,
+  "summary": {
+    "tests": 8,
+    "pass": 8,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "tapSha256": "e8d15f0130abafd26c00659bb074cf0aae56073fd41288d280194986af2d9202",
+  "artifacts": [
+    {
+      "path": "plugin/harness-provider.mjs",
+      "sha256": "f63fc69df3c85a167a85fefc4b7fc552e3fcbd944e049b2c3f9d1cea271e9f32"
+    },
+    {
+      "path": "src/jobs.mjs",
+      "sha256": "9b1415e0ef8d73ab4dbf50abf357e85d0519b276bcf13d07b5da4139cb603db6"
+    },
+    {
+      "path": "tests/harness-provider.test.mjs",
+      "sha256": "78153d5a7bccc1b08036d71a5b5fd9098c77e317fed3cec788f20b5db7377244"
+    },
+    {
+      "path": "tools/host-api/provider.test.mjs",
+      "sha256": "3b1eceda9002751e59b6371278f1d841e7f28622b3037dac002000fc85fdfe70"
+    },
+    {
+      "path": "tools/host-api/deny-network.cjs",
+      "sha256": "eb6a3c6295f7b95593505768afa0754792e53415cc0d69e7bceb1c5760dcce3e"
+    }
+  ],
+  "scope": "Independent real installed-library Context/SDK with synthetic adapters; no full profile, real Provider or global egress certification"
+}

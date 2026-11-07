@@ -1,0 +1,229 @@
+TAP version 13
+# Subtest: native LLM services cannot prepare without an explicit execution authority
+ok 1 - native LLM services cannot prepare without an explicit execution authority
+  ---
+  duration_ms: 143.6004
+  type: 'test'
+  ...
+# Subtest: native preparation awaiting permission revocation never starts the adapter stream
+ok 2 - native preparation awaiting permission revocation never starts the adapter stream
+  ---
+  duration_ms: 211.825
+  type: 'test'
+  ...
+# Subtest: native stream revocation stays unknown after late stop and leaves the next job gated
+ok 3 - native stream revocation stays unknown after late stop and leaves the next job gated
+  ---
+  duration_ms: 275.2161
+  type: 'test'
+  ...
+# Subtest: native successful execution commits only with the same live authority
+ok 4 - native successful execution commits only with the same live authority
+  ---
+  duration_ms: 312.741
+  type: 'test'
+  ...
+# Subtest: native execution cases do not invoke covered network sinks
+ok 5 - native execution cases do not invoke covered network sinks
+  ---
+  duration_ms: 0.0648
+  type: 'test'
+  ...
+# Subtest: real accepted Session events enqueue once and the hook never dispatches a Provider by itself
+ok 6 - real accepted Session events enqueue once and the hook never dispatches a Provider by itself
+  ---
+  duration_ms: 418.8974
+  type: 'test'
+  ...
+# Subtest: real pre-step rejection or removal preserves its decision and produces no queued job
+ok 7 - real pre-step rejection or removal preserves its decision and produces no queued job
+  ---
+  duration_ms: 142.6174
+  type: 'test'
+  ...
+# Subtest: real SDK recall source is separate from loop runtime context and self-commit is never extracted
+ok 8 - real SDK recall source is separate from loop runtime context and self-commit is never extracted
+  ---
+  duration_ms: 230.0945
+  type: 'test'
+  ...
+# Subtest: live scope changes before deferred admission do not write into the other scope
+ok 9 - live scope changes before deferred admission do not write into the other scope
+  ---
+  duration_ms: 112.7733
+  type: 'test'
+  ...
+# Subtest: actual fiber teardown drops deferred events and leaves no duplicate owner after replacement
+ok 10 - actual fiber teardown drops deferred events and leaves no duplicate owner after replacement
+  ---
+  duration_ms: 135.3874
+  type: 'test'
+  ...
+# Subtest: actual warm recall is removed from the next returned decision after forget
+ok 11 - actual warm recall is removed from the next returned decision after forget
+  ---
+  duration_ms: 250.8638
+  type: 'test'
+  ...
+# Subtest: native same-ID edited appends cannot create an additional extraction reservation
+ok 12 - native same-ID edited appends cannot create an additional extraction reservation
+  ---
+  duration_ms: 153.8791
+  type: 'test'
+  ...
+# Subtest: the hook installed-library cases never invoke the covered network API sinks
+ok 13 - the hook installed-library cases never invoke the covered network API sinks
+  ---
+  duration_ms: 0.0731
+  type: 'test'
+  ...
+# Subtest: the installed Host exposes an llm/stream waterfall around the adapter dispatch
+ok 14 - the installed Host exposes an llm/stream waterfall around the adapter dispatch
+  ---
+  duration_ms: 4.5492
+  type: 'test'
+  ...
+# Subtest: a waterfall listener may short-circuit dispatch by yielding its own chunks
+ok 15 - a waterfall listener may short-circuit dispatch by yielding its own chunks
+  ---
+  duration_ms: 0.9105
+  type: 'test'
+  ...
+# Subtest: final recall projection passes a live record and blocks the same request after deletion
+not ok 16 - final recall projection passes a live record and blocks the same request after deletion
+  ---
+  duration_ms: 11894.5159
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tools\\host-api\\m1.test.mjs:86:1'
+  failureType: 'hookFailed'
+  error: "EPERM, Permission denied: \\\\?\\E:\\dsh\\plugin\\05-local-memory\\evidence\\stream-tmp\\memory-m1-WHsLQM '\\\\?\\E:\\dsh\\plugin\\05-local-memory\\evidence\\stream-tmp\\memory-m1-WHsLQM'"
+  code: 'EPERM'
+  stack: |-
+    rmSync (node:fs:1282:18)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tools/host-api/m1.test.mjs:24:17)
+    TestHook.runInAsyncScope (node:async_hooks:227:14)
+    TestHook.run (node:internal/test_runner/test:1402:25)
+    TestHook.run (node:internal/test_runner/test:1757:18)
+    TestHook.run (node:internal/util:581:20)
+    Test.runHook (node:internal/test_runner/test:1289:20)
+    after (node:internal/test_runner/test:1342:20)
+    Test.run (node:internal/test_runner/test:1428:13)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: the pinned installed host exposes the expected runtime and service lifecycle
+ok 17 - the pinned installed host exposes the expected runtime and service lifecycle
+  ---
+  duration_ms: 3.4735
+  type: 'test'
+  ...
+# Subtest: real Cordis plugin disposal removes event listeners and contributions
+ok 18 - real Cordis plugin disposal removes event listeners and contributions
+  ---
+  duration_ms: 0.5862
+  type: 'test'
+  ...
+# Subtest: prepareCall freezes explicit controls and dispatches once through the registered adapter
+ok 19 - prepareCall freezes explicit controls and dispatches once through the registered adapter
+  ---
+  duration_ms: 2.9334
+  type: 'test'
+  ...
+# Subtest: a prepared call remains bound to its adapter generation after registration replacement
+ok 20 - a prepared call remains bound to its adapter generation after registration replacement
+  ---
+  duration_ms: 0.739
+  type: 'test'
+  ...
+# Subtest: host error and aborted chunks can be synthesized locally and are not remote completion receipts
+ok 21 - host error and aborted chunks can be synthesized locally and are not remote completion receipts
+  ---
+  duration_ms: 0.8864
+  type: 'test'
+  ...
+# Subtest: BlockAssembler defaults to stop without a finish chunk so bridge must track explicit termination
+ok 22 - BlockAssembler defaults to stop without a finish chunk so bridge must track explicit termination
+  ---
+  duration_ms: 0.0536
+  type: 'test'
+  ...
+# Subtest: agent pre-step waterfall supplies the subject and filters unrelated scoped listeners
+ok 23 - agent pre-step waterfall supplies the subject and filters unrelated scoped listeners
+  ---
+  duration_ms: 0.6151
+  type: 'test'
+  ...
+# Subtest: session notifications carry stable event sequence and source identity in an in-memory store
+ok 24 - session notifications carry stable event sequence and source identity in an in-memory store
+  ---
+  duration_ms: 1.6374
+  type: 'test'
+  ...
+# Subtest: bundle compatibility and telemetry switch use the pinned boot APIs without initializing a profile
+ok 25 - bundle compatibility and telemetry switch use the pinned boot APIs without initializing a profile
+  ---
+  duration_ms: 1.5423
+  type: 'test'
+  ...
+# Subtest: the audit guard blocks covered connection APIs and earlier imports or cases did not invoke these covered sinks
+ok 26 - the audit guard blocks covered connection APIs and earlier imports or cases did not invoke these covered sinks
+  ---
+  duration_ms: 0.4676
+  type: 'test'
+  ...
+# Subtest: actual Host Context and SDK feed a completed prepared stream into the real memory queue
+ok 27 - actual Host Context and SDK feed a completed prepared stream into the real memory queue
+  ---
+  duration_ms: 319.0851
+  type: 'test'
+  ...
+# Subtest: actual Runtime local error finish keeps the real queue unknown and quarantined
+ok 28 - actual Runtime local error finish keeps the real queue unknown and quarantined
+  ---
+  duration_ms: 234.1664
+  type: 'test'
+  ...
+# Subtest: actual assembler default stop is not accepted when an adapter returns partial text then EOF
+ok 29 - actual assembler default stop is not accepted when an adapter returns partial text then EOF
+  ---
+  duration_ms: 1.6965
+  type: 'test'
+  ...
+# Subtest: a settings event with unchanged provider metadata rejects a queued request before SDK I/O
+ok 30 - a settings event with unchanged provider metadata rejects a queued request before SDK I/O
+  ---
+  duration_ms: 104.7094
+  type: 'test'
+  ...
+# Subtest: actual SDK block assembly preserves text while discarding reasoning and replay metadata
+ok 31 - actual SDK block assembly preserves text while discarding reasoning and replay metadata
+  ---
+  duration_ms: 2.5741
+  type: 'test'
+  ...
+# Subtest: a failure in actual prepareCall remains unknown without invoking adapter stream
+ok 32 - a failure in actual prepareCall remains unknown without invoking adapter stream
+  ---
+  duration_ms: 0.9364
+  type: 'test'
+  ...
+# Subtest: native fiber disposal cancels a hung stream with bounded cleanup and never accepts late stop
+ok 33 - native fiber disposal cancels a hung stream with bounded cleanup and never accepts late stop
+  ---
+  duration_ms: 11.1515
+  type: 'test'
+  ...
+# Subtest: the actual installed-library bridge suite never invokes the guarded network API sinks
+ok 34 - the actual installed-library bridge suite never invokes the guarded network API sinks
+  ---
+  duration_ms: 0.1214
+  type: 'test'
+  ...
+1..34
+# tests 34
+# suites 0
+# pass 33
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 15906.1467

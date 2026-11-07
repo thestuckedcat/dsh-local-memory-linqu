@@ -1,0 +1,2068 @@
+TAP version 13
+# Subtest: CJK recall and management export stay inside explicit project/worktree/version scopes
+ok 1 - CJK recall and management export stay inside explicit project/worktree/version scopes
+  ---
+  duration_ms: 281.2071
+  type: 'test'
+  ...
+# Subtest: records survive reopen without a model or network dependency
+ok 2 - records survive reopen without a model or network dependency
+  ---
+  duration_ms: 162.9198
+  type: 'test'
+  ...
+# Subtest: missing scope, caller scope override, and source identity overwrite fail closed
+ok 3 - missing scope, caller scope override, and source identity overwrite fail closed
+  ---
+  duration_ms: 163.2383
+  type: 'test'
+  ...
+# Subtest: same source/version/content yields one evidence record across reopen
+ok 4 - same source/version/content yields one evidence record across reopen
+  ---
+  duration_ms: 217.3509
+  type: 'test'
+  ...
+# Subtest: FTS operators do not widen recall and empty query never lists all records
+ok 5 - FTS operators do not widen recall and empty query never lists all records
+  ---
+  duration_ms: 176.7191
+  type: 'test'
+  ...
+# Subtest: secret-like material and model-assigned path fields cannot enter local records
+ok 6 - secret-like material and model-assigned path fields cannot enter local records
+  ---
+  duration_ms: 55.4493
+  type: 'test'
+  ...
+# Subtest: unknown future schema and damaged FTS do not silently fall back to raw LIKE
+ok 7 - unknown future schema and damaged FTS do not silently fall back to raw LIKE
+  ---
+  duration_ms: 122.8709
+  type: 'test'
+  ...
+# Subtest: scope identity is deterministic and keeps worktree/revision/build distinctions
+ok 8 - scope identity is deterministic and keeps worktree/revision/build distinctions
+  ---
+  duration_ms: 35.3139
+  type: 'test'
+  ...
+# Subtest: quoted credential labels in JSON snippets are rejected before persistence
+ok 9 - quoted credential labels in JSON snippets are rejected before persistence
+  ---
+  duration_ms: 57.6673
+  type: 'test'
+  ...
+# Subtest: a bounded snapshot rejects overflow rather than silently dropping saved records
+ok 10 - a bounded snapshot rejects overflow rather than silently dropping saved records
+  ---
+  duration_ms: 12658.4978
+  type: 'test'
+  ...
+# Subtest: missing or rewritten index triggers and changed FTS definition are refused before writing
+ok 11 - missing or rewritten index triggers and changed FTS definition are refused before writing
+  ---
+  duration_ms: 184.7029
+  type: 'test'
+  ...
+# Subtest: common prefixed and camelCase credential labels never reach storage or export
+ok 12 - common prefixed and camelCase credential labels never reach storage or export
+  ---
+  duration_ms: 30.4556
+  type: 'test'
+  ...
+# Subtest: ordinary assignments cannot hide a later credential assignment
+ok 13 - ordinary assignments cannot hide a later credential assignment
+  ---
+  duration_ms: 27.794
+  type: 'test'
+  ...
+# Subtest: a quoted value cannot hide its own credential assignment from input filtering
+ok 14 - a quoted value cannot hide its own credential assignment from input filtering
+  ---
+  duration_ms: 24.5586
+  type: 'test'
+  ...
+# Subtest: single CJK character recall is preserved
+ok 15 - single CJK character recall is preserved
+  ---
+  duration_ms: 50.9534
+  type: 'test'
+  ...
+# Subtest: UNC, device, relative and unapproved drives fail before filesystem access
+ok 16 - UNC, device, relative and unapproved drives fail before filesystem access
+  ---
+  duration_ms: 0.6887
+  type: 'test'
+  ...
+# Subtest: ancestor reparse metadata is rejected before any access below it
+ok 17 - ancestor reparse metadata is rejected before any access below it
+  ---
+  duration_ms: 4.2331
+  type: 'test'
+  ...
+# Subtest: defaults keep the configured approved provider and non-destructive limits
+ok 18 - defaults keep the configured approved provider and non-destructive limits
+  ---
+  duration_ms: 2.3048
+  type: 'test'
+  ...
+# Subtest: profile comes from the Host environment and cannot escape the data root
+ok 19 - profile comes from the Host environment and cannot escape the data root
+  ---
+  duration_ms: 0.4428
+  type: 'test'
+  ...
+# Subtest: unknown fields, wrong route references and disabled path security are rejected
+ok 20 - unknown fields, wrong route references and disabled path security are rejected
+  ---
+  duration_ms: 0.1681
+  type: 'test'
+  ...
+# Subtest: budget and recall bounds cannot be enlarged beyond the reviewed caps
+ok 21 - budget and recall bounds cannot be enlarged beyond the reviewed caps
+  ---
+  duration_ms: 0.2201
+  type: 'test'
+  ...
+# Subtest: declared projects require unique names and local absolute repository roots
+ok 22 - declared projects require unique names and local absolute repository roots
+  ---
+  duration_ms: 1.6105
+  type: 'test'
+  ...
+# Subtest: route approval is synchronous, frozen and changes when routing changes
+ok 23 - route approval is synchronous, frozen and changes when routing changes
+  ---
+  duration_ms: 0.3517
+  type: 'test'
+  ...
+# Subtest: purpose routes follow the configured work-summary route
+ok 24 - purpose routes follow the configured work-summary route
+  ---
+  duration_ms: 0.1751
+  type: 'test'
+  ...
+# Subtest: config digest is stable across re-reads and independent of profile directory
+ok 25 - config digest is stable across re-reads and independent of profile directory
+  ---
+  duration_ms: 0.2247
+  type: 'test'
+  ...
+# Subtest: work-summary evidence roots are bounded local paths
+ok 26 - work-summary evidence roots are bounded local paths
+  ---
+  duration_ms: 0.7396
+  type: 'test'
+  ...
+# Subtest: reports export root can be configured locally but not as a bare relative path
+ok 27 - reports export root can be configured locally but not as a bare relative path
+  ---
+  duration_ms: 0.7349
+  type: 'test'
+  ...
+# Subtest: the defaults object itself is frozen and never mutated by normalization
+ok 28 - the defaults object itself is frozen and never mutated by normalization
+  ---
+  duration_ms: 0.1755
+  type: 'test'
+  ...
+# Subtest: temporary path helpers in the test directory are usable data roots
+ok 29 - temporary path helpers in the test directory are usable data roots
+  ---
+  duration_ms: 18.7467
+  type: 'test'
+  ...
+# Subtest: execution is denied by default even for an intact queued job and approved model route
+ok 30 - execution is denied by default even for an intact queued job and approved model route
+  ---
+  duration_ms: 111.1239
+  type: 'test'
+  ...
+# Subtest: revoking a queued admission prevents dispatch and discards the durable input
+ok 31 - revoking a queued admission prevents dispatch and discards the durable input
+  ---
+  duration_ms: 77.4795
+  type: 'test'
+  ...
+# Subtest: permission revoked in flight returns unknown, retains quarantine, and ignores late output
+ok 32 - permission revoked in flight returns unknown, retains quarantine, and ignores late output
+  ---
+  duration_ms: 269.3073
+  type: 'test'
+  ...
+# Subtest: a claim-to-dispatch denial is not dispatched and a replaced signal cannot reuse a lease
+ok 33 - a claim-to-dispatch denial is not dispatched and a replaced signal cannot reuse a lease
+  ---
+  duration_ms: 348.4471
+  type: 'test'
+  ...
+# Subtest: post-write authorization failure rolls back ordinary and annual records atomically
+ok 34 - post-write authorization failure rolls back ordinary and annual records atomically
+  ---
+  duration_ms: 467.276
+  type: 'test'
+  ...
+# Subtest: annual merge may advance its own epoch but post-merge revocation rolls the whole change back
+ok 35 - annual merge may advance its own epoch but post-merge revocation rolls the whole change back
+  ---
+  duration_ms: 433.4519
+  type: 'test'
+  ...
+# Subtest: a synchronous Provider throw becomes a contained unknown outcome
+ok 36 - a synchronous Provider throw becomes a contained unknown outcome
+  ---
+  duration_ms: 94.4754
+  type: 'test'
+  ...
+# Subtest: revocation winning the completion race keeps quarantine even if the Provider fulfills immediately
+ok 37 - revocation winning the completion race keeps quarantine even if the Provider fulfills immediately
+  ---
+  duration_ms: 136.1497
+  type: 'test'
+  ...
+# Subtest: caller cancellation between fulfilled response and queue commit never saves results
+ok 38 - caller cancellation between fulfilled response and queue commit never saves results
+  ---
+  duration_ms: 509.6172
+  type: 'test'
+  ...
+# Subtest: lifecycle or route changes inside final approval cannot overwrite current worker state
+ok 39 - lifecycle or route changes inside final approval cannot overwrite current worker state
+  ---
+  duration_ms: 270.2348
+  type: 'test'
+  ...
+# Subtest: a changed approval after model completion cannot commit ordinary or annual output
+ok 40 - a changed approval after model completion cannot commit ordinary or annual output
+  ---
+  duration_ms: 212.8385
+  type: 'test'
+  ...
+# Subtest: authorization callbacks receive immutable task identity without plaintext
+ok 41 - authorization callbacks receive immutable task identity without plaintext
+  ---
+  duration_ms: 123.4029
+  type: 'test'
+  ...
+# Subtest: invalid, throwing or asynchronous execution authority is observed and fails closed
+ok 42 - invalid, throwing or asynchronous execution authority is observed and fails closed
+  ---
+  duration_ms: 210.1507
+  type: 'test'
+  ...
+# Subtest: the stream gate supports direct yield delegation for ordinary requests without changing the downstream stream
+ok 43 - the stream gate supports direct yield delegation for ordinary requests without changing the downstream stream
+  ---
+  duration_ms: 89.8582
+  type: 'test'
+  ...
+# Subtest: record accepts the exact session-hooks payload shape, including an absent or undefined revision
+ok 44 - record accepts the exact session-hooks payload shape, including an absent or undefined revision
+  ---
+  duration_ms: 228.4599
+  type: 'test'
+  ...
+# Subtest: verify passes, the gate calls next once and the deep frozen request is untouched
+ok 45 - verify passes, the gate calls next once and the deep frozen request is untouched
+  ---
+  duration_ms: 279.4725
+  type: 'test'
+  ...
+# Subtest: a deleted or archived recalled memory blocks dispatch and never calls next
+ok 46 - a deleted or archived recalled memory blocks dispatch and never calls next
+  ---
+  duration_ms: 385.557
+  type: 'test'
+  ...
+# Subtest: project retirement, recall disable, authorization, route and binding changes block dispatch
+ok 47 - project retirement, recall disable, authorization, route and binding changes block dispatch
+  ---
+  duration_ms: 598.1338
+  type: 'test'
+  ...
+# Subtest: replaced text for the same message identity blocks before any dispatch
+ok 48 - replaced text for the same message identity blocks before any dispatch
+  ---
+  duration_ms: 166.6815
+  type: 'test'
+  ...
+# Subtest: requests without this plugin projection pass through as not_ours
+ok 49 - requests without this plugin projection pass through as not_ours
+  ---
+  duration_ms: 84.9475
+  type: 'test'
+  ...
+# Subtest: malformed requests never throw and never dispatch memory content
+ok 50 - malformed requests never throw and never dispatch memory content
+  ---
+  duration_ms: 76.2571
+  type: 'test'
+  ...
+# Subtest: commit and invalidate transitions are explicit and idempotent
+ok 51 - commit and invalidate transitions are explicit and idempotent
+  ---
+  duration_ms: 258.1552
+  type: 'test'
+  ...
+# Subtest: a missing session or unreadable store fails closed
+ok 52 - a missing session or unreadable store fails closed
+  ---
+  duration_ms: 149.8399
+  type: 'test'
+  ...
+# Subtest: a passed projection is re-verified on every later request and cannot silently go stale
+ok 53 - a passed projection is re-verified on every later request and cannot silently go stale
+  ---
+  duration_ms: 120.6177
+  type: 'test'
+  ...
+# Subtest: a previously dispatched own message blocks the same request after deletion and other sessions pass
+ok 54 - a previously dispatched own message blocks the same request after deletion and other sessions pass
+  ---
+  duration_ms: 114.9545
+  type: 'test'
+  ...
+# Subtest: re-recording the same injected message re-arms a stale projection
+ok 55 - re-recording the same injected message re-arms a stale projection
+  ---
+  duration_ms: 85.5383
+  type: 'test'
+  ...
+# Subtest: two recalled records are both re-read and a single removal blocks
+ok 56 - two recalled records are both re-read and a single removal blocks
+  ---
+  duration_ms: 124.6881
+  type: 'test'
+  ...
+# Subtest: install returns a disposer that removes only its listener and dispose is idempotent
+ok 57 - install returns a disposer that removes only its listener and dispose is idempotent
+  ---
+  duration_ms: 71.2844
+  type: 'test'
+  ...
+# Subtest: onRecallMessage receives the exact projection envelope while injection proceeds
+ok 58 - onRecallMessage receives the exact projection envelope while injection proceeds
+  ---
+  duration_ms: 121.0682
+  type: 'test'
+  ...
+# Subtest: a throwing or asynchronous onRecallMessage is contained and never breaks the request
+ok 59 - a throwing or asynchronous onRecallMessage is contained and never breaks the request
+  ---
+  duration_ms: 199.5883
+  type: 'test'
+  ...
+# Subtest: onMessageAdmitted can enqueue the annual draft inside the memory write transaction
+ok 60 - onMessageAdmitted can enqueue the annual draft inside the memory write transaction
+  ---
+  duration_ms: 81.7167
+  type: 'test'
+  ...
+# Subtest: a throwing or asynchronous onMessageAdmitted never rolls back the memory job
+ok 61 - a throwing or asynchronous onMessageAdmitted never rolls back the memory job
+  ---
+  duration_ms: 116.6008
+  type: 'test'
+  ...
+# Subtest: hooks, projection recording and the final gate form one closed path
+ok 62 - hooks, projection recording and the final gate form one closed path
+  ---
+  duration_ms: 224.4459
+  type: 'test'
+  ...
+# Subtest: bridge sends only the bounded fragment and fixed purpose prompt through one prepared call
+ok 63 - bridge sends only the bounded fragment and fixed purpose prompt through one prepared call
+  ---
+  duration_ms: 7.481
+  type: 'test'
+  ...
+# Subtest: each allowed purpose has a fixed schema prompt and unknown purposes cannot dispatch
+ok 64 - each allowed purpose has a fixed schema prompt and unknown purposes cannot dispatch
+  ---
+  duration_ms: 1.9584
+  type: 'test'
+  ...
+# Subtest: text followed by EOF without explicit finish is unknown
+ok 65 - text followed by EOF without explicit finish is unknown
+  ---
+  duration_ms: 1.4043
+  type: 'test'
+  ...
+# Subtest: synthesized error, aborted and truncation finishes do not become known completion
+ok 66 - synthesized error, aborted and truncation finishes do not become known completion
+  ---
+  duration_ms: 1.4821
+  type: 'test'
+  ...
+# Subtest: duplicate finish, text after stop, and an iterator throw after stop stay unknown
+ok 67 - duplicate finish, text after stop, and an iterator throw after stop stay unknown
+  ---
+  duration_ms: 2.2242
+  type: 'test'
+  ...
+# Subtest: once prepareCall was touched its failure is unknown even when stream never started
+ok 68 - once prepareCall was touched its failure is unknown even when stream never started
+  ---
+  duration_ms: 0.4881
+  type: 'test'
+  ...
+# Subtest: changed approval before prepare is refused without dispatch and activation versions do not rebind
+ok 69 - changed approval before prepare is refused without dispatch and activation versions do not rebind
+  ---
+  duration_ms: 0.7422
+  type: 'test'
+  ...
+# Subtest: all four host configuration events permanently invalidate an activation and remove listeners on dispose
+ok 70 - all four host configuration events permanently invalidate an activation and remove listeners on dispose
+  ---
+  duration_ms: 0.4379
+  type: 'test'
+  ...
+# Subtest: approval changes during preparation are unknown and never reach prepared.stream
+ok 71 - approval changes during preparation are unknown and never reach prepared.stream
+  ---
+  duration_ms: 2.4278
+  type: 'test'
+  ...
+# Subtest: an invalidation between preparation and dispatch is rechecked before sending the fragment
+ok 72 - an invalidation between preparation and dispatch is rechecked before sending the fragment
+  ---
+  duration_ms: 0.41
+  type: 'test'
+  ...
+# Subtest: cancellation during a non-cooperative prepare returns unknown and observes its later rejection
+ok 73 - cancellation during a non-cooperative prepare returns unknown and observes its later rejection
+  ---
+  duration_ms: 5.4197
+  type: 'test'
+  ...
+# Subtest: stop without EOF cannot complete and dispose waits only its cleanup budget
+ok 74 - stop without EOF cannot complete and dispose waits only its cleanup budget
+  ---
+  duration_ms: 15.9848
+  type: 'test'
+  ...
+# Subtest: late stop after queue timeout does not write memory or release the unknown root gate
+ok 75 - late stop after queue timeout does not write memory or release the unknown root gate
+  ---
+  duration_ms: 358.2221
+  type: 'test'
+  ...
+# Subtest: a rejecting iterator return is observed without exposing details and is never retried
+ok 76 - a rejecting iterator return is observed without exposing details and is never retried
+  ---
+  duration_ms: 1.2622
+  type: 'test'
+  ...
+# Subtest: old activation cancellation and late cleanup cannot disable a newly created activation
+ok 77 - old activation cancellation and late cleanup cannot disable a newly created activation
+  ---
+  duration_ms: 1.6853
+  type: 'test'
+  ...
+# Subtest: EOF microtasks cannot return success after cancellation or activation invalidation
+ok 78 - EOF microtasks cannot return success after cancellation or activation invalidation
+  ---
+  duration_ms: 0.9153
+  type: 'test'
+  ...
+# Subtest: async or malformed approved route readers are rejected without leaking their errors
+ok 79 - async or malformed approved route readers are rejected without leaking their errors
+  ---
+  duration_ms: 0.722
+  type: 'test'
+  ...
+# Subtest: oversized or tool-bearing protocol data is refused while known complete secret text is classified separately
+ok 80 - oversized or tool-bearing protocol data is refused while known complete secret text is classified separately
+  ---
+  duration_ms: 1.0544
+  type: 'test'
+  ...
+# Subtest: contradictory or repeated block frames cannot be silently accepted by a tolerant assembler
+ok 81 - contradictory or repeated block frames cannot be silently accepted by a tolerant assembler
+  ---
+  duration_ms: 1.6348
+  type: 'test'
+  ...
+# Subtest: system prompt plus fragment fits exactly 8000 UTF-16 units and excess is refused before SDK preparation
+ok 82 - system prompt plus fragment fits exactly 8000 UTF-16 units and excess is refused before SDK preparation
+  ---
+  duration_ms: 1.0229
+  type: 'test'
+  ...
+# Subtest: input accounting includes whitespace that direct execution actually forwards to the SDK
+ok 83 - input accounting includes whitespace that direct execution actually forwards to the SDK
+  ---
+  duration_ms: 0.674
+  type: 'test'
+  ...
+# Subtest: durable queue includes fixed prompts in the daily input limit and replay reserves only once
+ok 84 - durable queue includes fixed prompts in the daily input limit and replay reserves only once
+  ---
+  duration_ms: 447.9499
+  type: 'test'
+  ...
+# Subtest: invalid or changing input meters never spend budget or silently update an existing reservation
+ok 85 - invalid or changing input meters never spend budget or silently update an existing reservation
+  ---
+  duration_ms: 147.518
+  type: 'test'
+  ...
+# Subtest: authenticated older queued payloads without frozen input accounting cannot resume
+ok 86 - authenticated older queued payloads without frozen input accounting cannot resume
+  ---
+  duration_ms: 114.252
+  type: 'test'
+  ...
+# Subtest: execution authorization revoked during prepare prevents the prepared stream from starting
+ok 87 - execution authorization revoked during prepare prevents the prepared stream from starting
+  ---
+  duration_ms: 181.7193
+  type: 'test'
+  ...
+# Subtest: a source invalidated during prepare cannot reach a later prepared stream
+ok 88 - a source invalidated during prepare cannot reach a later prepared stream
+  ---
+  duration_ms: 223.7217
+  type: 'test'
+  ...
+# Subtest: created messages are identified, frozen and shaped like the Host helpers
+ok 89 - created messages are identified, frozen and shaped like the Host helpers
+  ---
+  duration_ms: 16.6627
+  type: 'test'
+  ...
+# Subtest: deepFreeze detaches the value from its source and locks nested objects
+ok 90 - deepFreeze detaches the value from its source and locks nested objects
+  ---
+  duration_ms: 0.1324
+  type: 'test'
+  ...
+# Subtest: BlockAssembler joins deltas, honors block-end text and exposes usage/finish
+ok 91 - BlockAssembler joins deltas, honors block-end text and exposes usage/finish
+  ---
+  duration_ms: 0.1993
+  type: 'test'
+  ...
+# Subtest: BlockAssembler assembles open text blocks and rejects unknown chunk types
+ok 92 - BlockAssembler assembles open text blocks and rejects unknown chunk types
+  ---
+  duration_ms: 0.0904
+  type: 'test'
+  ...
+# Subtest: admission requires a live session, matching agent and active registered scope
+ok 93 - admission requires a live session, matching agent and active registered scope
+  ---
+  duration_ms: 15.9301
+  type: 'test'
+  ...
+# Subtest: admission honors project preferences and the global enable switch
+ok 94 - admission honors project preferences and the global enable switch
+  ---
+  duration_ms: 1.2285
+  type: 'test'
+  ...
+# Subtest: admission refuses an unapproved extraction route and non-canonical session references
+ok 95 - admission refuses an unapproved extraction route and non-canonical session references
+  ---
+  duration_ms: 0.308
+  type: 'test'
+  ...
+# Subtest: admission is idempotent for the same message and rotates on edited content
+ok 96 - admission is idempotent for the same message and rotates on edited content
+  ---
+  duration_ms: 0.2621
+  type: 'test'
+  ...
+# Subtest: authorizeExecution needs a receipt and returns one stable lease signal across phases
+ok 97 - authorizeExecution needs a receipt and returns one stable lease signal across phases
+  ---
+  duration_ms: 0.792
+  type: 'test'
+  ...
+# Subtest: a receipt cannot be rebound to another scope, session or source version
+ok 98 - a receipt cannot be rebound to another scope, session or source version
+  ---
+  duration_ms: 0.3462
+  type: 'test'
+  ...
+# Subtest: a recorded input digest must equal the execution input digest
+ok 99 - a recorded input digest must equal the execution input digest
+  ---
+  duration_ms: 0.2973
+  type: 'test'
+  ...
+# Subtest: a changed Provider route between admission and execution is refused
+ok 100 - a changed Provider route between admission and execution is refused
+  ---
+  duration_ms: 0.2986
+  type: 'test'
+  ...
+# Subtest: revocation aborts the live lease and permanently denies new work
+ok 101 - revocation aborts the live lease and permanently denies new work
+  ---
+  duration_ms: 0.366
+  type: 'test'
+  ...
+# Subtest: one receipt authorizes one lease per purpose and never a second job identity
+ok 102 - one receipt authorizes one lease per purpose and never a second job identity
+  ---
+  duration_ms: 0.7532
+  type: 'test'
+  ...
+# Subtest: annual merges require a live user confirmation for the selected item
+ok 103 - annual merges require a live user confirmation for the selected item
+  ---
+  duration_ms: 1.0081
+  type: 'test'
+  ...
+# Subtest: receipts expire after 24 hours and unknown purposes fail closed
+ok 104 - receipts expire after 24 hours and unknown purposes fail closed
+  ---
+  duration_ms: 1.0988
+  type: 'test'
+  ...
+# Subtest: authorizeRecovery only accepts a recent user confirmation for the exact unknown job
+ok 105 - authorizeRecovery only accepts a recent user confirmation for the exact unknown job
+  ---
+  duration_ms: 0.4559
+  type: 'test'
+  ...
+# Subtest: status is bounded metadata and callbacks cannot leak secret details
+ok 106 - status is bounded metadata and callbacks cannot leak secret details
+  ---
+  duration_ms: 3.8493
+  type: 'test'
+  ...
+# Subtest: end to end: an admitted current message completes one authorized extraction
+ok 107 - end to end: an admitted current message completes one authorized extraction
+  ---
+  duration_ms: 276.4217
+  type: 'test'
+  ...
+# Subtest: queue integration: missing receipt, revocation, changed route and wrong source identity keep zero dispatch
+ok 108 - queue integration: missing receipt, revocation, changed route and wrong source identity keep zero dispatch
+  ---
+  duration_ms: 592.9613
+  type: 'test'
+  ...
+# Subtest: persistent queue binds original route and request identity despite active model switching
+ok 109 - persistent queue binds original route and request identity despite active model switching
+  ---
+  duration_ms: 350.2364
+  type: 'test'
+  ...
+# Subtest: revoked or changed route fails before dispatch with no fallback
+ok 110 - revoked or changed route fails before dispatch with no fallback
+  ---
+  duration_ms: 154.4319
+  type: 'test'
+  ...
+# Subtest: timeout becomes outcome_unknown and ignored late result never writes back
+ok 111 - timeout becomes outcome_unknown and ignored late result never writes back
+  ---
+  duration_ms: 237.2331
+  type: 'test'
+  ...
+# Subtest: an unknown timed-out dispatch keeps the root gate after settling until trusted confirmation
+ok 112 - an unknown timed-out dispatch keeps the root gate after settling until trusted confirmation
+  ---
+  duration_ms: 414.9539
+  type: 'test'
+  ...
+# Subtest: foreign scopes cannot clear quarantine and a late old callback cannot clear the new owner lock
+ok 113 - foreign scopes cannot clear quarantine and a late old callback cannot clear the new owner lock
+  ---
+  duration_ms: 414.0449
+  type: 'test'
+  ...
+# Subtest: forget during a model request rejects its late result under the old epoch
+ok 114 - forget during a model request rejects its late result under the old epoch
+  ---
+  duration_ms: 187.0816
+  type: 'test'
+  ...
+# Subtest: ordinary and annual jobs share durable daily and session budgets
+ok 115 - ordinary and annual jobs share durable daily and session budgets
+  ---
+  duration_ms: 77.2003
+  type: 'test'
+  ...
+# Subtest: global concurrency one leaves a second request queued instead of dispatching twice
+ok 116 - global concurrency one leaves a second request queued instead of dispatching twice
+  ---
+  duration_ms: 288.6661
+  type: 'test'
+  ...
+# Subtest: model scope/path overrides and secret output are rejected atomically
+ok 117 - model scope/path overrides and secret output are rejected atomically
+  ---
+  duration_ms: 182.9549
+  type: 'test'
+  ...
+# Subtest: worker death is recovered as unknown without replay
+ok 118 - worker death is recovered as unknown without replay
+  ---
+  duration_ms: 423.0194
+  type: 'test'
+  ...
+# Subtest: restoring a pre-completion body database never dispatches the completed request again
+ok 119 - restoring a pre-completion body database never dispatches the completed request again
+  ---
+  duration_ms: 173.0491
+  type: 'test'
+  ...
+# Subtest: queued requests expire at the next Shanghai budget day instead of spending yesterday reservation
+ok 120 - queued requests expire at the next Shanghai budget day instead of spending yesterday reservation
+  ---
+  duration_ms: 59.771
+  type: 'test'
+  ...
+# Subtest: cancellation of a dispatched request is unknown and provider errors cannot expose raw secrets
+ok 121 - cancellation of a dispatched request is unknown and provider errors cannot expose raw secrets
+  ---
+  duration_ms: 107.4238
+  type: 'test'
+  ...
+# Subtest: work model output is an unverified draft in its own collection
+ok 122 - work model output is an unverified draft in its own collection
+  ---
+  duration_ms: 125.3567
+  type: 'test'
+  ...
+# Subtest: forget invalidates warm readers, late generations, snapshots and index reconstruction
+ok 123 - forget invalidates warm readers, late generations, snapshots and index reconstruction
+  ---
+  duration_ms: 312.0984
+  type: 'test'
+  ...
+# Subtest: correction supersedes old body and archive is distinct from irreversible forget
+ok 124 - correction supersedes old body and archive is distinct from irreversible forget
+  ---
+  duration_ms: 482.0585
+  type: 'test'
+  ...
+# Subtest: restoring an entire old body file cannot roll back the independent deletion authority
+ok 125 - restoring an entire old body file cannot roll back the independent deletion authority
+  ---
+  duration_ms: 217.4391
+  type: 'test'
+  ...
+# Subtest: missing or corrupt authority refuses opening and warm cache never becomes a fallback
+ok 126 - missing or corrupt authority refuses opening and warm cache never becomes a fallback
+  ---
+  duration_ms: 122.9407
+  type: 'test'
+  ...
+# Subtest: source invalidation is scoped, replay safe and closes warm recall
+ok 127 - source invalidation is scoped, replay safe and closes warm recall
+  ---
+  duration_ms: 201.744
+  type: 'test'
+  ...
+# Subtest: DDL damage on an open content database cannot be hidden by a warm recall cache
+ok 128 - DDL damage on an open content database cannot be hidden by a warm recall cache
+  ---
+  duration_ms: 86.3047
+  type: 'test'
+  ...
+# Subtest: all lifecycle invalidation and an old body restore purge queued plaintext inputs
+ok 129 - all lifecycle invalidation and an old body restore purge queued plaintext inputs
+  ---
+  duration_ms: 166.6929
+  type: 'test'
+  ...
+# Subtest: forget clears unique tokens from current FTS shadow blocks and current database bytes
+ok 130 - forget clears unique tokens from current FTS shadow blocks and current database bytes
+  ---
+  duration_ms: 99.4407
+  type: 'test'
+  ...
+# Subtest: reopening an old insecure FTS index removes already deleted historical segments
+ok 131 - reopening an old insecure FTS index removes already deleted historical segments
+  ---
+  duration_ms: 63.2048
+  type: 'test'
+  ...
+# Subtest: a disabled secure-delete policy is unavailable until a verified reopen rebuilds it
+ok 132 - a disabled secure-delete policy is unavailable until a verified reopen rebuilds it
+  ---
+  duration_ms: 129.1747
+  type: 'test'
+  ...
+# Subtest: session removal always invalidates its registered session even with empty affected refs
+ok 133 - session removal always invalidates its registered session even with empty affected refs
+  ---
+  duration_ms: 93.013
+  type: 'test'
+  ...
+# Subtest: user-only operations reject model and host actors
+not ok 134 - user-only operations reject model and host actors
+  ---
+  duration_ms: 121.8664
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\management.test.mjs:165:1'
+  failureType: 'testCodeFailure'
+  error: 'memory store is unavailable (ERR_SQLITE_ERROR)'
+  code: 'STORE_UNAVAILABLE'
+  stack: |-
+    failure (file:///E:/dsh/plugin/05-local-memory/plugin/project-registry.mjs:48:17)
+    Object.storeFor (file:///E:/dsh/plugin/05-local-memory/plugin/project-registry.mjs:227:15)
+    seedMemory (file:///E:/dsh/plugin/05-local-memory/tests/management.test.mjs:142:30)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/management.test.mjs:170:3)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: unknown operations and unavailable extras return stable reason codes
+ok 135 - unknown operations and unavailable extras return stable reason codes
+  ---
+  duration_ms: 49.9763
+  type: 'test'
+  ...
+# Subtest: extras receive trusted actor context and their envelopes are validated
+ok 136 - extras receive trusted actor context and their envelopes are validated
+  ---
+  duration_ms: 31.779
+  type: 'test'
+  ...
+# Subtest: request validation rejects malformed envelopes without throwing
+ok 137 - request validation rejects malformed envelopes without throwing
+  ---
+  duration_ms: 37.6426
+  type: 'test'
+  ...
+# Subtest: project lifecycle: register, list, update, preference, retire
+ok 138 - project lifecycle: register, list, update, preference, retire
+  ---
+  duration_ms: 111.634
+  type: 'test'
+  ...
+# Subtest: one project aggregates multiple repository scopes without exposing their roots
+not ok 139 - one project aggregates multiple repository scopes without exposing their roots
+  ---
+  duration_ms: 134.5796
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\management.test.mjs:298:1'
+  failureType: 'testCodeFailure'
+  error: 'memory store is unavailable (ERR_SQLITE_ERROR)'
+  code: 'STORE_UNAVAILABLE'
+  stack: |-
+    failure (file:///E:/dsh/plugin/05-local-memory/plugin/project-registry.mjs:48:17)
+    Object.storeFor (file:///E:/dsh/plugin/05-local-memory/plugin/project-registry.mjs:227:15)
+    seedMemory (file:///E:/dsh/plugin/05-local-memory/tests/management.test.mjs:142:30)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/management.test.mjs:309:3)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: memory search, paging, detail, correction, archive, restore and explicit delete use the real store
+not ok 140 - memory search, paging, detail, correction, archive, restore and explicit delete use the real store
+  ---
+  duration_ms: 100.8565
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\management.test.mjs:329:1'
+  failureType: 'testCodeFailure'
+  error: 'memory store is unavailable (ERR_SQLITE_ERROR)'
+  code: 'STORE_UNAVAILABLE'
+  stack: |-
+    failure (file:///E:/dsh/plugin/05-local-memory/plugin/project-registry.mjs:48:17)
+    Object.storeFor (file:///E:/dsh/plugin/05-local-memory/plugin/project-registry.mjs:227:15)
+    seedMemory (file:///E:/dsh/plugin/05-local-memory/tests/management.test.mjs:142:30)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/management.test.mjs:334:3)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: task listing and inspection expose safe states without blind retry
+not ok 141 - task listing and inspection expose safe states without blind retry
+  ---
+  duration_ms: 99.9109
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\management.test.mjs:454:1'
+  failureType: 'testCodeFailure'
+  error: 'memory store is unavailable (ERR_SQLITE_ERROR)'
+  code: 'STORE_UNAVAILABLE'
+  stack: |-
+    failure (file:///E:/dsh/plugin/05-local-memory/plugin/project-registry.mjs:48:17)
+    Object.storeFor (file:///E:/dsh/plugin/05-local-memory/plugin/project-registry.mjs:227:15)
+    enqueueJob (file:///E:/dsh/plugin/05-local-memory/tests/management.test.mjs:440:30)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/management.test.mjs:459:18)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: task cancel requests only a local stop and confirmation releases the unknown lock
+not ok 142 - task cancel requests only a local stop and confirmation releases the unknown lock
+  ---
+  duration_ms: 91.8688
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\management.test.mjs:490:1'
+  failureType: 'testCodeFailure'
+  error: 'memory store is unavailable (ERR_SQLITE_ERROR)'
+  code: 'STORE_UNAVAILABLE'
+  stack: |-
+    failure (file:///E:/dsh/plugin/05-local-memory/plugin/project-registry.mjs:48:17)
+    Object.storeFor (file:///E:/dsh/plugin/05-local-memory/plugin/project-registry.mjs:227:15)
+    enqueueJob (file:///E:/dsh/plugin/05-local-memory/tests/management.test.mjs:440:30)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/management.test.mjs:495:17)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: cancel is honestly unavailable when the queue cannot stop a job
+not ok 143 - cancel is honestly unavailable when the queue cannot stop a job
+  ---
+  duration_ms: 85.1034
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\management.test.mjs:536:1'
+  failureType: 'testCodeFailure'
+  error: 'memory store is unavailable (ERR_SQLITE_ERROR)'
+  code: 'STORE_UNAVAILABLE'
+  stack: |-
+    failure (file:///E:/dsh/plugin/05-local-memory/plugin/project-registry.mjs:48:17)
+    Object.storeFor (file:///E:/dsh/plugin/05-local-memory/plugin/project-registry.mjs:227:15)
+    enqueueJob (file:///E:/dsh/plugin/05-local-memory/tests/management.test.mjs:440:30)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/management.test.mjs:541:18)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: HTTP route enforces transport rules and same-origin, then returns business envelopes
+ok 144 - HTTP route enforces transport rules and same-origin, then returns business envelopes
+  ---
+  duration_ms: 32.8066
+  type: 'test'
+  ...
+# Subtest: HTTP operationId is idempotent for mutations and rejects conflicting payloads
+not ok 145 - HTTP operationId is idempotent for mutations and rejects conflicting payloads
+  ---
+  duration_ms: 80.2862
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\management.test.mjs:641:1'
+  failureType: 'testCodeFailure'
+  error: 'memory store is unavailable (ERR_SQLITE_ERROR)'
+  code: 'STORE_UNAVAILABLE'
+  stack: |-
+    failure (file:///E:/dsh/plugin/05-local-memory/plugin/project-registry.mjs:48:17)
+    Object.storeFor (file:///E:/dsh/plugin/05-local-memory/plugin/project-registry.mjs:227:15)
+    seedMemory (file:///E:/dsh/plugin/05-local-memory/tests/management.test.mjs:142:30)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/management.test.mjs:647:3)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: status and project responses never leak local absolute paths or credentials
+ok 146 - status and project responses never leak local absolute paths or credentials
+  ---
+  duration_ms: 48.1629
+  type: 'test'
+  ...
+# Subtest: client half is a dependency-free classic plugin with locale-complete UI strings
+ok 147 - client half is a dependency-free classic plugin with locale-complete UI strings
+  ---
+  duration_ms: 7.0645
+  type: 'test'
+  ...
+# Subtest: valid Task1 databases require explicit migration and retain their scoped records
+ok 148 - valid Task1 databases require explicit migration and retain their scoped records
+  ---
+  duration_ms: 214.6183
+  type: 'test'
+  ...
+# Subtest: explicit Task1 migration clears legacy deleted FTS segments before serving reads
+ok 149 - explicit Task1 migration clears legacy deleted FTS segments before serving reads
+  ---
+  duration_ms: 115.2542
+  type: 'test'
+  ...
+# Subtest: activation registers tools, command, HTTP route and a ready status
+ok 150 - activation registers tools, command, HTTP route and a ready status
+  ---
+  duration_ms: 201.717
+  type: 'test'
+  ...
+# Subtest: closed loop: extraction persists, recall injects, stale projection blocks dispatch
+not ok 151 - closed loop: extraction persists, recall injects, stale projection blocks dispatch
+  ---
+  duration_ms: 10137.5339
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\plugin-entry.test.mjs:59:1'
+  failureType: 'testCodeFailure'
+  error: 'Timed out waiting for extracted memory'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    waitFor (file:///E:/dsh/plugin/05-local-memory/tests/fake-host.mjs:254:9)
+    async TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/plugin-entry.test.mjs:63:19)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: an unbound session keeps chatting, enqueues nothing and recalls nothing
+not ok 152 - an unbound session keeps chatting, enqueues nothing and recalls nothing
+  ---
+  duration_ms: 480.5097
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\plugin-entry.test.mjs:103:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    {"ok":false,"error":{"code":"STORE_UNAVAILABLE","message":"The operation could not be completed"}}
+    
+    false !== true
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/plugin-entry.test.mjs:111:10)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: user-only memory actions are refused for model callers
+ok 153 - user-only memory actions are refused for model callers
+  ---
+  duration_ms: 67.0445
+  type: 'test'
+  ...
+# Subtest: /memory register binds the current working directory as a new project
+not ok 154 - /memory register binds the current working directory as a new project
+  ---
+  duration_ms: 10125.7692
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\plugin-entry.test.mjs:127:1'
+  failureType: 'testCodeFailure'
+  error: 'Timed out waiting for second project memory'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    waitFor (file:///E:/dsh/plugin/05-local-memory/tests/fake-host.mjs:254:9)
+    async TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/plugin-entry.test.mjs:137:19)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: activation-owned listeners, routes and tools are released on dispose and can be reinstalled
+ok 155 - activation-owned listeners, routes and tools are released on dispose and can be reinstalled
+  ---
+  duration_ms: 87.904
+  type: 'test'
+  ...
+# Subtest: annual draft and proof reminder are wired through the same admission
+not ok 156 - annual draft and proof reminder are wired through the same admission
+  ---
+  duration_ms: 15075.4963
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\plugin-entry.test.mjs:160:1'
+  failureType: 'testCodeFailure'
+  error: 'Timed out waiting for annual draft'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    waitFor (file:///E:/dsh/plugin/05-local-memory/tests/fake-host.mjs:254:9)
+    async TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/plugin-entry.test.mjs:164:19)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: registry seeds declared projects and resolves trusted session bindings
+ok 157 - registry seeds declared projects and resolves trusted session bindings
+  ---
+  duration_ms: 98.9317
+  type: 'test'
+  ...
+# Subtest: the most specific registered worktree wins and unregistered paths stay unbound
+ok 158 - the most specific registered worktree wins and unregistered paths stay unbound
+  ---
+  duration_ms: 160.5511
+  type: 'test'
+  ...
+# Subtest: user registration adds a binding and duplicate names with another binding are refused
+ok 159 - user registration adds a binding and duplicate names with another binding are refused
+  ---
+  duration_ms: 135.7666
+  type: 'test'
+  ...
+# Subtest: stores persist across registry reopen and preferences follow project revisions
+not ok 160 - stores persist across registry reopen and preferences follow project revisions
+  ---
+  duration_ms: 3485.1654
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\project-registry.test.mjs:107:1'
+  failureType: 'testCodeFailure'
+  error: 'memory store is unavailable (ERR_SQLITE_ERROR)'
+  code: 'STORE_UNAVAILABLE'
+  stack: |-
+    failure (file:///E:/dsh/plugin/05-local-memory/plugin/project-registry.mjs:48:17)
+    Object.storeFor (file:///E:/dsh/plugin/05-local-memory/plugin/project-registry.mjs:227:15)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/project-registry.test.mjs:114:23)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: retirement stops session binding while keeping the memory store readable
+not ok 161 - retirement stops session binding while keeping the memory store readable
+  ---
+  duration_ms: 47.7364
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\project-registry.test.mjs:129:1'
+  failureType: 'testCodeFailure'
+  error: 'memory store is unavailable (ERR_SQLITE_ERROR)'
+  code: 'STORE_UNAVAILABLE'
+  stack: |-
+    failure (file:///E:/dsh/plugin/05-local-memory/plugin/project-registry.mjs:48:17)
+    Object.storeFor (file:///E:/dsh/plugin/05-local-memory/plugin/project-registry.mjs:227:15)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/project-registry.test.mjs:136:12)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: a changed static configuration is reported as degraded instead of silently rebinding
+ok 162 - a changed static configuration is reported as degraded instead of silently rebinding
+  ---
+  duration_ms: 50.3432
+  type: 'test'
+  ...
+# Subtest: closing the registry closes its stores and refuses later access
+not ok 163 - closing the registry closes its stores and refuses later access
+  ---
+  duration_ms: 3440.4753
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\project-registry.test.mjs:169:1'
+  failureType: 'testCodeFailure'
+  error: 'memory store is unavailable (ERR_SQLITE_ERROR)'
+  code: 'STORE_UNAVAILABLE'
+  stack: |-
+    failure (file:///E:/dsh/plugin/05-local-memory/plugin/project-registry.mjs:48:17)
+    Object.storeFor (file:///E:/dsh/plugin/05-local-memory/plugin/project-registry.mjs:227:15)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/project-registry.test.mjs:175:26)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: catalog creates an identity anchor and refuses a replaced identity
+ok 164 - catalog creates an identity anchor and refuses a replaced identity
+  ---
+  duration_ms: 42.1551
+  type: 'test'
+  ...
+# Subtest: project registration is idempotent and rejects a conflicting binding
+ok 165 - project registration is idempotent and rejects a conflicting binding
+  ---
+  duration_ms: 42.5208
+  type: 'test'
+  ...
+# Subtest: a concrete scope cannot be registered by two projects
+ok 166 - a concrete scope cannot be registered by two projects
+  ---
+  duration_ms: 35.9052
+  type: 'test'
+  ...
+# Subtest: updates advance binding revisions and retire removed repositories without deleting them
+ok 167 - updates advance binding revisions and retire removed repositories without deleting them
+  ---
+  duration_ms: 60.4145
+  type: 'test'
+  ...
+# Subtest: retirement is terminal for edits but keeps repositories and memory identity
+ok 168 - retirement is terminal for edits but keeps repositories and memory identity
+  ---
+  duration_ms: 47.8624
+  type: 'test'
+  ...
+# Subtest: preferences persist and are revision-checked
+ok 169 - preferences persist and are revision-checked
+  ---
+  duration_ms: 53.2249
+  type: 'test'
+  ...
+# Subtest: operation idempotency caches results and rejects a changed payload
+ok 170 - operation idempotency caches results and rejects a changed payload
+  ---
+  duration_ms: 27.5904
+  type: 'test'
+  ...
+# Subtest: reopened catalog preserves projects, bindings and preferences
+ok 171 - reopened catalog preserves projects, bindings and preferences
+  ---
+  duration_ms: 42.3132
+  type: 'test'
+  ...
+# Subtest: reminders record the last shown timestamp per claim and version
+ok 172 - reminders record the last shown timestamp per claim and version
+  ---
+  duration_ms: 27.7766
+  type: 'test'
+  ...
+# Subtest: catalog reports a stable schema version and rejects a foreign schema file
+ok 173 - catalog reports a stable schema version and rejects a foreign schema file
+  ---
+  duration_ms: 9.0241
+  type: 'test'
+  ...
+# Subtest: proof reminders append at most one short message, dedupe for 24h and list at most three records
+not ok 174 - proof reminders append at most one short message, dedupe for 24h and list at most three records
+  ---
+  duration_ms: 71.0086
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\proof-reminders.test.mjs:133:1'
+  failureType: 'testCodeFailure'
+  error: 'unable to open database file'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    openStore (file:///E:/dsh/plugin/05-local-memory/src/backend.mjs:18:11)
+    fixture (file:///E:/dsh/plugin/05-local-memory/tests/proof-reminders.test.mjs:53:17)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/proof-reminders.test.mjs:134:13)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.start (node:internal/test_runner/test:1262:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: a new record generation re-arms the reminder immediately
+not ok 175 - a new record generation re-arms the reminder immediately
+  ---
+  duration_ms: 50.2952
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\proof-reminders.test.mjs:174:1'
+  failureType: 'testCodeFailure'
+  error: 'unable to open database file'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    openStore (file:///E:/dsh/plugin/05-local-memory/src/backend.mjs:18:11)
+    fixture (file:///E:/dsh/plugin/05-local-memory/tests/proof-reminders.test.mjs:53:17)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/proof-reminders.test.mjs:175:13)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: defer and disable state persist in the catalog and suppress reminders exactly as written
+not ok 176 - defer and disable state persist in the catalog and suppress reminders exactly as written
+  ---
+  duration_ms: 57.2893
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\proof-reminders.test.mjs:187:1'
+  failureType: 'testCodeFailure'
+  error: 'unable to open database file'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    openStore (file:///E:/dsh/plugin/05-local-memory/src/backend.mjs:18:11)
+    fixture (file:///E:/dsh/plugin/05-local-memory/tests/proof-reminders.test.mjs:53:17)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/proof-reminders.test.mjs:188:13)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: a project-wide reminder disable and the global config switch suppress reminders
+not ok 177 - a project-wide reminder disable and the global config switch suppress reminders
+  ---
+  duration_ms: 50.9815
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\proof-reminders.test.mjs:213:1'
+  failureType: 'testCodeFailure'
+  error: 'unable to open database file'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    openStore (file:///E:/dsh/plugin/05-local-memory/src/backend.mjs:18:11)
+    fixture (file:///E:/dsh/plugin/05-local-memory/tests/proof-reminders.test.mjs:53:17)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/proof-reminders.test.mjs:214:13)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: reminder failures never block or alter the main chat request
+not ok 178 - reminder failures never block or alter the main chat request
+  ---
+  duration_ms: 54.4498
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\proof-reminders.test.mjs:227:1'
+  failureType: 'testCodeFailure'
+  error: 'unable to open database file'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    openStore (file:///E:/dsh/plugin/05-local-memory/src/backend.mjs:18:11)
+    fixture (file:///E:/dsh/plugin/05-local-memory/tests/proof-reminders.test.mjs:53:17)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/proof-reminders.test.mjs:228:13)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: non-enter decisions, aborted signals and unbound sessions are returned untouched
+not ok 179 - non-enter decisions, aborted signals and unbound sessions are returned untouched
+  ---
+  duration_ms: 50.1036
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\proof-reminders.test.mjs:243:1'
+  failureType: 'testCodeFailure'
+  error: 'unable to open database file'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    openStore (file:///E:/dsh/plugin/05-local-memory/src/backend.mjs:18:11)
+    fixture (file:///E:/dsh/plugin/05-local-memory/tests/proof-reminders.test.mjs:53:17)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/proof-reminders.test.mjs:244:13)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: dispose detaches the listener and is idempotent
+not ok 180 - dispose detaches the listener and is idempotent
+  ---
+  duration_ms: 50.3812
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\proof-reminders.test.mjs:263:1'
+  failureType: 'testCodeFailure'
+  error: 'unable to open database file'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    openStore (file:///E:/dsh/plugin/05-local-memory/src/backend.mjs:18:11)
+    fixture (file:///E:/dsh/plugin/05-local-memory/tests/proof-reminders.test.mjs:53:17)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/proof-reminders.test.mjs:264:13)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: reminders follow the persisted pending state: reviewed proof and confirmed claims stop the reminder
+not ok 181 - reminders follow the persisted pending state: reviewed proof and confirmed claims stop the reminder
+  ---
+  duration_ms: 46.9292
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\proof-reminders.test.mjs:276:1'
+  failureType: 'testCodeFailure'
+  error: 'unable to open database file'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    openStore (file:///E:/dsh/plugin/05-local-memory/src/backend.mjs:18:11)
+    fixture (file:///E:/dsh/plugin/05-local-memory/tests/proof-reminders.test.mjs:53:17)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/proof-reminders.test.mjs:277:13)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: report draft fixes the time range, lists pending proofs and never invents dimensions or confirmations
+not ok 182 - report draft fixes the time range, lists pending proofs and never invents dimensions or confirmations
+  ---
+  duration_ms: 90.431
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\reports.test.mjs:92:1'
+  failureType: 'testCodeFailure'
+  error: 'unable to open database file'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    openStore (file:///E:/dsh/plugin/05-local-memory/src/backend.mjs:18:11)
+    Object.register (file:///E:/dsh/plugin/05-local-memory/tests/reports.test.mjs:37:23)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/reports.test.mjs:94:21)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.start (node:internal/test_runner/test:1262:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: draft is deterministic for the same fixed clock and content
+not ok 183 - draft is deterministic for the same fixed clock and content
+  ---
+  duration_ms: 77.6501
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\reports.test.mjs:125:1'
+  failureType: 'testCodeFailure'
+  error: 'unable to open database file'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    openStore (file:///E:/dsh/plugin/05-local-memory/src/backend.mjs:18:11)
+    Object.register (file:///E:/dsh/plugin/05-local-memory/tests/reports.test.mjs:37:23)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/reports.test.mjs:127:21)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: approve binds the report digest and each source work generation; mismatches are REPORT_STALE
+not ok 184 - approve binds the report digest and each source work generation; mismatches are REPORT_STALE
+  ---
+  duration_ms: 69.053
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\reports.test.mjs:136:1'
+  failureType: 'testCodeFailure'
+  error: 'unable to open database file'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    openStore (file:///E:/dsh/plugin/05-local-memory/src/backend.mjs:18:11)
+    Object.register (file:///E:/dsh/plugin/05-local-memory/tests/reports.test.mjs:37:23)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/reports.test.mjs:138:21)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: unapproved export is marked as draft and writes Markdown and JSON without absolute paths
+not ok 185 - unapproved export is marked as draft and writes Markdown and JSON without absolute paths
+  ---
+  duration_ms: 65.9218
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\reports.test.mjs:166:1'
+  failureType: 'testCodeFailure'
+  error: 'unable to open database file'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    openStore (file:///E:/dsh/plugin/05-local-memory/src/backend.mjs:18:11)
+    Object.register (file:///E:/dsh/plugin/05-local-memory/tests/reports.test.mjs:37:23)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/reports.test.mjs:168:21)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: approved export is final, includes references and rejects changed sources
+not ok 186 - approved export is final, includes references and rejects changed sources
+  ---
+  duration_ms: 68.0658
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\reports.test.mjs:210:1'
+  failureType: 'testCodeFailure'
+  error: 'unable to open database file'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    openStore (file:///E:/dsh/plugin/05-local-memory/src/backend.mjs:18:11)
+    Object.register (file:///E:/dsh/plugin/05-local-memory/tests/reports.test.mjs:37:23)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/reports.test.mjs:212:21)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: report draft keeps evidence references stable without local paths and never upgrades support
+not ok 187 - report draft keeps evidence references stable without local paths and never upgrades support
+  ---
+  duration_ms: 61.4045
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\reports.test.mjs:230:1'
+  failureType: 'testCodeFailure'
+  error: 'unable to open database file'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    openStore (file:///E:/dsh/plugin/05-local-memory/src/backend.mjs:18:11)
+    Object.register (file:///E:/dsh/plugin/05-local-memory/tests/reports.test.mjs:37:23)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/reports.test.mjs:236:21)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: explicit work references must be live, inside the range and inside the selected projects
+not ok 188 - explicit work references must be live, inside the range and inside the selected projects
+  ---
+  duration_ms: 55.6992
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\reports.test.mjs:262:1'
+  failureType: 'testCodeFailure'
+  error: 'unable to open database file'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    openStore (file:///E:/dsh/plugin/05-local-memory/src/backend.mjs:18:11)
+    Object.register (file:///E:/dsh/plugin/05-local-memory/tests/reports.test.mjs:37:23)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/reports.test.mjs:264:21)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: only active registered projects are selected and retired or unknown projects are refused
+not ok 189 - only active registered projects are selected and retired or unknown projects are refused
+  ---
+  duration_ms: 62.4468
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\reports.test.mjs:279:1'
+  failureType: 'testCodeFailure'
+  error: 'unable to open database file'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    openStore (file:///E:/dsh/plugin/05-local-memory/src/backend.mjs:18:11)
+    Object.register (file:///E:/dsh/plugin/05-local-memory/tests/reports.test.mjs:37:23)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/reports.test.mjs:281:21)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: report time ranges reject malformed or reversed bounds
+not ok 190 - report time ranges reject malformed or reversed bounds
+  ---
+  duration_ms: 52.1674
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\reports.test.mjs:296:1'
+  failureType: 'testCodeFailure'
+  error: 'unable to open database file'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    openStore (file:///E:/dsh/plugin/05-local-memory/src/backend.mjs:18:11)
+    Object.register (file:///E:/dsh/plugin/05-local-memory/tests/reports.test.mjs:37:23)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/reports.test.mjs:298:21)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: catalog-backed reminder state supports 24h dedupe, defer and disable semantics
+not ok 191 - catalog-backed reminder state supports 24h dedupe, defer and disable semantics
+  ---
+  duration_ms: 50.6
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\reports.test.mjs:306:1'
+  failureType: 'testCodeFailure'
+  error: 'unable to open database file'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    openStore (file:///E:/dsh/plugin/05-local-memory/src/backend.mjs:18:11)
+    Object.register (file:///E:/dsh/plugin/05-local-memory/tests/reports.test.mjs:37:23)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/reports.test.mjs:308:21)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: start recovers an interrupted running job and never re-dispatches it
+ok 192 - start recovers an interrupted running job and never re-dispatches it
+  ---
+  duration_ms: 262.4785
+  type: 'test'
+  ...
+# Subtest: tick executes the oldest queued job first and leaves the rest queued
+ok 193 - tick executes the oldest queued job first and leaves the rest queued
+  ---
+  duration_ms: 427.5687
+  type: 'test'
+  ...
+# Subtest: global concurrency one keeps a second scope queued instead of dispatching twice
+ok 194 - global concurrency one keeps a second scope queued instead of dispatching twice
+  ---
+  duration_ms: 367.6486
+  type: 'test'
+  ...
+# Subtest: an outcome_unknown job is never re-sent and keeps the root dispatch gate held
+ok 195 - an outcome_unknown job is never re-sent and keeps the root dispatch gate held
+  ---
+  duration_ms: 184.3375
+  type: 'test'
+  ...
+# Subtest: stop aborts the current run, is idempotent and stops further polling
+ok 196 - stop aborts the current run, is idempotent and stops further polling
+  ---
+  duration_ms: 280.8996
+  type: 'test'
+  ...
+# Subtest: start and tick never throw when the registry or a queue is unavailable
+ok 197 - start and tick never throw when the registry or a queue is unavailable
+  ---
+  duration_ms: 0.4927
+  type: 'test'
+  ...
+# Subtest: status reports pending scopes before polling and bounded diagnostics after one tick
+ok 198 - status reports pending scopes before polling and bounded diagnostics after one tick
+  ---
+  duration_ms: 165.7407
+  type: 'test'
+  ...
+# Subtest: recoverOnStart can be disabled without touching a running job
+ok 199 - recoverOnStart can be disabled without touching a running job
+  ---
+  duration_ms: 112.5068
+  type: 'test'
+  ...
+# Subtest: queue pending/list views are read-only, bounded and oldest first
+ok 200 - queue pending/list views are read-only, bounded and oldest first
+  ---
+  duration_ms: 95.8627
+  type: 'test'
+  ...
+# Subtest: only an accepted current user event enqueues and repeated delivery spends one reservation
+ok 201 - only an accepted current user event enqueues and repeated delivery spends one reservation
+  ---
+  duration_ms: 242.0778
+  type: 'test'
+  ...
+# Subtest: claimed rejection and claimed-only messages never enqueue or add recall
+ok 202 - claimed rejection and claimed-only messages never enqueue or add recall
+  ---
+  duration_ms: 132.0907
+  type: 'test'
+  ...
+# Subtest: same message ID with edited text or a second event sequence is refused as a new source
+ok 203 - same message ID with edited text or a second event sequence is refused as a new source
+  ---
+  duration_ms: 178.0409
+  type: 'test'
+  ...
+# Subtest: unapproved user tags and non-user producer classes do not gain extraction permission
+ok 204 - unapproved user tags and non-user producer classes do not gain extraction permission
+  ---
+  duration_ms: 76.083
+  type: 'test'
+  ...
+# Subtest: attachments, secret-like text, oversized input and unsupported source data are not partly extracted
+ok 205 - attachments, secret-like text, oversized input and unsupported source data are not partly extracted
+  ---
+  duration_ms: 63.056
+  type: 'test'
+  ...
+# Subtest: a forged event object or replay into an unapproved session cannot reuse an admission
+ok 206 - a forged event object or replay into an unapproved session cannot reuse an admission
+  ---
+  duration_ms: 111.3694
+  type: 'test'
+  ...
+# Subtest: a delayed A event cannot be rebound to a newly selected B scope
+ok 207 - a delayed A event cannot be rebound to a newly selected B scope
+  ---
+  duration_ms: 79.6461
+  type: 'test'
+  ...
+# Subtest: post-enqueue permission revocation rolls back jobs, plaintext and budget together
+ok 208 - post-enqueue permission revocation rolls back jobs, plaintext and budget together
+  ---
+  duration_ms: 86.7477
+  type: 'test'
+  ...
+# Subtest: a foreign queue is refused before any cross-store write
+ok 209 - a foreign queue is refused before any cross-store write
+  ---
+  duration_ms: 61.3633
+  type: 'test'
+  ...
+# Subtest: recall preserves the final decision and injects only ordinary active memory once
+ok 210 - recall preserves the final decision and injects only ordinary active memory once
+  ---
+  duration_ms: 145.2324
+  type: 'test'
+  ...
+# Subtest: replaced or removed claimed input cannot become a historical fallback query
+ok 211 - replaced or removed claimed input cannot become a historical fallback query
+  ---
+  duration_ms: 118.8802
+  type: 'test'
+  ...
+# Subtest: scope and authorization changes while next is awaiting never inject the old scope
+ok 212 - scope and authorization changes while next is awaiting never inject the old scope
+  ---
+  duration_ms: 118.0033
+  type: 'test'
+  ...
+# Subtest: uncommitted reentry keeps identity but deletion removes old recalled body instead of caching it
+ok 213 - uncommitted reentry keeps identity but deletion removes old recalled body instead of caching it
+  ---
+  duration_ms: 255.8482
+  type: 'test'
+  ...
+# Subtest: changed recalled content gets a new injection ID rather than reusing the old body identity
+ok 214 - changed recalled content gets a new injection ID rather than reusing the old body identity
+  ---
+  duration_ms: 227.6692
+  type: 'test'
+  ...
+# Subtest: only an exact self-commit receipt suppresses reentry and never enqueues the recalled content
+ok 215 - only an exact self-commit receipt suppresses reentry and never enqueues the recalled content
+  ---
+  duration_ms: 257.8258
+  type: 'test'
+  ...
+# Subtest: same-root sibling fibers and a second module copy cannot install duplicate writers
+ok 216 - same-root sibling fibers and a second module copy cannot install duplicate writers
+  ---
+  duration_ms: 84.1856
+  type: 'test'
+  ...
+# Subtest: dispose drops not-yet-admitted material and late callbacks but reports durable queued material retained
+ok 217 - dispose drops not-yet-admitted material and late callbacks but reports durable queued material retained
+  ---
+  duration_ms: 90.7857
+  type: 'test'
+  ...
+# Subtest: retrieval or authorization failures never return a previous recalled body or raw diagnostic error
+ok 218 - retrieval or authorization failures never return a previous recalled body or raw diagnostic error
+  ---
+  duration_ms: 122.7744
+  type: 'test'
+  ...
+# Subtest: non-canonical session IDs and asynchronous authority callbacks fail closed
+ok 219 - non-canonical session IDs and asynchronous authority callbacks fail closed
+  ---
+  duration_ms: 52.6754
+  type: 'test'
+  ...
+# Subtest: partial installation failure removes every listener and does not reserve the owner
+ok 220 - partial installation failure removes every listener and does not reserve the owner
+  ---
+  duration_ms: 80.1502
+  type: 'test'
+  ...
+# Subtest: pending capacity, cumulative body size and expired admission do not create extra jobs
+ok 221 - pending capacity, cumulative body size and expired admission do not create extra jobs
+  ---
+  duration_ms: 190.1323
+  type: 'test'
+  ...
+# Subtest: recall bounds skip whole records and never search work summaries or session history
+ok 222 - recall bounds skip whole records and never search work summaries or session history
+  ---
+  duration_ms: 175.9295
+  type: 'test'
+  ...
+# Subtest: evicted recall metadata does not retain body or reuse a different cached message identity
+ok 223 - evicted recall metadata does not retain body or reuse a different cached message identity
+  ---
+  duration_ms: 170.703
+  type: 'test'
+  ...
+# Subtest: an asynchronous rejected message factory is observed and cannot leak its raw failure
+ok 224 - an asynchronous rejected message factory is observed and cannot leak its raw failure
+  ---
+  duration_ms: 100.7828
+  type: 'test'
+  ...
+# Subtest: configuration cannot enlarge the promised recall or admission lifetime bounds
+ok 225 - configuration cannot enlarge the promised recall or admission lifetime bounds
+  ---
+  duration_ms: 94.553
+  type: 'test'
+  ...
+# Subtest: admission accepts fixed source and refuses another host or runtime
+ok 226 - admission accepts fixed source and refuses another host or runtime
+  ---
+  duration_ms: 11.9852
+  type: 'test'
+  ...
+# Subtest: changed vendor bytes fail before any vendor code can load
+ok 227 - changed vendor bytes fail before any vendor code can load
+  ---
+  duration_ms: 98.8632
+  type: 'test'
+  ...
+# Subtest: undeclared executable file and removed license are rejected
+ok 228 - undeclared executable file and removed license are rejected
+  ---
+  duration_ms: 100.9861
+  type: 'test'
+  ...
+# Subtest: a lock cannot introduce an alternative vendor or network module
+ok 229 - a lock cannot introduce an alternative vendor or network module
+  ---
+  duration_ms: 72.2112
+  type: 'test'
+  ...
+# Subtest: backend import verifies bytes before a modified vendor can cause a side effect
+ok 230 - backend import verifies bytes before a modified vendor can cause a side effect
+  ---
+  duration_ms: 295.1424
+  type: 'test'
+  ...
+# Subtest: work operations expose exactly the contracted operation map
+ok 231 - work operations expose exactly the contracted operation map
+  ---
+  duration_ms: 35.5824
+  type: 'test'
+  ...
+# Subtest: model actors may list/get/draft reports but cannot confirm, merge, read evidence, approve or export
+not ok 232 - model actors may list/get/draft reports but cannot confirm, merge, read evidence, approve or export
+  ---
+  duration_ms: 66.7483
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\work-management.test.mjs:97:1'
+  failureType: 'testCodeFailure'
+  error: 'unable to open database file'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    openStore (file:///E:/dsh/plugin/05-local-memory/src/backend.mjs:18:11)
+    Object.register (file:///E:/dsh/plugin/05-local-memory/tests/work-management.test.mjs:40:21)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/work-management.test.mjs:99:21)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: user confirmations persist and responses never expose local paths or secrets
+not ok 233 - user confirmations persist and responses never expose local paths or secrets
+  ---
+  duration_ms: 67.0598
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\work-management.test.mjs:132:1'
+  failureType: 'testCodeFailure'
+  error: 'unable to open database file'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    openStore (file:///E:/dsh/plugin/05-local-memory/src/backend.mjs:18:11)
+    Object.register (file:///E:/dsh/plugin/05-local-memory/tests/work-management.test.mjs:40:21)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/work-management.test.mjs:134:21)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: explicit approval.request gates evidence content reads
+not ok 234 - explicit approval.request gates evidence content reads
+  ---
+  duration_ms: 58.5931
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\work-management.test.mjs:175:1'
+  failureType: 'testCodeFailure'
+  error: 'unable to open database file'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    openStore (file:///E:/dsh/plugin/05-local-memory/src/backend.mjs:18:11)
+    Object.register (file:///E:/dsh/plugin/05-local-memory/tests/work-management.test.mjs:40:21)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/work-management.test.mjs:177:21)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: extras handlers return synchronous envelopes for the management dispatcher
+not ok 235 - extras handlers return synchronous envelopes for the management dispatcher
+  ---
+  duration_ms: 56.4272
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\work-management.test.mjs:212:1'
+  failureType: 'testCodeFailure'
+  error: 'unable to open database file'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    openStore (file:///E:/dsh/plugin/05-local-memory/src/backend.mjs:18:11)
+    Object.register (file:///E:/dsh/plugin/05-local-memory/tests/work-management.test.mjs:40:21)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/work-management.test.mjs:214:21)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: an async approval service cannot block the synchronous dispatcher; pre-resolved user confirmation works
+not ok 236 - an async approval service cannot block the synchronous dispatcher; pre-resolved user confirmation works
+  ---
+  duration_ms: 55.1088
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\work-management.test.mjs:228:1'
+  failureType: 'testCodeFailure'
+  error: 'unable to open database file'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    openStore (file:///E:/dsh/plugin/05-local-memory/src/backend.mjs:18:11)
+    Object.register (file:///E:/dsh/plugin/05-local-memory/tests/work-management.test.mjs:40:21)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/work-management.test.mjs:230:21)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: project scope resolution works across repositories and from the trusted session binding
+not ok 237 - project scope resolution works across repositories and from the trusted session binding
+  ---
+  duration_ms: 63.6445
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\work-management.test.mjs:254:1'
+  failureType: 'testCodeFailure'
+  error: 'unable to open database file'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    openStore (file:///E:/dsh/plugin/05-local-memory/src/backend.mjs:18:11)
+    Object.register (file:///E:/dsh/plugin/05-local-memory/tests/work-management.test.mjs:40:21)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/work-management.test.mjs:256:18)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: report operations delegate to the catalog-backed report manager
+not ok 238 - report operations delegate to the catalog-backed report manager
+  ---
+  duration_ms: 57.1172
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\work-management.test.mjs:281:1'
+  failureType: 'testCodeFailure'
+  error: 'unable to open database file'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    openStore (file:///E:/dsh/plugin/05-local-memory/src/backend.mjs:18:11)
+    Object.register (file:///E:/dsh/plugin/05-local-memory/tests/work-management.test.mjs:40:21)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/work-management.test.mjs:283:21)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: reminder.defer and reminder.disable write persisted catalog state with the documented cooldown semantics
+not ok 239 - reminder.defer and reminder.disable write persisted catalog state with the documented cooldown semantics
+  ---
+  duration_ms: 48.3414
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\work-management.test.mjs:306:1'
+  failureType: 'testCodeFailure'
+  error: 'unable to open database file'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    openStore (file:///E:/dsh/plugin/05-local-memory/src/backend.mjs:18:11)
+    Object.register (file:///E:/dsh/plugin/05-local-memory/tests/work-management.test.mjs:40:21)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/work-management.test.mjs:308:21)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: stale generations and unknown records map to safe resource codes without leaking internals
+not ok 240 - stale generations and unknown records map to safe resource codes without leaking internals
+  ---
+  duration_ms: 43.9706
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\work-management.test.mjs:332:1'
+  failureType: 'testCodeFailure'
+  error: 'unable to open database file'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    openStore (file:///E:/dsh/plugin/05-local-memory/src/backend.mjs:18:11)
+    Object.register (file:///E:/dsh/plugin/05-local-memory/tests/work-management.test.mjs:40:21)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/work-management.test.mjs:334:21)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: work/report operations dispatch through the real management extras envelope
+not ok 241 - work/report operations dispatch through the real management extras envelope
+  ---
+  duration_ms: 44.4507
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\work-management.test.mjs:352:1'
+  failureType: 'testCodeFailure'
+  error: 'unable to open database file'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    openStore (file:///E:/dsh/plugin/05-local-memory/src/backend.mjs:18:11)
+    Object.register (file:///E:/dsh/plugin/05-local-memory/tests/work-management.test.mjs:40:21)
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/work-management.test.mjs:354:21)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: manual work drafts persist independently with unknown dates and missing proof
+ok 242 - manual work drafts persist independently with unknown dates and missing proof
+  ---
+  duration_ms: 194.4679
+  type: 'test'
+  ...
+# Subtest: a model supplied calendar date remains inferred and pending until explicit user confirmation
+ok 243 - a model supplied calendar date remains inferred and pending until explicit user confirmation
+  ---
+  duration_ms: 171.8276
+  type: 'test'
+  ...
+# Subtest: contradictory dates remain visible without overwriting a confirmed date and replay is a no-op
+ok 244 - contradictory dates remain visible without overwriting a confirmed date and replay is a no-op
+  ---
+  duration_ms: 176.5835
+  type: 'test'
+  ...
+# Subtest: goal and association changes become explicit candidates instead of disappearing from a merge
+ok 245 - goal and association changes become explicit candidates instead of disappearing from a merge
+  ---
+  duration_ms: 96.2932
+  type: 'test'
+  ...
+# Subtest: evidence registration never certifies claims; explicit review is limited to one claim and version
+ok 246 - evidence registration never certifies claims; explicit review is limited to one claim and version
+  ---
+  duration_ms: 193.5861
+  type: 'test'
+  ...
+# Subtest: source replay avoids duplicate items and model merges preserve user confirmation
+ok 247 - source replay avoids duplicate items and model merges preserve user confirmation
+  ---
+  duration_ms: 162.2899
+  type: 'test'
+  ...
+# Subtest: replaying the same work merge does not advance lifecycle epoch or content revision
+ok 248 - replaying the same work merge does not advance lifecycle epoch or content revision
+  ---
+  duration_ms: 97.53
+  type: 'test'
+  ...
+# Subtest: a new version of the same source anchor requires a revision rather than a new work item
+ok 249 - a new version of the same source anchor requires a revision rather than a new work item
+  ---
+  duration_ms: 129.7509
+  type: 'test'
+  ...
+# Subtest: reviewing a new version for one claim cannot refresh another claims obsolete proof
+ok 250 - reviewing a new version for one claim cannot refresh another claims obsolete proof
+  ---
+  duration_ms: 171.1381
+  type: 'test'
+  ...
+# Subtest: registering the same document for another claim extends links without increasing proof count
+ok 251 - registering the same document for another claim extends links without increasing proof count
+  ---
+  duration_ms: 127.075
+  type: 'test'
+  ...
+# Subtest: revoked proof read authorization prevents automatic content revalidation
+ok 252 - revoked proof read authorization prevents automatic content revalidation
+  ---
+  duration_ms: 120.2286
+  type: 'test'
+  ...
+# Subtest: work forget, source invalidation and restore use the same independent authority
+ok 253 - work forget, source invalidation and restore use the same independent authority
+  ---
+  duration_ms: 159.1001
+  type: 'test'
+  ...
+1..253
+# tests 253
+# suites 0
+# pass 211
+# fail 42
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 36786.101

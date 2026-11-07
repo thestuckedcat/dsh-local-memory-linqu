@@ -1,0 +1,59 @@
+{
+  "startedAtUtc": "2026-11-06T04:28:04.434Z",
+  "durationMs": 1071.0754,
+  "args": [
+    "--expose-internals",
+    "--require",
+    "E:\\dsh\\plugin\\05-local-memory\\tools\\host-api\\deny-network.cjs",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "--test-reporter-destination=E:\\dsh\\plugin\\05-local-memory\\evidence\\task3-hooks-native-independent-review.tap",
+    "E:\\dsh\\plugin\\05-local-memory\\tools\\host-api\\hooks.test.mjs"
+  ],
+  "exitCode": 0,
+  "summary": {
+    "tests": 8,
+    "pass": 8,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "tapSha256": "9dfc5eeab6bd6c483bfa5649f29632f698b877818c9e5cc69654fe33732b2e16",
+  "artifacts": [
+    {
+      "path": "plugin/session-hooks.mjs",
+      "sha256": "e435937e689d5a3b31fa428a91700e4cdcdb2e3ccfbbe77461ebac1d4d60f07a"
+    },
+    {
+      "path": "src/jobs.mjs",
+      "sha256": "1975abc317465c4ae14ad12038e13217ce6031b03a4956e23bf19912829f449b"
+    },
+    {
+      "path": "tests/session-hooks.test.mjs",
+      "sha256": "48e0df749ef972d8e572fef0207fa8c884401b15471bfb24656f8a25d1652fcd"
+    },
+    {
+      "path": "tools/host-api/hooks.test.mjs",
+      "sha256": "f8e278e07eec760c249f804f5eb4293972694ee6e3a22d9a5409b63bbb0ab7bf"
+    }
+  ],
+  "separateSurfaceProof": {
+    "startedAtUtc": "2026-11-06T04:25:55.894Z",
+    "exitCode": 0,
+    "stdout": "{\"checkedSourceFiles\":7,\"allSourceBytesMatch\":true,\"returnedDeltaLength\":1,\"returnedRecallCount\":0,\"surfaceNodesBefore\":1,\"surfaceNodesAfter\":1,\"originalRecallRetained\":true}\n",
+    "stderr": "",
+    "productionArtifacts": [
+      {
+        "path": "plugin/session-hooks.mjs",
+        "sha256": "e435937e689d5a3b31fa428a91700e4cdcdb2e3ccfbbe77461ebac1d4d60f07a"
+      },
+      {
+        "path": "src/jobs.mjs",
+        "sha256": "1975abc317465c4ae14ad12038e13217ce6031b03a4956e23bf19912829f449b"
+      }
+    ]
+  },
+  "scope": "Independent installed-library hooks with synthetic subjects/adapters; no real profile, Provider, scheduler, or final wire gate certification"
+}

@@ -1,0 +1,127 @@
+TAP version 13
+# Subtest: execution is denied by default even for an intact queued job and approved model route
+not ok 1 - execution is denied by default even for an intact queued job and approved model route
+  ---
+  duration_ms: 107.2064
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\execution-authorization.test.mjs:20:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/execution-authorization.test.mjs:22:50)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: revoking a queued admission prevents dispatch and discards the durable input
+not ok 2 - revoking a queued admission prevents dispatch and discards the durable input
+  ---
+  duration_ms: 87.4988
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\execution-authorization.test.mjs:25:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/execution-authorization.test.mjs:27:50)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: permission revoked in flight returns unknown, retains quarantine, and ignores late output
+ok 3 - permission revoked in flight returns unknown, retains quarantine, and ignores late output
+  ---
+  duration_ms: 10117.9652
+  type: 'test'
+  ...
+# Subtest: a changed approval after model completion cannot commit ordinary or annual output
+not ok 4 - a changed approval after model completion cannot commit ordinary or annual output
+  ---
+  duration_ms: 88.3621
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\execution-authorization.test.mjs:39:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected "actual" to be strictly unequal to:
+    
+    'completed'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'completed'
+  actual: 'completed'
+  operator: 'notStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/execution-authorization.test.mjs:42:56)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: authorization callbacks receive immutable task identity without plaintext
+not ok 5 - authorization callbacks receive immutable task identity without plaintext
+  ---
+  duration_ms: 87.5916
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\execution-authorization.test.mjs:46:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok(h.checks.length>=3)
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/execution-authorization.test.mjs:48:9)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: invalid, throwing or asynchronous execution authority is observed and fails closed
+not ok 6 - invalid, throwing or asynchronous execution authority is observed and fails closed
+  ---
+  duration_ms: 84.7988
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\execution-authorization.test.mjs:51:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'completed'
+    - 'failed'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'failed'
+  actual: 'completed'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/execution-authorization.test.mjs:54:51)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 1
+# fail 5
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10713.196

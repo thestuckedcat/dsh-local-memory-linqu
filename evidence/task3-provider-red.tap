@@ -1,0 +1,299 @@
+TAP version 13
+# Subtest: bridge sends only the bounded fragment and fixed purpose prompt through one prepared call
+not ok 1 - bridge sends only the bounded fragment and fixed purpose prompt through one prepared call
+  ---
+  duration_ms: 1.5922
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\harness-provider.test.mjs:36:1'
+  failureType: 'testCodeFailure'
+  error: 'Harness Provider bridge is not implemented'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  operator: 'fail'
+  stack: |-
+    bridge (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:30:145)
+    async TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:37:24)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: each allowed purpose has a fixed schema prompt and unknown purposes cannot dispatch
+not ok 2 - each allowed purpose has a fixed schema prompt and unknown purposes cannot dispatch
+  ---
+  duration_ms: 0.2978
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\harness-provider.test.mjs:42:1'
+  failureType: 'testCodeFailure'
+  error: 'Harness Provider bridge is not implemented'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  operator: 'fail'
+  stack: |-
+    bridge (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:30:145)
+    async TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:43:24)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: text followed by EOF without explicit finish is unknown
+not ok 3 - text followed by EOF without explicit finish is unknown
+  ---
+  duration_ms: 0.2428
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\harness-provider.test.mjs:47:1'
+  failureType: 'testCodeFailure'
+  error: 'Harness Provider bridge is not implemented'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  operator: 'fail'
+  stack: |-
+    bridge (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:30:145)
+    async TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:48:19)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: synthesized error, aborted and truncation finishes do not become known completion
+not ok 4 - synthesized error, aborted and truncation finishes do not become known completion
+  ---
+  duration_ms: 0.2416
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\harness-provider.test.mjs:51:1'
+  failureType: 'testCodeFailure'
+  error: 'Harness Provider bridge is not implemented'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  operator: 'fail'
+  stack: |-
+    bridge (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:30:145)
+    async TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:52:76)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: duplicate finish, text after stop, and an iterator throw after stop stay unknown
+not ok 5 - duplicate finish, text after stop, and an iterator throw after stop stay unknown
+  ---
+  duration_ms: 0.2846
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\harness-provider.test.mjs:55:1'
+  failureType: 'testCodeFailure'
+  error: 'Harness Provider bridge is not implemented'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  operator: 'fail'
+  stack: |-
+    bridge (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:30:145)
+    async TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:56:68)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: once prepareCall was touched its failure is unknown even when stream never started
+not ok 6 - once prepareCall was touched its failure is unknown even when stream never started
+  ---
+  duration_ms: 0.1974
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\harness-provider.test.mjs:59:1'
+  failureType: 'testCodeFailure'
+  error: 'Harness Provider bridge is not implemented'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  operator: 'fail'
+  stack: |-
+    bridge (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:30:145)
+    async TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:60:24)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: changed approval before prepare is refused without dispatch and activation versions do not rebind
+not ok 7 - changed approval before prepare is refused without dispatch and activation versions do not rebind
+  ---
+  duration_ms: 0.1878
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\harness-provider.test.mjs:63:1'
+  failureType: 'testCodeFailure'
+  error: 'Harness Provider bridge is not implemented'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  operator: 'fail'
+  stack: |-
+    bridge (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:30:145)
+    async TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:64:21)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: all four host configuration events permanently invalidate an activation and remove listeners on dispose
+not ok 8 - all four host configuration events permanently invalidate an activation and remove listeners on dispose
+  ---
+  duration_ms: 0.2523
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\harness-provider.test.mjs:69:1'
+  failureType: 'testCodeFailure'
+  error: 'Harness Provider bridge is not implemented'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  operator: 'fail'
+  stack: |-
+    bridge (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:30:145)
+    async TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:70:163)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: approval changes during preparation are unknown and never reach prepared.stream
+not ok 9 - approval changes during preparation are unknown and never reach prepared.stream
+  ---
+  duration_ms: 0.3042
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\harness-provider.test.mjs:73:1'
+  failureType: 'testCodeFailure'
+  error: 'Harness Provider bridge is not implemented'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  operator: 'fail'
+  stack: |-
+    bridge (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:30:145)
+    async TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:74:169)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: an invalidation between preparation and dispatch is rechecked before sending the fragment
+not ok 10 - an invalidation between preparation and dispatch is rechecked before sending the fragment
+  ---
+  duration_ms: 0.3535
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\harness-provider.test.mjs:77:1'
+  failureType: 'testCodeFailure'
+  error: 'Harness Provider bridge is not implemented'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  operator: 'fail'
+  stack: |-
+    bridge (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:30:145)
+    async TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:78:199)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: cancellation during a non-cooperative prepare returns unknown and observes its later rejection
+not ok 11 - cancellation during a non-cooperative prepare returns unknown and observes its later rejection
+  ---
+  duration_ms: 0.2287
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\harness-provider.test.mjs:81:1'
+  failureType: 'testCodeFailure'
+  error: 'Harness Provider bridge is not implemented'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  operator: 'fail'
+  stack: |-
+    bridge (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:30:145)
+    async TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:82:108)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: stop without EOF cannot complete and dispose waits only its cleanup budget
+not ok 12 - stop without EOF cannot complete and dispose waits only its cleanup budget
+  ---
+  duration_ms: 0.2333
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\harness-provider.test.mjs:85:1'
+  failureType: 'testCodeFailure'
+  error: 'Harness Provider bridge is not implemented'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  operator: 'fail'
+  stack: |-
+    bridge (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:30:145)
+    async TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:86:294)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: late stop after queue timeout does not write memory or release the unknown root gate
+not ok 13 - late stop after queue timeout does not write memory or release the unknown root gate
+  ---
+  duration_ms: 44.8555
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\harness-provider.test.mjs:89:1'
+  failureType: 'testCodeFailure'
+  error: 'Harness Provider bridge is not implemented'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  operator: 'fail'
+  stack: |-
+    bridge (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:30:145)
+    async TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:91:19)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: a rejecting iterator return is observed without exposing details and is never retried
+not ok 14 - a rejecting iterator return is observed without exposing details and is never retried
+  ---
+  duration_ms: 0.2665
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\harness-provider.test.mjs:94:1'
+  failureType: 'testCodeFailure'
+  error: 'Harness Provider bridge is not implemented'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  operator: 'fail'
+  stack: |-
+    bridge (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:30:145)
+    async TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:95:202)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: old activation cancellation and late cleanup cannot disable a newly created activation
+not ok 15 - old activation cancellation and late cleanup cannot disable a newly created activation
+  ---
+  duration_ms: 0.2196
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\harness-provider.test.mjs:98:1'
+  failureType: 'testCodeFailure'
+  error: 'Harness Provider bridge is not implemented'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  operator: 'fail'
+  stack: |-
+    bridge (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:30:145)
+    async TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:99:257)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: async or malformed approved route readers are rejected without leaking their errors
+not ok 16 - async or malformed approved route readers are rejected without leaking their errors
+  ---
+  duration_ms: 0.2064
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\harness-provider.test.mjs:102:1'
+  failureType: 'testCodeFailure'
+  error: 'Harness Provider bridge is not implemented'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  operator: 'fail'
+  stack: |-
+    bridge (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:30:145)
+    async TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:103:239)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: oversized or tool-bearing protocol data is refused while known complete secret text is classified separately
+not ok 17 - oversized or tool-bearing protocol data is refused while known complete secret text is classified separately
+  ---
+  duration_ms: 0.2247
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\harness-provider.test.mjs:106:1'
+  failureType: 'testCodeFailure'
+  error: 'Harness Provider bridge is not implemented'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  operator: 'fail'
+  stack: |-
+    bridge (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:30:145)
+    async TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/harness-provider.test.mjs:107:170)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 0
+# fail 17
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 162.3928

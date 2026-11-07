@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-06",
+  "reviewer": "/root/execution_review",
+  "assessment": "no_open_critical_or_important_findings_in_reviewed_scope",
+  "scope": "Queue execution authority, caller cancellation, Provider and Harness prepare/stream checkpoints, transaction rollback, persistent unknown quarantine, and stage mechanism documentation. Synthetic grants and adapters; no real Host grant mapping, scheduler, main-model final projection, full Host egress certification, profile, credentials, or real model API.",
+  "sourceArtifacts": [
+    {"path":"src/jobs.mjs","sha256":"ce8e5b4d63e3c25a7e4796670c322d76a2de204f641da839b8cfe22f29fe60a1"},
+    {"path":"src/provider.mjs","sha256":"5569dc938044a7f8f4c65ca03267a13f12d42408cd6bc5e37582caa754613dab"},
+    {"path":"plugin/harness-provider.mjs","sha256":"19ed2a89decb0e18aad1029aab7f64035f59e5862a7192b60af7d13658415981"},
+    {"path":"docs/task3-execution-mechanisms.md","sha256":"5b446f36300ff3e55dd8f606b1e47fe34fd2ad5b10efc7d50c592500fd456052"}
+  ],
+  "findings": [
+    {"id":"EXEC-REVIEW-01","priority":"Important","status":"closed","description":"A fulfilled invocation could win Promise.race while caller abort occurred before commit; commit ignored local cancellation and stored output.","reproduction":"task3-execution-independent-probes.mjs caller-race depth 3 and 4","closure":"jobs.mjs checkRunning checks controller and original caller signal at both commit boundaries; final probes report stale and zero new records."},
+    {"id":"EXEC-REVIEW-02","priority":"Important","status":"closed","description":"Final Host authority callbacks could synchronously change worker, route, or epoch and old row completion could overwrite current state.","closure":"checkRunning checks internal invariants after external callback returns. Read-only callback contract and transaction rollback limitation are documented; this is not a JavaScript sandbox or reliable lifecycle mutation entry point."},
+    {"id":"EXEC-REVIEW-03","priority":"Important","status":"closed","description":"The first post-write invariant fix rejected every annual merge that legitimately advanced the epoch.","reproduction":"task3-execution-independent-assertions-red.tap, test 3","closure":"Queue captures writtenEpoch after controlled local writes and before final Host callbacks; independent assertions now preserve prior confirmed record on denial and complete an authorized merge."}
+  ],
+  "verification": [
+    {"command":".\\runtime\\node.exe --test --test-reporter=tap --test-reporter-destination=evidence/task3-execution-independent-node26.tap tests/*.test.mjs","exitCode":0,"tests":125,"pass":125,"fail":0,"cancelled":0,"skipped":0,"todo":0,"evidence":"task3-execution-independent-node26.tap","sha256":"221343bb835962021ca587bc61f86399db8f0233ae96c0a564333d7e4d33a271"},
+    {"command":".\\runtime\\node.exe tools/test-execution-authorization.mjs --native-only --independent","exitCode":0,"tests":5,"pass":5,"fail":0,"evidence":"task3-execution-native-independent-review.json","sha256":"e8b2a402e4843a77d9afa8b65fcc09a8ea04977c798cf5ca6a91cfae08757ed8"},
+    {"command":".\\runtime\\node.exe --test evidence/task3-execution-independent-assertions.test.mjs","exitCode":0,"tests":3,"pass":3,"fail":0,"evidence":"task3-execution-independent-assertions-green.tap","sha256":"30b7401929242cbf5e710c7f62508d23a34ee6fb0143dad28134920e507ae656"},
+    {"command":".\\runtime\\node.exe evidence/task3-execution-independent-probes.mjs","exitCode":0,"observations":14,"evidence":"task3-execution-independent-probes-green.jsonl","sha256":"e9ea4e90b268fd7e69497a8e683d0343c0fa7e61af3a536efbb13eaea0029582"}
+  ],
+  "mechanismReview": "MEM-EXEC-01 through MEM-EXEC-05 match reviewed implementation and observed stage behavior. Unknown quarantine remains after late settle and across reopen, budget denial does not refund reservations, ordinary and annual denial commits roll back, and pre-prepare versus post-prepare outcome classifications remain distinct. Historical hooks/provider artifacts remain historical; this stage is not complete Task 3 or complete plugin delivery."
+}

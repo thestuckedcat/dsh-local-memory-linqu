@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Local memory">
+  <defs>
+    <linearGradient id="lm-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2f6fed"/>
+      <stop offset="1" stop-color="#1b3f8f"/>
+    </linearGradient>
+  </defs>
+  <rect x="3" y="3" width="58" height="58" rx="14" fill="url(#lm-bg)"/>
+  <g fill="none" stroke="#eaf1ff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 21c0-2.2 1.8-4 4-4h9c2.2 0 4 1.8 4 4v24c0-2.2-1.8-4-4-4h-9c-2.2 0-4 1.8-4 4z"/>
+    <path d="M48 21c0-2.2-1.8-4-4-4h-5c-2.2 0-4 1.8-4 4v24c0-2.2 1.8-4 4-4h5c2.2 0 4 1.8 4 4z"/>
+    <path d="M22 25h5M22 31h5M22 37h5M37 25h5M37 31h5M37 37h5"/>
+  </g>
+  <circle cx="32" cy="13" r="2.6" fill="#ffd166"/>
+</svg>

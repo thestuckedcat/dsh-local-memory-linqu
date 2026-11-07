@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-07",
+  "startedAtUtc": "2026-11-07T01:25:32.961Z",
+  "durationMs": 311.4718,
+  "purpose": "isolated real installed-library audit of the M1 final recall projection gate (llm/stream waterfall); not a full Host activation",
+  "executable": "E:/dsh/DeepSeek Harness.exe",
+  "archive": "E:/dsh/resources/app.asar",
+  "hashes": {
+    "executable": "7ae939b5a82b220fbd8ad04dfbafaaedb5a49ab43dc884a5db6381f678dd0cc4",
+    "archive": "e1b6f25fa937da98086c3e77af77aa14791105963c4d337a1c42179d232c6915"
+  },
+  "artifacts": [
+    {
+      "path": "tools/test-m1-host.mjs",
+      "sha256": "77f8fdbd4ffe84f62a27bea56f29fcb914494b01c8adcffe1a938a3974925318"
+    },
+    {
+      "path": "tools/host-api/m1.test.mjs",
+      "sha256": "7a76303e4c37c5e7c646023fa8b8f94e7f2679999955ee2dfa516c29495159f5"
+    },
+    {
+      "path": "tools/host-api/deny-network.cjs",
+      "sha256": "eb6a3c6295f7b95593505768afa0754792e53415cc0d69e7bceb1c5760dcce3e"
+    },
+    {
+      "path": "plugin/final-projection.mjs",
+      "sha256": "7ef9cfa45590c7305c3cacf6c62191f2a9132cd2cae7fd63a3826518b821f5b8"
+    },
+    {
+      "path": "plugin/configuration.mjs",
+      "sha256": "29dd00b2b9dda1beded76ccdd781c5382e1b8509dc8142bd9ea5d46fca6b2a74"
+    },
+    {
+      "path": "plugin/project-registry.mjs",
+      "sha256": "4ea64737dae0e573ddcd933804a2521a35ab05517ab81b0d4ac0902c195dd68a"
+    },
+    {
+      "path": "src/projects.mjs",
+      "sha256": "e7d7873c42dc6c39e3fcd0205b9b6af83c6abc9290f11f2914e15a266fa8ae64"
+    },
+    {
+      "path": "src/backend.mjs",
+      "sha256": "3dfca144e7099c19e8dd7112646c0bf3bd68366b99c116fe3c360172802eb187"
+    },
+    {
+      "path": "src/scope.mjs",
+      "sha256": "80c65e8271579953eaed5f19533508511cddb7002f4a5ec91c046126f01da4da"
+    },
+    {
+      "path": "src/schema.mjs",
+      "sha256": "e1e505538339eba17d2a27c3deb150fccefdd84b20c9983f6dd850c134676c02"
+    },
+    {
+      "path": "src/store-internals.mjs",
+      "sha256": "45f252a7403cb4f2b0b90d341195a5a173bb3b9c3689e2e794643053b7499052"
+    },
+    {
+      "path": "src/validation.mjs",
+      "sha256": "75b5c10999c9f7aa560baf299a0bd1541e8194271589c559bb365216fd67eab9"
+    },
+    {
+      "path": "src/lifecycle.mjs",
+      "sha256": "49e1762b80e58310e3739358376eb3f5b57da6de73a7c353ff9b380c87d19e20"
+    }
+  ],
+  "args": [
+    "--expose-internals",
+    "--require",
+    "E:\\dsh\\plugin\\05-local-memory\\tools\\host-api\\deny-network.cjs",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "--test-reporter-destination=E:\\dsh\\plugin\\05-local-memory\\evidence\\m1-host-probe.tap",
+    "E:\\dsh\\plugin\\05-local-memory\\tools\\host-api\\m1.test.mjs"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "errorCode": null,
+  "summary": {
+    "tests": 3,
+    "pass": 3,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "verified": true,
+  "profileLoaded": false,
+  "realProviderCalled": false,
+  "declarationBasis": "The probe mounts the installed Cordis/LlmRuntime and a synthetic TextAdapter; the false flags follow the inspected call path, not OS-level monitoring.",
+  "networkGuard": "tools/host-api/deny-network.cjs; covered Node API sinks only; not an OS policy",
+  "scope": "Proves the llm/stream waterfall exists in the pinned Host, that a listener can pass or short-circuit dispatch, and that the final projection blocks a recalled message after the record is deleted. Does not certify the full Web profile, the real Provider, or the client bundle.",
+  "tapSha256": "b2da643f4a54adb06c0fb40ca0a0456fbc1d11b2e8b5f89a2bfb14411bdfe9fc"
+}

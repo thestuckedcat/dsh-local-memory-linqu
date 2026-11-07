@@ -1,0 +1,170 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-05",
+  "stage": "Task 3 installed-library API audit",
+  "full_plugin_complete": false,
+  "actual_host_profile_tested": false,
+  "approved_real_provider_tested": false,
+  "independent_reviewer": "/root/memory_task2_review",
+  "independent_probe_tests": 10,
+  "independent_source_copies_verified": 30,
+  "reviewed_interface_document_sha256": "f94a282d1a147bbc39bae9d7ba4c0216f1758a127258add2b0c2e1f7d64f7a00",
+  "files": [
+    {
+      "path": "docs/task3-host-interfaces.md",
+      "sha256": "f94a282d1a147bbc39bae9d7ba4c0216f1758a127258add2b0c2e1f7d64f7a00"
+    },
+    {
+      "path": "evidence/host-api/cordis/lib/index.js",
+      "sha256": "6a9394c0877ff45218818c6e815edd038f8057e1a1deb390a8d43ec81c57691e"
+    },
+    {
+      "path": "evidence/host-api/cordis/package.json",
+      "sha256": "b73831b926b16cbd684aa1b277461e7800a2b35e2dd351ad3c2c8c0db158589d"
+    },
+    {
+      "path": "evidence/host-api/dsh-agent/lib/index.js",
+      "sha256": "7b59cf82c2784c25bdce4e3e24e5e5303b02b9f1003efacf50255492d17baf8b"
+    },
+    {
+      "path": "evidence/host-api/dsh-agent/package.json",
+      "sha256": "ce5841f6b3e481dea24983385ac088cff7aff27d29fefa625f7b19aed6f6cbf2"
+    },
+    {
+      "path": "evidence/host-api/dsh-llm/lib/index.js",
+      "sha256": "d18d8ae4c8d961e628708c1e4698e09716a0ebb80e55a672e0bde1029bec1155"
+    },
+    {
+      "path": "evidence/host-api/dsh-llm/package.json",
+      "sha256": "228ece44843bf5458292c7dda285599188dd6d6137ea032749a8374d2cc7954b"
+    },
+    {
+      "path": "evidence/host-api/dsh-scope/lib/index.js",
+      "sha256": "2829df71d76e08941457d4dd173eac60783e55354921137c8b75e8b5c0d2ecca"
+    },
+    {
+      "path": "evidence/host-api/dsh-scope/package.json",
+      "sha256": "cac362b325c17c6e2917247d42f795dfcede561b375a8fde2e6368e4800cc153"
+    },
+    {
+      "path": "evidence/host-api/dsh-session/lib/index.js",
+      "sha256": "2f5dd07cb5c744a29abbb8003a8a4cefd9e582c6e2538074ca299a0ddd02a3bf"
+    },
+    {
+      "path": "evidence/host-api/dsh-session/package.json",
+      "sha256": "c8355a542c9cd2be07746445ba49c54b0bba0baf195fd39f95632d9dc8b7fa41"
+    },
+    {
+      "path": "evidence/host-api/dsh-tools/lib/index.js",
+      "sha256": "1e53932e7c4213ea24a7d87f06960b7a7702cb21f8a5741c97242b4a470a442a"
+    },
+    {
+      "path": "evidence/host-api/dsh-tools/package.json",
+      "sha256": "5ebfb49032068284f7ac422d01dc31833fea778b80fcf433d54c4866a32fb8b5"
+    },
+    {
+      "path": "evidence/host-api/source-manifest.json",
+      "sha256": "5b9ce99475fbfddbe79e01572faee756c10c06041a832b6304d752b553a3e831"
+    },
+    {
+      "path": "evidence/task3-drive-proof.json",
+      "sha256": "784318173fbe4a4a7445e4acb6951c9feb8c51d56b5fb52f2ec1b0fabf071a8a"
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-agent-loop/lib/index.js",
+      "sha256": "cf57e3ecd487ac5c2553455aaa5cef2c6fb41e6bd61be5aa455675d1d7193033"
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-agent-loop/package.json",
+      "sha256": "e103d718f1bc8693e449676e65b3527d984d657795a5fc4fcc7b14fe3ff72cf5"
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-app-boot/lib/index.js",
+      "sha256": "5135179ac810e4f626f32ec3bdc3293dc7d2028e8aa92e5e0c006f1a33b78e76"
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-app-boot/package.json",
+      "sha256": "f34353b3a01474130493e6c7d3469e8347b88895068dfd36fba0580134334375"
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-credentials/lib/index.js",
+      "sha256": "1b6afdb04e966285e0732eb766eb0a12f3f9c0821c8caacfd192ce1ac88bee7a"
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-credentials/package.json",
+      "sha256": "e46b528e168e90824e37847852e738478aa139d3638aa5ced966a216f1e299d8"
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-llm-deepseek-api-key/lib/index.js",
+      "sha256": "67f9cbc26ce0ea07009e0c36ee4a7cc058542cdf85b873549885922646cacd35"
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-llm-deepseek-api-key/package.json",
+      "sha256": "86388d8aca0d12e3bc5b448708b4ee9cf5ac3670a869b744c39a6f602b78e7a8"
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-llm-pi-ai/lib/index.js",
+      "sha256": "99b5c20830a52f69641df8a18a39206079b0c725201958cce2c4a934f1d4f7cd"
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-llm-pi-ai/package.json",
+      "sha256": "7294267a74c0f4528012bd053da9b555bc06f64569dbc86dbdf45da366da0969"
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-llm-retry/lib/index.js",
+      "sha256": "cbb99f1c5038e4a9167aedf333343cb3e3adfb5c9f45a37ef7562b024429d050"
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-llm-retry/package.json",
+      "sha256": "b77137c2019c15c4b4aadc20a3d2ceacac5f0ca632911ba0323e2bd79386cda8"
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-plugin-manager/lib/index.js",
+      "sha256": "1b8bf9eb266d7b3b7f899175e3f435c89ed8baa8aabc677212759f8c6cd23132"
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-plugin-manager/package.json",
+      "sha256": "b652cb265453970de1f2e09b89e1f719a2d8c7309ae26a0c2a5d893ed456220e"
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-settings/lib/index.js",
+      "sha256": "9432b872597b7a31473072eb38a55979ab23375c76bd1d86d751388a692a0136"
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-settings/package.json",
+      "sha256": "4ad7b33480ee08189669afef9f1a17e77a4182d58eb5aa3740b0badff51f5e42"
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-workspace/lib/index.js",
+      "sha256": "931ca0cb10c5102066c7723690a887f0e6e8e7ab0ffdee1a782686745b0b934f"
+    },
+    {
+      "path": "evidence/task3-host-api/dsh-workspace/package.json",
+      "sha256": "e5d6331549368b0df96c6475051600eb92d4867f959d38da1583dad47d57a959"
+    },
+    {
+      "path": "evidence/task3-host-api/source-manifest.json",
+      "sha256": "cbfa1ba3cfac5cf8153b9dff043dbf2924539e19d90ce70eaa20618062a3f161"
+    },
+    {
+      "path": "evidence/task3-host-contract.tap",
+      "sha256": "350b9c00165edc43ac9e6f5f4b79a19a6f1405ba28d26b151631ea2e0c1d2c4f"
+    },
+    {
+      "path": "evidence/task3-host-probe.json",
+      "sha256": "ace80ce61ba2334ca451fb9c9fbaa154693fa47788f81a343e53d4c05392bacd"
+    },
+    {
+      "path": "tools/host-api/deny-network.cjs",
+      "sha256": "eb6a3c6295f7b95593505768afa0754792e53415cc0d69e7bceb1c5760dcce3e"
+    },
+    {
+      "path": "tools/host-api/probe.test.mjs",
+      "sha256": "76b2d75bd1007f642a42d25d6802ecd8df302dc91d17f6c28185b9b70f97453f"
+    },
+    {
+      "path": "tools/probe-host-api.mjs",
+      "sha256": "e53c57d2f2e2290f2b82ec6f15a673f24cd9c4a810a1ce569b2bf3821d4705cf"
+    }
+  ]
+}

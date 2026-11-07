@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-06",
+  "startedAtUtc": "2026-11-05T16:51:49.561Z",
+  "durationMs": 985.0410999999999,
+  "executable": "E:/dsh/DeepSeek Harness.exe",
+  "archive": "E:/dsh/resources/app.asar",
+  "hashes": {
+    "executable": "7ae939b5a82b220fbd8ad04dfbafaaedb5a49ab43dc884a5db6381f678dd0cc4",
+    "archive": "e1b6f25fa937da98086c3e77af77aa14791105963c4d337a1c42179d232c6915"
+  },
+  "artifacts": [
+    {
+      "path": "plugin/session-hooks.mjs",
+      "sha256": "24f57aef8dd8704f926516d3cd892d0a96c37bd5f4b9d17ad3145c2ca8dd618f"
+    },
+    {
+      "path": "src/jobs.mjs",
+      "sha256": "1975abc317465c4ae14ad12038e13217ce6031b03a4956e23bf19912829f449b"
+    },
+    {
+      "path": "tests/session-hooks.test.mjs",
+      "sha256": "bc594689170df0507cbf9bac05447954a5c8b83023e746b7899c58bd1ad748f0"
+    },
+    {
+      "path": "tools/host-api/hooks.test.mjs",
+      "sha256": "251aeebab9ed37527d95884e26aa9ac2072f8cf0b51659d62fec731c3dd90254"
+    },
+    {
+      "path": "tools/test-session-hooks.mjs",
+      "sha256": "6e50de9f2a0a6d42c79857f8b842c74edb992d9cb0efcef84d1bf002f46d7ded"
+    },
+    {
+      "path": "tools/host-api/deny-network.cjs",
+      "sha256": "eb6a3c6295f7b95593505768afa0754792e53415cc0d69e7bceb1c5760dcce3e"
+    }
+  ],
+  "args": [
+    "--expose-internals",
+    "--require",
+    "E:\\dsh\\plugin\\05-local-memory\\tools\\host-api\\deny-network.cjs",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "--test-reporter-destination=E:\\dsh\\plugin\\05-local-memory\\evidence\\task3-hooks-native-development.tap",
+    "tools/host-api/hooks.test.mjs"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "errorCode": null,
+  "summary": {
+    "tests": 8,
+    "pass": 8,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "verified": true,
+  "profileLoaded": false,
+  "realProviderCalled": false,
+  "declarationBasis": "Test call paths mount isolated Context/Session/Agent/LLM services and fake adapters, not a live profile or real Provider; flags are not system-wide monitoring.",
+  "scope": "Current-event intake and decision-return recall; no automatic job scheduler or final wire authorization certification",
+  "tapSha256": "85d250b257a5c3aef0975de0a5633a6ef7c1023159be717f85ba89143ec85da6"
+}

@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-06",
+  "startedAtUtc": "2026-11-06T11:55:11.366Z",
+  "durationMs": 1465.6615,
+  "executable": "E:/dsh/DeepSeek Harness.exe",
+  "archive": "E:/dsh/resources/app.asar",
+  "hashes": {
+    "executable": "7ae939b5a82b220fbd8ad04dfbafaaedb5a49ab43dc884a5db6381f678dd0cc4",
+    "archive": "e1b6f25fa937da98086c3e77af77aa14791105963c4d337a1c42179d232c6915"
+  },
+  "artifacts": [
+    {
+      "path": "src/jobs.mjs",
+      "sha256": "ce8e5b4d63e3c25a7e4796670c322d76a2de204f641da839b8cfe22f29fe60a1"
+    },
+    {
+      "path": "src/provider.mjs",
+      "sha256": "5569dc938044a7f8f4c65ca03267a13f12d42408cd6bc5e37582caa754613dab"
+    },
+    {
+      "path": "plugin/harness-provider.mjs",
+      "sha256": "19ed2a89decb0e18aad1029aab7f64035f59e5862a7192b60af7d13658415981"
+    },
+    {
+      "path": "tests/execution-authorization.test.mjs",
+      "sha256": "2bc21c9b65f3e63614a6ecf289ec8392acd3aacf1751f7595dc27c3c752f8056"
+    },
+    {
+      "path": "tests/helpers.mjs",
+      "sha256": "bbd7a96ea2825b5868847c06e4840fdd5ad1f9e56f78b280fcfae20e52b27d0a"
+    },
+    {
+      "path": "tests/jobs.test.mjs",
+      "sha256": "d9cf81b15c0428142b9faee6654ce0e9849983be1defa234a766aae82ac74812"
+    },
+    {
+      "path": "tests/harness-provider.test.mjs",
+      "sha256": "c4d55c8760ff5f95cccb88980a7714be05d08c60a8fd7738f54e0ff3878a67e9"
+    },
+    {
+      "path": "tests/lifecycle.test.mjs",
+      "sha256": "67bbd063eef35824f109d922af7987b00abe8188b357b6e8ed4e2ae7abebf7ae"
+    },
+    {
+      "path": "tools/host-api/provider.test.mjs",
+      "sha256": "7fd4d02db1e79ca981d65b0c863457d031010118e27bf7bb743319c8304ff0c0"
+    },
+    {
+      "path": "tools/host-api/hooks.test.mjs",
+      "sha256": "7b0c92689054668503e0221fe8949668b4a083d1b1599c162ce0c9be59bc2e4a"
+    },
+    {
+      "path": "tools/host-api/execution.test.mjs",
+      "sha256": "d2318820eae8d8cab1dfdda860f2f3bffef18602e33dbd7dc1cb8f4c7fb3a9e9"
+    },
+    {
+      "path": "tools/test-execution-authorization.mjs",
+      "sha256": "b365c23144e9b17debc58e7106ca4a447757c55c344d39b31d333ea2fb4c1b43"
+    },
+    {
+      "path": "tools/host-api/deny-network.cjs",
+      "sha256": "eb6a3c6295f7b95593505768afa0754792e53415cc0d69e7bceb1c5760dcce3e"
+    }
+  ],
+  "args": [
+    "--expose-internals",
+    "--require",
+    "E:\\dsh\\plugin\\05-local-memory\\tools\\host-api\\deny-network.cjs",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "--test-reporter-destination=E:\\dsh\\plugin\\05-local-memory\\evidence\\task3-execution-native-independent-review.tap",
+    "tools/host-api/execution.test.mjs"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "errorCode": null,
+  "summary": {
+    "tests": 5,
+    "pass": 5,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "verified": true,
+  "profileLoaded": false,
+  "realProviderCalled": false,
+  "declarationBasis": "Test call paths mount isolated Context/Session/Agent/LLM services and fake adapters, not a live profile or real Provider; flags are not system-wide monitoring.",
+  "scope": "Queue execution authority and cancellation with synthetic grants; no automatic scheduler, real Host grant mapping, main-model projection or complete wire certification",
+  "tapSha256": "90c28df623744dd103785c2f3a880d11ecdc48258ed2ae1ddc3a8628e394a4c1"
+}

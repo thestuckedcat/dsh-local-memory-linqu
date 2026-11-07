@@ -1,0 +1,237 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-07",
+  "startedAtUtc": "2026-11-07T01:25:11.769Z",
+  "durationMs": 21523.5279,
+  "purpose": "M1 delivery evidence: local full suite, real installed-library final-request gate probe, reviewed material hashes",
+  "runtime": {
+    "node": "26.13.0",
+    "executable": "E:\\dsh\\plugin\\05-local-memory\\runtime\\node.exe"
+  },
+  "commands": {
+    "suite": "E:\\dsh\\plugin\\05-local-memory\\runtime\\node.exe --test --test-concurrency=1 --test-reporter=tap --test-reporter-destination=evidence/m1-node26.tap tests/backend.test.mjs tests/configuration.test.mjs tests/execution-authorization.test.mjs tests/final-projection.test.mjs tests/harness-provider.test.mjs tests/harness-sdk.test.mjs tests/host-grants.test.mjs tests/jobs.test.mjs tests/lifecycle.test.mjs tests/management.test.mjs tests/migration.test.mjs tests/plugin-entry.test.mjs tests/project-registry.test.mjs tests/projects.test.mjs tests/proof-reminders.test.mjs tests/reports.test.mjs tests/scheduler.test.mjs tests/session-hooks.test.mjs tests/source-lock.test.mjs tests/work-management.test.mjs tests/work-summary.test.mjs",
+    "probe": "E:\\dsh\\plugin\\05-local-memory\\runtime\\node.exe tools/test-m1-host.mjs"
+  },
+  "suite": {
+    "summary": {
+      "tests": 258,
+      "pass": 258,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "exitCode": 0,
+    "tapSha256": "ec3ab743d3f95bb1fe50e84f29577dd927b5571f48c5a16d1dcb59ab2960973f"
+  },
+  "probe": {
+    "verified": true,
+    "summary": {
+      "tests": 3,
+      "pass": 3,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "exitCode": 0,
+    "tapSha256": "b2da643f4a54adb06c0fb40ca0a0456fbc1d11b2e8b5f89a2bfb14411bdfe9fc"
+  },
+  "artifacts": [
+    {
+      "path": "plugin/index.mjs",
+      "sha256": "a68630a2656de96280c75bbe99c56b0d9902451ee43fa7146b67681541f9fc87"
+    },
+    {
+      "path": "plugin/configuration.mjs",
+      "sha256": "29dd00b2b9dda1beded76ccdd781c5382e1b8509dc8142bd9ea5d46fca6b2a74"
+    },
+    {
+      "path": "plugin/project-registry.mjs",
+      "sha256": "4ea64737dae0e573ddcd933804a2521a35ab05517ab81b0d4ac0902c195dd68a"
+    },
+    {
+      "path": "plugin/host-grants.mjs",
+      "sha256": "dfb159df845351f30a45a8623207cdf1b9829dda290951187b0aefd91e46dc2f"
+    },
+    {
+      "path": "plugin/scheduler.mjs",
+      "sha256": "808f3f571351d683f6fa55a28cf7b966987f8da5127a953e47a4a0a0e09174ac"
+    },
+    {
+      "path": "plugin/final-projection.mjs",
+      "sha256": "7ef9cfa45590c7305c3cacf6c62191f2a9132cd2cae7fd63a3826518b821f5b8"
+    },
+    {
+      "path": "plugin/management.mjs",
+      "sha256": "2fb786a558a43538d5eef136b6bd15850cec291ccc6954b644c17bd7b1930371"
+    },
+    {
+      "path": "plugin/work-management.mjs",
+      "sha256": "89d7ed97cae486af4095fe31fc7460c3c0955ece0555f25c113c553e2b8a1968"
+    },
+    {
+      "path": "plugin/proof-reminders.mjs",
+      "sha256": "6d39f4b3e80ffb94b6d9b769c0628cad4b8110c4901f21453557dd6ca3c8ea9f"
+    },
+    {
+      "path": "plugin/session-hooks.mjs",
+      "sha256": "f8b10a15705708c507d764d99e326092ed0640ea1a2afe43ba1719886c5c645d"
+    },
+    {
+      "path": "plugin/harness-provider.mjs",
+      "sha256": "19ed2a89decb0e18aad1029aab7f64035f59e5862a7192b60af7d13658415981"
+    },
+    {
+      "path": "plugin/harness-sdk.mjs",
+      "sha256": "3126c1924d8856a9659af530552e1b431fb756bc041907562b1c37f136213d3d"
+    },
+    {
+      "path": "src/projects.mjs",
+      "sha256": "e7d7873c42dc6c39e3fcd0205b9b6af83c6abc9290f11f2914e15a266fa8ae64"
+    },
+    {
+      "path": "src/reports.mjs",
+      "sha256": "6edb9d6291aa0551d037fa8c043eec1aa3b1a59cd2c94f62c28e39356f7dcd56"
+    },
+    {
+      "path": "src/jobs.mjs",
+      "sha256": "ac2b05cbea5ce687d1693c7567a63fce2b2eae56a59d9c8961cf102c5ba54c6a"
+    },
+    {
+      "path": "src/backend.mjs",
+      "sha256": "3dfca144e7099c19e8dd7112646c0bf3bd68366b99c116fe3c360172802eb187"
+    },
+    {
+      "path": "src/lifecycle.mjs",
+      "sha256": "49e1762b80e58310e3739358376eb3f5b57da6de73a7c353ff9b380c87d19e20"
+    },
+    {
+      "path": "src/store-internals.mjs",
+      "sha256": "45f252a7403cb4f2b0b90d341195a5a173bb3b9c3689e2e794643053b7499052"
+    },
+    {
+      "path": "src/work-summary.mjs",
+      "sha256": "ddbff1df54337e9b7978a7520e3d488911a2223895d0a332c18561a7b01f8b10"
+    },
+    {
+      "path": "src/work-summary-evidence.mjs",
+      "sha256": "262c5a2d9b6eda3cd6c914ad9df3ed9de6d9992f6a700bccc844724186966488"
+    },
+    {
+      "path": "client.js",
+      "sha256": "c7dc90d02274341bebefd6112cd5b4ea0edcaa31f9cac36af8adeba762ea3ceb"
+    },
+    {
+      "path": "cordis.patch.yml",
+      "sha256": "6e9e9cf0f2ffc520ae40486db3d992691983595ddafa0f4b42972d48267fffa9"
+    },
+    {
+      "path": "package.json",
+      "sha256": "13e871507f1c6ce018b6b6aa49503ef193b8c478ba8a17782a8ddb58f1255ec8"
+    },
+    {
+      "path": "locale/en.json",
+      "sha256": "4ecee08aff10bcc9666432e6fb98a9dcaddb1ab4a71c7cacbc9c5a47e874efac"
+    },
+    {
+      "path": "locale/zh.json",
+      "sha256": "8d78ea03d8baad59ea962a9ff3048f5e27d46065602efaeffcb4114eaa68ae84"
+    },
+    {
+      "path": "tools/test-m1-host.mjs",
+      "sha256": "77f8fdbd4ffe84f62a27bea56f29fcb914494b01c8adcffe1a938a3974925318"
+    },
+    {
+      "path": "tools/host-api/m1.test.mjs",
+      "sha256": "7a76303e4c37c5e7c646023fa8b8f94e7f2679999955ee2dfa516c29495159f5"
+    },
+    {
+      "path": "tests/fake-host.mjs",
+      "sha256": "fb97aa9b3949bfdae014cb23e9e615629a1b94989ac64a832aa492bd2bc05547"
+    },
+    {
+      "path": "tests/plugin-entry.test.mjs",
+      "sha256": "f1cc1120a5dc0e5683d7f81bb35975e2e95841d71904973b77a4e4201596594e"
+    },
+    {
+      "path": "tests/host-grants.test.mjs",
+      "sha256": "6625bd6bcb664ec96c26491888f4ee69c90b8ef499e1862afde0dfce7b3dabfe"
+    },
+    {
+      "path": "tests/final-projection.test.mjs",
+      "sha256": "ddde851773d5ec69c50a9009f4dcaeae21bedffa94b4a20cf6307f2557c290a5"
+    },
+    {
+      "path": "tests/scheduler.test.mjs",
+      "sha256": "19e47172660d5d8842431607f8b746a392e2fb1a72b823240c6e0b920a690a7b"
+    },
+    {
+      "path": "tests/management.test.mjs",
+      "sha256": "4c7a6ce9a16a59d62a40fad8e576efc07891466d7d9844b78f9d6452eabcfd80"
+    },
+    {
+      "path": "tests/reports.test.mjs",
+      "sha256": "cddec6f11fd7eed08d439b628ab77be06a14e945c1ae41281b3bf418cdc41fbe"
+    },
+    {
+      "path": "tests/proof-reminders.test.mjs",
+      "sha256": "e9130e699e6aad86875a15fa7d3f9b954880720d6bb9bc2a3f1c99e526cae08c"
+    },
+    {
+      "path": "tests/configuration.test.mjs",
+      "sha256": "ac81fcf28dcd2ae826c382e4cbb08c8e4a73d24b52d574d4298207d52758906a"
+    },
+    {
+      "path": "tests/projects.test.mjs",
+      "sha256": "56247a84e8a5d61da66ce3fe370f50015c575aaca05ed8611178d2322ebe2f42"
+    },
+    {
+      "path": "tests/project-registry.test.mjs",
+      "sha256": "f3160b3c79dc4ef24389e1b20eee653333c2c0e42df1c12220c4e82f68b9c654"
+    },
+    {
+      "path": "tests/harness-sdk.test.mjs",
+      "sha256": "d76d09c237856d4b1c75985c9d658f4e72f57e2c2d11e39a80cabe45fff3b97a"
+    },
+    {
+      "path": "vendor/kovey/cjk.js",
+      "sha256": "95d0db52226fa4719d679a4a4cc2ed0de7f232cf8e2e0d304c9d752af2b6c8cb"
+    },
+    {
+      "path": "source-lock.json",
+      "sha256": "9d732ce280ca6dc9a42315cec4f89040812700765050870a519c50f89f64cd54"
+    },
+    {
+      "path": "README.md",
+      "sha256": "3f4d090d166d16ab46ce55d4a6ecb849be65dac11813f90be25282ad5fc8de79"
+    },
+    {
+      "path": "TODO.md",
+      "sha256": "8b1175d554afb0e9937c0e2ad75e2629a28778fdf621cb28b11b07730d3cb8d5"
+    },
+    {
+      "path": "docs/m1-plugin-design.md",
+      "sha256": "0b5d0184a4449f1773a6d2939bb96f493cb728f94fed5fb2c78d512804d01bc3"
+    },
+    {
+      "path": "docs/mechanisms.md",
+      "sha256": "d92efc0a06374da6b09d4d80b645fe04c0566c1149e13f3c40136b146badef48"
+    },
+    {
+      "path": "docs/m1-independent-review.md",
+      "sha256": "d385b48070b7387f4b2576a4846ddc01a4cd30fb03452385e54e73d038b057d7"
+    },
+    {
+      "path": "docs/implementation-route.md",
+      "sha256": "a5458c78be66494ae2645053736fe10c413bf16b8477a0348614b02b880b10a3"
+    }
+  ],
+  "verified": true,
+  "boundaries": [
+    "The suite uses synthetic adapters, FakeHost (for the plugin-entry closed loop) and temporary real SQLite stores; it does not call a business model API.",
+    "The probe mounts the real installed Cordis/LlmRuntime with a synthetic text adapter; it does not boot the Web profile, read credentials or reach a Provider.",
+    "Installation evidence in evidence/m1-install-verification.json was observed through plugin_manager, the same-origin status route and client slot inspection; no visual screenshot was taken.",
+    "M2 abstract sharing, M3 cold tier, MEM-405 dimension mapping and the async proof-read approval seam are not part of this evidence."
+  ]
+}

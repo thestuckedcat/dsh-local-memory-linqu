@@ -1,0 +1,136 @@
+TAP version 13
+# Subtest: CJK recall and management export stay inside explicit project/worktree/version scopes
+ok 1 - CJK recall and management export stay inside explicit project/worktree/version scopes
+  ---
+  duration_ms: 71.0269
+  type: 'test'
+  ...
+# Subtest: records survive reopen without a model or network dependency
+ok 2 - records survive reopen without a model or network dependency
+  ---
+  duration_ms: 21.1003
+  type: 'test'
+  ...
+# Subtest: missing scope, caller scope override, and source identity overwrite fail closed
+ok 3 - missing scope, caller scope override, and source identity overwrite fail closed
+  ---
+  duration_ms: 14.6959
+  type: 'test'
+  ...
+# Subtest: same source/version/content yields one evidence record across reopen
+ok 4 - same source/version/content yields one evidence record across reopen
+  ---
+  duration_ms: 19.0532
+  type: 'test'
+  ...
+# Subtest: FTS operators do not widen recall and empty query never lists all records
+ok 5 - FTS operators do not widen recall and empty query never lists all records
+  ---
+  duration_ms: 17.7118
+  type: 'test'
+  ...
+# Subtest: secret-like material and model-assigned path fields cannot enter local records
+ok 6 - secret-like material and model-assigned path fields cannot enter local records
+  ---
+  duration_ms: 10.1204
+  type: 'test'
+  ...
+# Subtest: unknown future schema and damaged FTS do not silently fall back to raw LIKE
+ok 7 - unknown future schema and damaged FTS do not silently fall back to raw LIKE
+  ---
+  duration_ms: 29.1368
+  type: 'test'
+  ...
+# Subtest: scope identity is deterministic and keeps worktree/revision/build distinctions
+ok 8 - scope identity is deterministic and keeps worktree/revision/build distinctions
+  ---
+  duration_ms: 18.1036
+  type: 'test'
+  ...
+# Subtest: quoted credential labels in JSON snippets are rejected before persistence
+ok 9 - quoted credential labels in JSON snippets are rejected before persistence
+  ---
+  duration_ms: 10.2031
+  type: 'test'
+  ...
+# Subtest: a bounded snapshot rejects overflow rather than silently dropping saved records
+ok 10 - a bounded snapshot rejects overflow rather than silently dropping saved records
+  ---
+  duration_ms: 1412.9141
+  type: 'test'
+  ...
+# Subtest: missing or rewritten index triggers and changed FTS definition are refused before writing
+ok 11 - missing or rewritten index triggers and changed FTS definition are refused before writing
+  ---
+  duration_ms: 70.9276
+  type: 'test'
+  ...
+# Subtest: common prefixed and camelCase credential labels never reach storage or export
+ok 12 - common prefixed and camelCase credential labels never reach storage or export
+  ---
+  duration_ms: 9.7489
+  type: 'test'
+  ...
+# Subtest: ordinary assignments cannot hide a later credential assignment
+ok 13 - ordinary assignments cannot hide a later credential assignment
+  ---
+  duration_ms: 9.1225
+  type: 'test'
+  ...
+# Subtest: single CJK character recall is preserved
+ok 14 - single CJK character recall is preserved
+  ---
+  duration_ms: 11.1382
+  type: 'test'
+  ...
+# Subtest: UNC, device, relative and unapproved drives fail before filesystem access
+ok 15 - UNC, device, relative and unapproved drives fail before filesystem access
+  ---
+  duration_ms: 0.6764
+  type: 'test'
+  ...
+# Subtest: ancestor reparse metadata is rejected before any access below it
+ok 16 - ancestor reparse metadata is rejected before any access below it
+  ---
+  duration_ms: 4.5215
+  type: 'test'
+  ...
+# Subtest: admission accepts fixed source and refuses another host or runtime
+ok 17 - admission accepts fixed source and refuses another host or runtime
+  ---
+  duration_ms: 22.2583
+  type: 'test'
+  ...
+# Subtest: changed vendor bytes fail before any vendor code can load
+ok 18 - changed vendor bytes fail before any vendor code can load
+  ---
+  duration_ms: 37.1077
+  type: 'test'
+  ...
+# Subtest: undeclared executable file and removed license are rejected
+ok 19 - undeclared executable file and removed license are rejected
+  ---
+  duration_ms: 41.0636
+  type: 'test'
+  ...
+# Subtest: a lock cannot introduce an alternative vendor or network module
+ok 20 - a lock cannot introduce an alternative vendor or network module
+  ---
+  duration_ms: 33.407
+  type: 'test'
+  ...
+# Subtest: backend import verifies bytes before a modified vendor can cause a side effect
+ok 21 - backend import verifies bytes before a modified vendor can cause a side effect
+  ---
+  duration_ms: 176.266
+  type: 'test'
+  ...
+1..21
+# tests 21
+# suites 0
+# pass 21
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1853.5845

@@ -1,0 +1,16 @@
+TAP version 13
+# Subtest: revocation winning the completion race keeps quarantine even if the Provider fulfills immediately
+ok 1 - revocation winning the completion race keeps quarantine even if the Provider fulfills immediately
+  ---
+  duration_ms: 118.341
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 239.0539

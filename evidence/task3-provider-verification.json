@@ -1,0 +1,199 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-05",
+  "stage": "Task 3 Provider bridge and input accounting",
+  "full_plugin_complete": false,
+  "actual_profile_loaded": false,
+  "real_provider_called": false,
+  "model_call_declaration_basis": "Inspected synthetic test paths, not a system-wide call monitor",
+  "design_agent": "/root/design",
+  "independent_reviewer": "/root/memory_task2_review",
+  "node26": {
+    "tests": 85,
+    "pass": 85,
+    "fail": 0,
+    "skipped": 0,
+    "exit_code": 0,
+    "tap": "evidence/task3-provider-node26.tap"
+  },
+  "host24": {
+    "component_tests": 85,
+    "installed_library_tests": 8,
+    "total_tests": 93,
+    "pass": 93,
+    "fail": 0,
+    "skipped": 0,
+    "exit_code": 0,
+    "tap": "evidence/task3-provider-host24.tap"
+  },
+  "independent": {
+    "node26_tests": 85,
+    "native_tests": 8,
+    "native_tap": "evidence/task3-provider-native-independent-review.tap"
+  },
+  "task2_core_delta": [
+    "src/jobs.mjs"
+  ],
+  "files": [
+    {
+      "path": "docs/task3-provider-mechanisms.md",
+      "sha256": "07200018b9124c913d0649dc10593384feb60bd4d0a629fd0e058b2e62b96564"
+    },
+    {
+      "path": "docs/task3-provider-plan.md",
+      "sha256": "bdb9b1a8610eb82ea17cdcc3ffca3d653216c3fd8116fcf4c46a4c50bba72f33"
+    },
+    {
+      "path": "evidence/task3-provider-host24.json",
+      "sha256": "b7c876e700d745ae7998593084d1c521fb6994cbd05283848ccd4693639d59c0"
+    },
+    {
+      "path": "evidence/task3-provider-host24.tap",
+      "sha256": "e2c63cbfb21a80d1fde563ab3f53f9ff0d1986241131ba7006c5d73f5a53987e"
+    },
+    {
+      "path": "evidence/task3-provider-native-independent-review.json",
+      "sha256": "e7cc689549f2a6dbb78fa6d0da5c165ffa566f67e903b3ce693639aaccbb66e1"
+    },
+    {
+      "path": "evidence/task3-provider-native-independent-review.tap",
+      "sha256": "e8d15f0130abafd26c00659bb074cf0aae56073fd41288d280194986af2d9202"
+    },
+    {
+      "path": "evidence/task3-provider-node26.tap",
+      "sha256": "83c1bece3c145dc3b15c97154344eacac54ac3704b4aadeddc07a3dca88389fb"
+    },
+    {
+      "path": "evidence/task3-provider-red.tap",
+      "sha256": "fde0fb1ca3fa454ac6308527271a2fe46d165c5c03dc472a7965aebce1eda2e6"
+    },
+    {
+      "path": "licenses/Apache-2.0.txt",
+      "sha256": "074e6e32c86a4c0ef8b3ed25b721ca23aca83df277cd88106ef7177c354615ff"
+    },
+    {
+      "path": "licenses/kovey-package.json",
+      "sha256": "7b988c63272cbbe6f1b4ee68c503cdbc5532ce6495ec7b159183881a82caf242"
+    },
+    {
+      "path": "package.json",
+      "sha256": "613534c10028128c44a6f1d67cbe58cdaf7d4628815a37765c20b15b64953016"
+    },
+    {
+      "path": "plugin/harness-provider.mjs",
+      "sha256": "f63fc69df3c85a167a85fefc4b7fc552e3fcbd944e049b2c3f9d1cea271e9f32"
+    },
+    {
+      "path": "runtime/node.exe",
+      "sha256": "14319838b3f355e0398c13569a90270bce4fc68f25189f58c59b03dadae0e6d5"
+    },
+    {
+      "path": "schemas/work-summary.schema.json",
+      "sha256": "6fcff5b15873ba74f10929f79cf524ef7219f8bb8903b4e37e9af53882c75df4"
+    },
+    {
+      "path": "source-lock.json",
+      "sha256": "9d732ce280ca6dc9a42315cec4f89040812700765050870a519c50f89f64cd54"
+    },
+    {
+      "path": "src/backend.mjs",
+      "sha256": "3dfca144e7099c19e8dd7112646c0bf3bd68366b99c116fe3c360172802eb187"
+    },
+    {
+      "path": "src/jobs.mjs",
+      "sha256": "9b1415e0ef8d73ab4dbf50abf357e85d0519b276bcf13d07b5da4139cb603db6"
+    },
+    {
+      "path": "src/lifecycle.mjs",
+      "sha256": "49e1762b80e58310e3739358376eb3f5b57da6de73a7c353ff9b380c87d19e20"
+    },
+    {
+      "path": "src/provider.mjs",
+      "sha256": "24acda11f39fd1101548e7ba04b6ce07ad6b97d0e9bc74af5264268fb1d1003a"
+    },
+    {
+      "path": "src/schema.mjs",
+      "sha256": "e1e505538339eba17d2a27c3deb150fccefdd84b20c9983f6dd850c134676c02"
+    },
+    {
+      "path": "src/scope.mjs",
+      "sha256": "80c65e8271579953eaed5f19533508511cddb7002f4a5ec91c046126f01da4da"
+    },
+    {
+      "path": "src/source-lock.mjs",
+      "sha256": "d255aff3e5b72717bee07a09bf0e2113bb4baa8418063bb6fbc48dd1b30ed57e"
+    },
+    {
+      "path": "src/store-internals.mjs",
+      "sha256": "45f252a7403cb4f2b0b90d341195a5a173bb3b9c3689e2e794643053b7499052"
+    },
+    {
+      "path": "src/validation.mjs",
+      "sha256": "75b5c10999c9f7aa560baf299a0bd1541e8194271589c559bb365216fd67eab9"
+    },
+    {
+      "path": "src/work-summary-evidence.mjs",
+      "sha256": "262c5a2d9b6eda3cd6c914ad9df3ed9de6d9992f6a700bccc844724186966488"
+    },
+    {
+      "path": "src/work-summary.mjs",
+      "sha256": "ddbff1df54337e9b7978a7520e3d488911a2223895d0a332c18561a7b01f8b10"
+    },
+    {
+      "path": "tests/backend.test.mjs",
+      "sha256": "21e050a4686ca103097344648740c32cb5b80d664e3d10e672fb193ec83af388"
+    },
+    {
+      "path": "tests/fixtures/task1-schema.sql",
+      "sha256": "997ffad4038e4dc4e412d7c52e452439c3d9165430d2cb51e2d0495cb00c9da4"
+    },
+    {
+      "path": "tests/harness-provider.test.mjs",
+      "sha256": "78153d5a7bccc1b08036d71a5b5fd9098c77e317fed3cec788f20b5db7377244"
+    },
+    {
+      "path": "tests/helpers.mjs",
+      "sha256": "0fa1e40a6ad408ad0013d5529e95c4b06a7cc6e472d5be255af9d7f2b7f2f10c"
+    },
+    {
+      "path": "tests/jobs.test.mjs",
+      "sha256": "02012bc6c40d0185190c2da57e6a11b14b58127b3237daaf51290300f410afc7"
+    },
+    {
+      "path": "tests/lifecycle.test.mjs",
+      "sha256": "864eb32204c0fc4d74ccbf83e9800b70bebf187c8ca124220fa428b351581d3f"
+    },
+    {
+      "path": "tests/migration.test.mjs",
+      "sha256": "da50cfae2739db1011b5bfca9fd98237ea8dc0a73bf0328044f1dd64d2fbd932"
+    },
+    {
+      "path": "tests/source-lock.test.mjs",
+      "sha256": "07211942864697b8c64962623419bec4bef6504bdd89ee3207a26b8d6486a3f7"
+    },
+    {
+      "path": "tests/work-summary.test.mjs",
+      "sha256": "55d29b3aa250a885a457c13a51c3987e58b3146f69dae4e59464af43882791dd"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "sha256": "c055bd796660fc8092de63fd3a32bf5467b40d0dd44106edd745138e701d6433"
+    },
+    {
+      "path": "tools/host-api/deny-network.cjs",
+      "sha256": "eb6a3c6295f7b95593505768afa0754792e53415cc0d69e7bceb1c5760dcce3e"
+    },
+    {
+      "path": "tools/host-api/provider.test.mjs",
+      "sha256": "3b1eceda9002751e59b6371278f1d841e7f28622b3037dac002000fc85fdfe70"
+    },
+    {
+      "path": "tools/test-harness-provider.mjs",
+      "sha256": "98482cb8ff683a6290c7015945a35bf7a08b25d1412ff514ee01d19d38f37095"
+    },
+    {
+      "path": "vendor/kovey/cjk.js",
+      "sha256": "95d0db52226fa4719d679a4a4cc2ed0de7f232cf8e2e0d304c9d752af2b6c8cb"
+    }
+  ]
+}

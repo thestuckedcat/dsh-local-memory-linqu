@@ -1,0 +1,52 @@
+TAP version 13
+# Subtest: caller cancellation between fulfilled response and queue commit never saves results
+not ok 1 - caller cancellation between fulfilled response and queue commit never saves results
+  ---
+  duration_ms: 120.0143
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\execution-authorization.test.mjs:67:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected "actual" to be strictly unequal to:
+    
+    'completed'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'completed'
+  actual: 'completed'
+  operator: 'notStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/execution-authorization.test.mjs:72:51)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: lifecycle or route changes inside final approval cannot overwrite current worker state
+not ok 2 - lifecycle or route changes inside final approval cannot overwrite current worker state
+  ---
+  duration_ms: 108.4976
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\execution-authorization.test.mjs:76:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected "actual" to be strictly unequal to:
+    
+    'completed'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'completed'
+  actual: 'completed'
+  operator: 'notStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/execution-authorization.test.mjs:81:46)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 0
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 357.6679

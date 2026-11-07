@@ -1,0 +1,135 @@
+# 05 本地长期记忆：统一产品待办与后续交接
+
+版本 `MEM-TODO-2`，2026-11-07。**M1已实现并完成真实安装/最终请求门验证；M2/M3仍未实现，M4/M5只交付可用子集。** 本文是05新增要求和未完工程的现行入口；旧Task 1/2/3报告保留各自受审基线，不由本文改写。安装包与验证证据见[README](README.md)、[机制说明](docs/mechanisms.md)与[独立评审](docs/m1-independent-review.md)。
+
+## 1. 已收束的产品形态
+
+主形态为Harness原生plugin＋本地后端。开发者从“记忆中心”查看**经验记忆、年度工作记录**两个独立分区，以列表＋侧边详情连续核对；另有统一“处理任务”入口。聊天仅显示命中提示和必要的缺证提醒。无需05依赖08完成，08以后组合已有入口。
+
+项目启用后自动从当前获准对话提炼，保留手动“记住这条”。普通经验校验后自动保存并可召回，明确标注“模型提炼、未核验”及来源；按当前问题自动召回，支持手动搜索。有命中才显示“本次召回N条经验”并可展开来源，**首版不提供单次跳过，只保留项目级召回开关**。未知项目时提示选择/登记，暂停记忆功能，普通聊天继续。
+
+一个研发项目显式登记多个仓库，经验仍有工作树、版本和构建适用条件。项目普通经验二次压缩为abstract，在本地跨项目发现；Agent决定首次建立共享索引，之后自动跟随最新有效版本，按当前许可检索相关明细。年度工作记录和证明正文不自动参加共享。长期未调用记忆存非C盘冷档，再做语义合并压缩；摘要优先、明细按需，不能整库塞入上下文。
+
+**源项目删除后，记忆独立保留。记忆中心明确“删除”即清除；可恢复内容使用单独“归档”动作。** 两者和会话移除是不同生命周期。年度维度自动形成项目/需求/问题探索的工作草稿，缺证明在对话中提醒，最终报告人工审定后本地导出Markdown/JSON。模型输出不等于本人贡献已核实。《年终总结维度.md》尚未提供，维度映射保持`pending_reference`，不妨碍先记录粗粒度事实。
+
+上述依据为既有PF-01..05、PF-13、PF-06a及集中Q05明确答复。没有尚待用户逐项确认的机制问题；下文路径、阈值、频率、接口与布局细节均是**可修改设计决定**，不冒称用户逐项选定。真实Provider、项目与证明路径作为运行时配置，不在本轮索取。
+
+## 2. 已完成组件和仍缺的用户旅程
+
+| 基线 | 已有代码/证据 | 覆盖界限 |
+|---|---|---|
+| 本地SQLite/FTS、严格scope、来源/版本、同源去重 | `src/backend.mjs`、`src/scope.mjs`；[Task 1](docs/task1-review.md) | 现有scope是具体root/worktree/revision/build身份，不是逻辑多仓项目 |
+| 持久队列、预算、结果校验、unknown隔离 | `src/jobs.mjs`、`src/provider.mjs`；[Task 2](docs/task2-review.md) | 没有完整Host自动scheduler；旧queued不能自动获得新授权 |
+| 纠正、归档/恢复、权威删除账本 | `src/lifecycle.mjs`、`src/store-internals.mjs` | 不等于项目退休、跨项目共享或冷档删除传播已实现 |
+| 独立年度记录/证明状态 | `src/work-summary.mjs`、`src/work-summary-evidence.mjs`；[年度设计](docs/work-summary-design.md) | 缺实际提醒、维度模板映射、人工审定报告与正式导出 |
+| Provider桥接、当前消息hook、执行lease复核 | `plugin/`；[执行授权评审](docs/task3-execution-review.md)及[当前证据清单](evidence/task3-execution-verification.json) | 已有受审组件；真实Host grant/config映射、调度、主模型最终投影、UI及完整安装旅程仍缺 |
+
+旧证据记录Node26组件125项、Host内嵌Node24组件及原生库共146项通过；这是此前组件验证。`docs/implementation-route.md`固定实际来源：仅直接复用kovey固定版本CJK文件，其余Provider/hook为接口参考和自行实现；RestRegular、Hindsight等没有合入。
+
+### 2.1 2026-11-07 M1实施结果（v0.2.0）
+
+| 新增交付 | 实际文件/入口 | 验证边界 |
+|---|---|---|
+| 配置与数据根、批准路由 | `plugin/configuration.mjs`、`configDesign`（`docs/m1-plugin-design.md` §4） | 未知字段/越界预算/非本地路径拒绝；路由版本随配置变化 |
+| 逻辑项目/多仓目录与scope绑定 | `src/projects.mjs`、`plugin/project-registry.mjs`；catalog.sqlite v1 | 同scope冲突、退休保留、配置漂移degraded；会话按最具体worktree绑定 |
+| 真实Host准入/执行授权 | `plugin/host-grants.mjs` | 回执绑定活会话+绑定项目+开关+批准路由+来源锚；同lease撤权signal abort；未知不自动解闸 |
+| 自动调度与重启恢复 | `plugin/scheduler.mjs`；`src/jobs.mjs`新增只读`pending/list` | 每scope单任务、全局并发1、unknown不重发、有界幂等stop |
+| 主模型最终请求门 | `plugin/final-projection.mjs`；`llm/stream` waterfall | 每次请求重核已注入消息；删除/归档/退休/偏好/授权/路由/正文变化→阻断且零dispatch；真实安装库探针3/3 |
+| Host/Client入口 | `plugin/index.mjs`、`client.js`、`/memory`命令、11个模型工具、同源管理API | 安装后插件行active、`POST /dsh-local-memory/api` ready、客户端`settings.section`注册`local-memory` active |
+| 年度草稿/证明提醒/报告/导出 | `src/work-summary.mjs`复用、`plugin/proof-reminders.mjs`、`src/reports.mjs`、`plugin/work-management.mjs` | 草稿/确认/证据/审定/两格式导出与STALE负例通过；证据正文读取仍需异步确认接缝（已知限制） |
+| 验证与机制 | `tests/*.test.mjs`（258项）、`tools/test-m1-host.mjs`、`evidence/m1-*.json`、`docs/mechanisms.md` | 本地Node26 258/258；真实安装库探针3/3；未调用真实业务Provider、未做视觉走查、无OS级出口证明 |
+
+本表不替代M2/M3：abstract共享、冷档、跨项目明细、`consumeCapabilityEvent`代次消费仍未实现；年度维度模板仍`pending_reference`。
+
+同日回归修复：`plugin/final-projection.mjs`的`llm/stream`监听器必须**同步返回`AsyncIterable`**；原`async`声明会让普通聊天与其他插件的模型请求收到Promise并报`stream is not async iterable`，属插件/Host接口硬合同缺陷。修复与证据见[流接口修复记录](docs/stream-contract-fix.md)；重启桌面Harness后普通流式对话已现场复验恢复。另对最终门做fail-closed加固：未登记的own召回消息阻断、无投影时不注入召回（见`docs/mechanisms.md` MEM-FINAL-02/03）。
+
+## 3. 后续增量与退出条件
+
+所有未勾选项均**待实现/待验证**。优先做一条真实入口闭环，避免新增大量底座却无法使用；已有安全边界不因闭环优先而省略。
+
+### M1：单个登记项目的最小Host闭环
+
+- [x] **MEM-101 范围与真实授权适配**：已实现`plugin/project-registry.mjs`、`plugin/host-grants.mjs`、`plugin/configuration.mjs`。登记逻辑项目、仓库列表及当前具体scope；真实Host会话/调用方/来源读取权限映射到现有入队准入与`authorizeExecution`。授权固定job、purpose、source/version/inputDigest、route及代次，同lease撤权使AbortSignal失效；不接受模型自报scope或布尔开关作为可信授权。证据：`tests/project-registry.test.mjs`、`tests/host-grants.test.mjs`、`tests/plugin-entry.test.mjs`。
+- [x] **MEM-102 可见入口与调度**：已实现`plugin/index.mjs`、`plugin/scheduler.mjs`、`client.js`。提供登记/启用/手动记忆/搜索/来源/删除和任务状态，复用已有queue/provider/hooks。每scope一个在途任务，全局默认1个，轮询默认1秒；入队只登记，scheduler获取当前有效许可后执行，不重选Provider，不盲目重发unknown。证据：`tests/scheduler.test.mjs`、`tests/plugin-entry.test.mjs`、真实安装后`/dsh-local-memory/api`与客户端slot核对。
+- [x] **MEM-103 主模型最终请求复核**：已实现`plugin/final-projection.mjs`。把召回集与确切source/version/grant/route绑定，在`llm/stream`水的最终dispatch前检查适用性与撤权；只撤回本插件追加内容，保留原用户消息和工具配对；现有pre-step投影不算此门通过。证据：`tests/final-projection.test.mjs`（含删除后同一请求阻断、`next()`零调用；未登记own消息fail-closed；不可注入未投影召回）与真实安装库探针`evidence/m1-host-probe.json`（3/3）。
+- [x] **MEM-104 第一条闭环验收**：已在隔离临时profile/合成源（FakeHost + 真实SQLite/队列）跑通：登记→启用→当前对话提炼→持久保存→新会话命中→查看来源→纠正→删除→重启及晚到结果不能复活；真实Host侧安装、最终请求门（真实Cordis/LlmRuntime）和撤权/负例分别验证。证据：`tests/plugin-entry.test.mjs`、`tests/execution-authorization.test.mjs`、`evidence/m1-verification.json`。边界：未以真实业务Provider跑提取/召回。
+
+M1可进入后续开发的前提：真实Host绑定证据和负例完成；不能仅凭当前Host API列表推断存在授权功能。先用现有来源锁核接口；如果缺少必要权限信息，适配层默认拒绝相关模型动作，记录具体Host缺口而不写假API。安装/注册API验证沿用已有授权及[隔离验证计划](docs/shared/live-installation-plan.md)，不在本轮提前执行。
+
+### M2：逻辑多仓、共享abstract与独立保留
+
+- [x] **MEM-201 多仓映射**：已实现`src/projects.mjs`。逻辑`projectId`只负责组织；`RepositoryBinding`含`repoId, canonicalRoot, worktreeRoot, revision, buildVariant, scopeRef, bindingRevision`。沿用`createScope`具体身份与权限过滤，逐scope受控查询后聚合，不把过滤改成全局或宽泛project字符串；新增仓库不扫描全部历史、不迁移/放宽旧scope授权。证据：`tests/projects.test.mjs`、`tests/project-registry.test.mjs`。边界：abstract引用与共享关系仍属MEM-202。
+- [ ] **MEM-202 abstract与共享关系**：新增`src/abstracts.mjs`、`src/sharing.mjs`。abstract引用有效记忆及其版本、适用条件、内容摘要和生成route；共享关系记录sourceProject/targetProject、Agent选择依据abstractRevision、grantRef及状态。首次由Agent索引，后续读取最新有效revision；许可改变立即生效，不等待下一次摘要刷新。shared recall明细必须二次检验原scope/记忆状态及目标许可，不复制成无来源的目标项目新事实。
+- [ ] **MEM-203 项目退休**：**v0.2.0已实现子集**：catalog保留`retired`状态、repositories与记忆store，退休后不再绑定新会话、已有记忆仍可读/管理（`tests/project-registry.test.mjs`）。仍缺：独立`src/project-lifecycle.mjs`、源码不可核时的historical/unknown适用性标记、旧共享许可的逐项处理；完整MEM-203保持未完成。
+- [ ] **MEM-204 失效和消费代次**：新增`plugin/capability-events.mjs`，沿用共同合同v1事件。当前`consumeCapabilityEvent`没有完整producer generation对比，新适配先持久化每producer/scope lastGeneration及eventId；来源恢复时同步记录生产方当前generation，不能只依赖已收到事件的最大值。每次应用迟到移除前，通过本地适配`getScopeState`比较生产方当前状态/代次，避免尚未投递的restore被旧移除覆盖；断档/unknown/partial或无法重核则暂停相关来源使用。适配不是声称Host已提供该方法；03停用时保留待核并靠本地检查。源项目注销不冒充`session_removed`，新kind协商后才能交给支持它的消费者。
+
+M2退出：合成驱动/用户库两个登记仓库不互相放宽适用性；两个逻辑项目通过摘要发现、许可明细读取；撤权/删除即时断开；项目退休后仍可查看/管理已有记忆。乱序事件和重启重放不复活旧状态。
+
+### M3：非C盘冷档、再次压缩和删除闭环
+
+- [ ] **MEM-301 独立数据根**：新增`src/storage-layout.mjs`、`src/cold-archive.mjs`。设计默认`E:/dsh-data/05-local-memory/<profile>`，`hot/`、`cold/`、`authority/`、`staging/`、`reports/`同一本地固定卷，独立于源码目录及plugin安装目录；**本轮不创建该数据根**。部署重新验证卷类型、ACL、非网络/非链接以及路径逐段身份。C盘仅允许隔离测试fixture；生产冷档无非C盘可用时停用冷档并显示容量/配置异常，不悄悄回C。
+- [ ] **MEM-302 分层召回**：长期未有效调用默认90天转冷，可配置；仅通过权限/适用性检查且实际交付的用户检索更新lastAccess，后台压缩/索引遍历不能令全库永不变冷。热索引只保留冷条目的安全摘要与ref，按当前问题、预算、来源有效性选中后再读取小段明细。二次压缩是语义合并＋保留来源图，不是只压ZIP；原明细独立保留，不因总结而丢失证明。
+- [ ] **MEM-303 可恢复归档与明确删除**：`archive`进入用户归档、不参与自动召回；`restoreArchived`需重新核许可/适用性。冷存储是tier，不等于用户归档状态：active+cold仍可按需召回。明确删除先在独立权威账本提交tombstone/提升epoch/撤销在途lease，再清理本工具控制的正文、FTS、冷块、abstract、共享缓存和报告受控缓存。失败处保持不可读并重试清理，不能因残留块而恢复可召回状态。不得承诺SSD底层擦除或撤回模型已接收数据。
+- [ ] **MEM-304 崩溃/备份**：转冷journal记录prepared→copied_verified→index_switched→source_cleaned，单writer、同卷原子替换和文件摘要核对；重启依权威账本恢复。备份仅包含用户明确选择的本地内容，恢复先读取现行删除权威再重建索引。authority丢失/不匹配时禁止自动导入旧备份。不可变revision中的旧正文也纳入受控清理，不留下“旧版本仍可搜索”的旁路。
+
+M3退出：非C盘路径断开、磁盘满、搬移中崩溃、旧备份、摘要残留和晚到模型结果均不得突破删除。上下文检查只出现所选摘要/片段，不出现整库；冷存储路径和上下文token控制分别证明。
+
+### M4：年度工作草稿、证明和人工审定报告
+
+- [x] **MEM-401 当前获准对话自动草稿**（v0.2.0子集）：复用`work_summaries`、draft校验和持久queue，独立记录项目/需求/问题、目标、本人贡献、过程/结论、结果、时间精度、来源；与普通经验job同一次准入原子入队。证据：`tests/work-management.test.mjs`、`tests/plugin-entry.test.mjs`。仍缺：按明确requirement/problem标识聚合的完整规则与用户审定断言的冲突保留（现由merge/correct流程覆盖）。
+- [x] **MEM-402 证明管理与提醒**（v0.2.0子集）：`plugin/proof-reminders.mjs`在pre-step附一次简短“缺证提醒”，按`(scope,record,claim,generation)`24小时去重，可延后/停用；不另发外部通知；引用区分unread/current/changed/unavailable，读取正文仍需用户确认（HTTP入口当前返回`USER_ACTION_REQUIRED`，见已知限制）。证据：`tests/proof-reminders.test.mjs`。
+- [x] **MEM-403 审定报告**（v0.2.0子集）：`src/reports.mjs`固定时间范围、项目集合、选中workRevision、每条确认与证明状态及待补证清单；审定绑定`reportDigest+sourceRevisions`，源变化`REPORT_STALE`；草稿无需模型即可生成。证据：`tests/reports.test.mjs`。
+- [x] **MEM-404 本地导出**（v0.2.0子集）：Markdown＋JSON，保留引用、未核验/缺证标记、时间精度、schema和manifest摘要；默认去掉绝对路径，只给稳定ref；未审定只能导出标明draft的材料。证据：`tests/reports.test.mjs`（含离线导出与路径约束）。
+- [ ] **MEM-405 模板增量**：《年终总结维度.md》提供后，单独创建带版本/来源摘要的映射，不猜评分维度。映射不会修改原工作事实；用缺维度/无来源/维度冲突负例验收，未提供模板不阻断粗粒度草稿与基础报告。**当前`dimensionMapping.status='pending_reference'`，仍未实现。**
+
+M4退出：从合成开发对话形成草稿→缺证提示→仅引用/经授权读取证明→人工纠正贡献/时间→选定记录审定→本地两格式导出。变化或缺证必须如实显示，不能把模型写出的成果当完成证据。
+
+### M5：完整记忆中心、部署与最终交付
+
+- [ ] **MEM-501 管理界面**：v0.2.0已交付`client.js`基础版：经验/年度两分区及统一任务入口、列表＋侧边详情、搜索/来源/纠正/归档恢复/明确删除/项目登记与开关/退休、任务状态（含unknown“待核”用户确认、无盲重试）、报告确认与两格式导出。仍缺：年度记录人工合并/纠正与证明正文评审UI、窄屏专项、删除前“受影响记录与派生引用”清单等完整交互，故不整项勾选。
+- [ ] **MEM-502 安装/更新/停用**：v0.2.0已交付：实际manifest/`cordis.patch.yml`/导出与显示资源、本地bundle安装、停用撤销lease/停止scheduler/清理注入且保留数据（dispose实测；卸载默认保留dataRoot）。仍缺：更新停writer/版本备份/迁移、schema不兼容只读、离线依赖闭包证明。
+- [ ] **MEM-503 最终验证与独立评审**：已完成：范围隔离/Provider预算/撤权/最终请求/队列故障/删除/年度审定/安装与停用的组件与安装级负例、独立评审（`docs/m1-independent-review.md`）。仍缺：真实业务Provider旅程、完整GUI视觉走查、OS级出口与子进程/DNS/代理负例、共享与冷档（对应M2/M3未实现）。
+- [ ] **MEM-504 完整机制交付**：`docs/mechanisms.md`已按[机制说明合同](docs/shared/mechanism-document-contract.md)交付（稳定机制ID、触发、规则、硬边界、代码/接口、命令与证据、失败恢复、skill可改参数），但独立评审曾判阻断（F-01..F-05），修复后的复核通过前不勾选；原阶段机制保留历史身份。
+
+## 4. 接口与状态合同（v0.2.0已实现子集）
+
+以下为设计合同；v0.2.0已实现 `project.register/update/retire/preference`、`memory.search/list/get/correct/archive/restore/delete`、`task.list/inspect/cancel/confirmRemoteQuiescence`、`recovery.confirm`、`work.*`、`report.draft/get/approve/export`、`reminder.defer/disable`，通过同源HTTP `/dsh-local-memory/api` 与模型工具复用同一实现。`MEM-API-ABSTRACT` 未实现；`MEM-API-PROOF` 的正文读取确认仍受同步dispatch限制（见README已知限制）。
+
+所有新控制请求使用`schemaVersion:1, operationId, expectedRevision, projectId, input`，身份与许可从可信调用上下文注入，不接受模型自报grant。相同operationId＋标准化payloadDigest返回原结果；不同payload拒绝`OPERATION_CONFLICT`。响应含`currentRevision, state, evidenceRefs, reasonCode?`，原始凭据/Provider错误不外露。
+
+| 接口ID | input及返回要点 | 边界/错误 |
+|---|---|---|
+| MEM-API-PROJECT register/bind/retire | register `{name,repositories:[RepositoryBinding]}`；bind `{sessionRef,projectRevision}`；retire `{reason}`；返回项目revision/具体scope列表/retired | realpath固定根、未知仓库拒绝；`UNBOUND/STALE_REVISION/OUTSIDE_ROOT`；退休保留记忆 |
+| MEM-API-RECALL search | `{query,mode:manual或automatic,collections:['memories'],limit,cursor?,contextRef}`；返回 `{items:[{recordRef,revision,origin,verification,applicability,sourceRefs,tier}],nextCursor?,projectionDigest}` | limit默认10、上限50；cursor绑定查询/projectRevision/许可及页边界；变化`STALE_CURSOR`；年度不混入自动经验 |
+| MEM-API-ABSTRACT refresh/share | refresh `{sourceProjectId,reason:manual或coalesced}`返回jobRef；share `{sourceProjectId,abstractRevision,decisionBasis,permissionRef}`返回relationRevision | 已存在索引后无需逐次Agent重选；`SHARE_DENIED/STALE_ABSTRACT/ROUTE_CHANGED`；只返回获准abstract投影 |
+| MEM-API-LIFECYCLE archive/restore/forget | `{collection,recordId,recordRevision}`返回 `{state,generation,cleanupState}` | 复用底层lifecycle但补全派生tier；`forgotten`不可restore；`cleanup_pending`仍禁止读取 |
+| MEM-API-TASK list/inspect/cancel | `{stateFilter?,cursor?,limit}`、`{jobRef}`；返回安全状态、阶段、耗时、原因及合法actions | 取消不等于远端已静止；unknown仅可信recovery调查可解闸；不向普通客户端开放“标记远端完成” |
+| MEM-API-PROOF attach/defer | `{workId,workRevision,claimRef,localRef,readRequested}`或`{workId,claimRefs,deferUntil}`返回proofStatus/提醒状态 | readRequested只是请求，仍查真实范围许可；`PROOF_UNREADABLE/PROOF_CHANGED`不提升support |
+| MEM-API-REPORT draft/approve/export | draft `{timeRange,projectIds,workRefs,templateRef?}`；approve `{reportId,reportDigest,sourceRevisions}`；export `{reportId,revision,format,outputRootRef,includeLocalPaths:false}` | 源变化`REPORT_STALE`；未审定只能draft；跨项目汇总必须具备每个project读取许可 |
+
+设计默认：提炼继承现有队列限额，abstract积累10条有效变动或距首条变动24小时后合并刷新、最短间隔10分钟，手动刷新仍受预算/许可约束；不设置无授权定时模型任务。经验召回投影上限优先按批准模型精确token计数、默认min(4096 tokens,请求可用预算的10%)；无可信计数/最终dispatch门禁时不给自动追加，手动本地搜索仍可用。分页/容量和频率可改，不需要重新产品确认，但要重测受影响边界。
+
+新增独立project catalog保存project/repository_binding/abstract_revision/share_relation/record_locator/archive_job/report_revision/reminder/event_cursor；所有表带schema版本、scope/项目键和revision，复合唯一约束按实体ID＋revision，外键在单事务内维护。定位表只存ref和摘要，不重复存秘密正文。抽象/报告依赖边`derived_from(recordRef,revision)`供删除传播与读取时复核；catalog失败不能绕过底层authority。数据迁移单writer持本地锁→校验旧schema/authority→写新文件→完整性检查→原子发布manifest，旧generation/queued许可不得自动升级。详细SQL/迁移由M2开始前按本文字段与新测试交接补齐，不用修改旧受审数据库来假装多仓已有。
+
+## 5. 最小验收映射和依赖
+
+| 验收ID | 覆盖待办 | 需要观察的结果 | 2026-11-07状态 |
+|---|---|---|---|
+| MEM-A01 | 101..104 | 真实隔离Host入口闭环；撤权后零后续dispatch/提交；最终请求只含合法所选经验 | **通过（合成Provider边界）**：`tests/plugin-entry.test.mjs`、`evidence/m1-host-probe.json`；真实业务Provider未运行 |
+| MEM-A02 | 201..204 | 多仓范围不放宽；abstract发现/最新明细；撤权/乱序/项目退休的分别处理 | **部分**：多仓/退休已验；abstract共享/事件代次未实现 |
+| MEM-A03 | 301..304 | 非C本地卷、冷档按需展开、崩溃恢复、删除后旧块/备份/共享均不能复活 | **未实现**（删除权威账本沿用既有组件） |
+| MEM-A04 | 401..405 | 草稿来源/证明/本人审定/两格式报告可追溯；缺模板不造维度 | **部分通过**：401..404已有测试；405待模板 |
+| MEM-A05 | 501..504 | 两分区＋任务完整交互、停用/更新/卸载与出口负例、完整机制说明 | **部分通过**：基础UI/安装停用负例/机制说明与独立评审已完成；完整交互与出口实测待补 |
+
+M1不等待03/04/08：合成事件、来源和本地入口可独立验收；M2共享不等待向量后端；M4提醒不依赖外部通知；M5组合08前先测试自身生命周期。后置：多Agent MCP、Hindsight/OpenViking等新服务、远端向量、全历史扫描和高级语义检索，不成为首版前提。**v0.2.0已是可安装首版（M1闭环），但不是完整05交付**：M2/M3与M5剩余项仍未实现，安装包不构成这些能力的验收。
+
+编码时为上述验收创建真实行为测试，再记录运行时/构件摘要、命令、退出码、断言和覆盖限制；本轮只检查文档与独立评审，不写不存在的测试命令或重新使用旧测试数冒充新增功能成功。
+
+## 6. 局部修改与修订
+
+沿用[局部修订规则](docs/shared/design-change-policy.md)：新增字段/筛选使用新ID和默认语义；改阈值/文案只变局部规则及相关验收；改变共享许可、删除语义、真实接收方或跨项目自动化须重核受影响产品项/权限，不能当普通参数。新增schema或公共事件给迁移和旧客户端行为。修订记录保留已实现基线，完成待办时填实际文件/接口/验收证据，不直接给全部checkbox打勾。
+
+| 修订 | 来源与影响 | 实现状态 |
+|---|---|---|
+| MEM-TODO-1 / 2026-11-07 | 汇总已确认PF、删除即清除、年度自动草稿与高层集中确认要求；MEM-101..504/API/A01..A05 | 本文均为后续待办，旧组件仍按原证据计 |
+| MEM-TODO-2 / 2026-11-07 | 用户要求继续实现、自测并同步仓库；M1方案落地为v0.2.0安装包，新增M1/MEM-201/M4子集/M5部分勾选与验收状态列 | M1、MEM-201、MEM-401..404、MEM-504已实现；M2/M3/405与M5剩余项未完成；证据见`evidence/m1-*`、`docs/mechanisms.md`、`docs/m1-independent-review.md` |

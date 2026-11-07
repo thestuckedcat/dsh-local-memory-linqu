@@ -1,0 +1,58 @@
+TAP version 13
+# Subtest: actual Host Context and SDK feed a completed prepared stream into the real memory queue
+ok 1 - actual Host Context and SDK feed a completed prepared stream into the real memory queue
+  ---
+  duration_ms: 151.2012
+  type: 'test'
+  ...
+# Subtest: actual Runtime local error finish keeps the real queue unknown and quarantined
+ok 2 - actual Runtime local error finish keeps the real queue unknown and quarantined
+  ---
+  duration_ms: 106.3878
+  type: 'test'
+  ...
+# Subtest: actual assembler default stop is not accepted when an adapter returns partial text then EOF
+ok 3 - actual assembler default stop is not accepted when an adapter returns partial text then EOF
+  ---
+  duration_ms: 1.7016
+  type: 'test'
+  ...
+# Subtest: a settings event with unchanged provider metadata rejects a queued request before SDK I/O
+ok 4 - a settings event with unchanged provider metadata rejects a queued request before SDK I/O
+  ---
+  duration_ms: 62.535
+  type: 'test'
+  ...
+# Subtest: actual SDK block assembly preserves text while discarding reasoning and replay metadata
+ok 5 - actual SDK block assembly preserves text while discarding reasoning and replay metadata
+  ---
+  duration_ms: 1.8478
+  type: 'test'
+  ...
+# Subtest: a failure in actual prepareCall remains unknown without invoking adapter stream
+ok 6 - a failure in actual prepareCall remains unknown without invoking adapter stream
+  ---
+  duration_ms: 1.4597
+  type: 'test'
+  ...
+# Subtest: native fiber disposal cancels a hung stream with bounded cleanup and never accepts late stop
+ok 7 - native fiber disposal cancels a hung stream with bounded cleanup and never accepts late stop
+  ---
+  duration_ms: 22.7007
+  type: 'test'
+  ...
+# Subtest: the actual installed-library bridge suite never invokes the guarded network API sinks
+ok 8 - the actual installed-library bridge suite never invokes the guarded network API sinks
+  ---
+  duration_ms: 0.1315
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 549.1209

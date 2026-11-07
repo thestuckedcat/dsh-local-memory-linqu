@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-05",
+  "startedAtUtc": "2026-11-05T15:48:24.714Z",
+  "durationMs": 23580.6857,
+  "purpose": "Provider bridge with component regressions and actual installed-library Context; synthetic adapters only",
+  "executable": "E:/dsh/DeepSeek Harness.exe",
+  "archive": "E:/dsh/resources/app.asar",
+  "hashes": {
+    "executable": "7ae939b5a82b220fbd8ad04dfbafaaedb5a49ab43dc884a5db6381f678dd0cc4",
+    "archive": "e1b6f25fa937da98086c3e77af77aa14791105963c4d337a1c42179d232c6915"
+  },
+  "artifacts": [
+    {
+      "path": "plugin/harness-provider.mjs",
+      "sha256": "f63fc69df3c85a167a85fefc4b7fc552e3fcbd944e049b2c3f9d1cea271e9f32"
+    },
+    {
+      "path": "src/jobs.mjs",
+      "sha256": "9b1415e0ef8d73ab4dbf50abf357e85d0519b276bcf13d07b5da4139cb603db6"
+    },
+    {
+      "path": "tests/harness-provider.test.mjs",
+      "sha256": "78153d5a7bccc1b08036d71a5b5fd9098c77e317fed3cec788f20b5db7377244"
+    },
+    {
+      "path": "tools/host-api/provider.test.mjs",
+      "sha256": "3b1eceda9002751e59b6371278f1d841e7f28622b3037dac002000fc85fdfe70"
+    },
+    {
+      "path": "tools/test-harness-provider.mjs",
+      "sha256": "98482cb8ff683a6290c7015945a35bf7a08b25d1412ff514ee01d19d38f37095"
+    },
+    {
+      "path": "tools/host-api/deny-network.cjs",
+      "sha256": "eb6a3c6295f7b95593505768afa0754792e53415cc0d69e7bceb1c5760dcce3e"
+    }
+  ],
+  "args": [
+    "--expose-internals",
+    "--require",
+    "E:\\dsh\\plugin\\05-local-memory\\tools\\host-api\\deny-network.cjs",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "--test-reporter-destination=E:\\dsh\\plugin\\05-local-memory\\evidence\\task3-provider-host24.tap",
+    "tests/backend.test.mjs",
+    "tests/harness-provider.test.mjs",
+    "tests/jobs.test.mjs",
+    "tests/lifecycle.test.mjs",
+    "tests/migration.test.mjs",
+    "tests/source-lock.test.mjs",
+    "tests/work-summary.test.mjs",
+    "tools/host-api/provider.test.mjs"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "errorCode": null,
+  "tapSummary": {
+    "tests": 93,
+    "pass": 93,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "verified": true,
+  "profileLoaded": false,
+  "realProviderCalled": false,
+  "declarationBasis": "Inspected test code mounts isolated services and fake adapters, not user profiles or real Provider configurations; not file access monitoring.",
+  "networkGuard": "Covered Node API sinks only; no whole Host, native module, child-process or browser egress certification",
+  "tapSha256": "e2c63cbfb21a80d1fde563ab3f53f9ff0d1986241131ba7006c5d73f5a53987e"
+}

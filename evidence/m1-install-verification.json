@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-07",
+  "purpose": "Installed-bundle observation for dsh-local-memory-linqu v0.2.0 in the DSH desktop profile (linked local package). Recorded by the Lead from plugin_manager/list_plugins, the same-origin management route, and Client slot inspection; not a screenshot or a full visual walkthrough.",
+  "profile": {
+    "name": "desktop",
+    "dir": "C:\\Users\\admin\\.dsh\\profiles\\desktop",
+    "bundleDependency": "dsh-local-memory-linqu: link:E:/dsh/plugin/05-local-memory",
+    "bundleListContains": "dsh-local-memory-linqu"
+  },
+  "installation": {
+    "tool": "plugin_manager install_bundle",
+    "target": "E:\\dsh\\plugin\\05-local-memory",
+    "result": {
+      "stage": "enable",
+      "enabled": true,
+      "changed": true,
+      "application": "applied",
+      "bundle": "dsh-local-memory-linqu",
+      "version": "0.2.0",
+      "warnings": []
+    }
+  },
+  "host": {
+    "baseline": "0.2.1-rc.5",
+    "embeddedNode": "24.21.0",
+    "executableSha256": "7ae939b5a82b220fbd8ad04dfbafaaedb5a49ab43dc884a5db6381f678dd0cc4",
+    "appAsarSha256": "e1b6f25fa937da98086c3e77af77aa14791105963c4d337a1c42179d232c6915",
+    "guiOriginAtObservation": "http://127.0.0.1:8656"
+  },
+  "checks": {
+    "pluginEntry": {
+      "observedVia": "plugin_manager action=list_plugins",
+      "entryId": "include:dsh-local-memory-linqu",
+      "moduleName": "dsh-local-memory-linqu",
+      "patchId": "dsh-local-memory-linqu",
+      "enabled": true,
+      "fiberPhase": "active"
+    },
+    "statusRoute": {
+      "observedVia": "POST /dsh-local-memory/api with operation=status (same-origin not required for local curl; route enforces Origin when present)",
+      "httpStatus": 200,
+      "responseSummary": {
+        "ok": true,
+        "plugin": "dsh-local-memory-linqu",
+        "state": "ready",
+        "registryState": "ready",
+        "schedulerState": "running",
+        "provider": "active",
+        "recallIntegration": "llm-stream-gate",
+        "grantsRevoked": false,
+        "projectCount": 0
+      }
+    },
+    "clientSlot": {
+      "observedVia": "cordis_inspect_query platform=client provider=Slots method=listSubTree root=settings.section",
+      "slot": "settings.section",
+      "occupant": {"id": "local-memory", "order": 10, "active": true},
+      "conclusion": "The Memory Center settings page is registered in the live Web client."
+    },
+    "dataRoot": {
+      "path": "E:/dsh-data/05-local-memory/default",
+      "created": true,
+      "contents": ["catalog.identity.json", "catalog.sqlite"],
+      "note": "The profile subdirectory resolves to 'default' because the Host process does not export DSH_PROFILE; this is the documented fallback in plugin/configuration.mjs. Configurable via config.dataRoot/profile."
+    },
+    "securityBoundariesObserved": {
+      "managementPath": "/dsh-local-memory/api",
+      "methodEnforced": "POST only (GET returns 404/405 at the web carrier; no management route for GET)",
+      "noAbsolutePathsInStatus": true
+    },
+    "managementApiRoundTrip": {
+      "observedVia": "POST /dsh-local-memory/api (user actor) with PowerShell Invoke-RestMethod",
+      "register": {
+        "operation": "project.register",
+        "inputName": "install-verification",
+        "repositoryRoot": "E:/dsh/plugin/05-local-memory",
+        "result": {"ok": true, "state": "active", "revision": 1, "localRootsVisible": false}
+      },
+      "retire": {
+        "operation": "project.retire",
+        "expectedRevision": 1,
+        "result": {"ok": true, "state": "retired", "revision": 2, "memoryRetained": true, "memoryDeleted": false}
+      },
+      "list": {
+        "operation": "project.list",
+        "result": "install-verification / retired / revision 2 persisted; only root names returned, no absolute paths"
+      },
+      "note": "The retired install-verification project remains in the real desktop data root as an observable delivery artifact; it is retired, contains no memory records, and can be ignored or removed only by a future explicit maintenance action."
+    },
+    "finalCodeGenerationReload": {
+      "observedVia": "plugin_manager set_plugin disable/enable, then POST /dsh-local-memory/api operation=status",
+      "observedAfterUtc": "2026-11-07T09:22:17Z",
+      "result": {
+        "ok": true,
+        "state": "ready",
+        "recallIntegration": "llm-stream-gate",
+        "scheduler": "running",
+        "provider": "active",
+        "cold": {"status": "not_configured", "detail": "M3 cold tier is not implemented in v0.2.0; all memory data stays local."},
+        "registry": {"projectCount": 1, "activeProjectCount": 0, "scopeCount": 1, "openStores": 1},
+        "grants": {"state": "active", "revoked": false}
+      },
+      "note": "Confirms the plugin reloads to a ready state with the cold status field. Because the Host process may keep the previously imported ESM module generation until an app restart, this observation alone does not prove the very latest on-disk generation is executing; see the independent review R-04 and the reload/restart requirement in the README limitations."
+    }
+  },
+  "limitations": [
+    "No real business Provider call was made; extraction/recall were exercised with synthetic adapters in tests and the isolated probe.",
+    "No manual visual walkthrough/screenshot of the Memory Center page was taken; only Host state, route response and slot registration were observed.",
+    "The installed plugin had no registered project during observation, so extraction/recall hooks correctly paused (lastDiagnostic admission_refused) while ordinary chat continued.",
+    "The plugin is a linked local package; editing the workspace changes the installed bytes, and reload/restart is required for a fresh module generation."
+  ]
+}

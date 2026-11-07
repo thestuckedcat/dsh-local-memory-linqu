@@ -1,0 +1,70 @@
+TAP version 13
+# Subtest: the pinned installed host exposes the expected runtime and service lifecycle
+ok 1 - the pinned installed host exposes the expected runtime and service lifecycle
+  ---
+  duration_ms: 3.3513
+  type: 'test'
+  ...
+# Subtest: real Cordis plugin disposal removes event listeners and contributions
+ok 2 - real Cordis plugin disposal removes event listeners and contributions
+  ---
+  duration_ms: 0.5968
+  type: 'test'
+  ...
+# Subtest: prepareCall freezes explicit controls and dispatches once through the registered adapter
+ok 3 - prepareCall freezes explicit controls and dispatches once through the registered adapter
+  ---
+  duration_ms: 2.4115
+  type: 'test'
+  ...
+# Subtest: a prepared call remains bound to its adapter generation after registration replacement
+ok 4 - a prepared call remains bound to its adapter generation after registration replacement
+  ---
+  duration_ms: 1.2578
+  type: 'test'
+  ...
+# Subtest: host error and aborted chunks can be synthesized locally and are not remote completion receipts
+ok 5 - host error and aborted chunks can be synthesized locally and are not remote completion receipts
+  ---
+  duration_ms: 1.0002
+  type: 'test'
+  ...
+# Subtest: BlockAssembler defaults to stop without a finish chunk so bridge must track explicit termination
+ok 6 - BlockAssembler defaults to stop without a finish chunk so bridge must track explicit termination
+  ---
+  duration_ms: 0.0554
+  type: 'test'
+  ...
+# Subtest: agent pre-step waterfall supplies the subject and filters unrelated scoped listeners
+ok 7 - agent pre-step waterfall supplies the subject and filters unrelated scoped listeners
+  ---
+  duration_ms: 0.6257
+  type: 'test'
+  ...
+# Subtest: session notifications carry stable event sequence and source identity in an in-memory store
+ok 8 - session notifications carry stable event sequence and source identity in an in-memory store
+  ---
+  duration_ms: 1.6578
+  type: 'test'
+  ...
+# Subtest: bundle compatibility and telemetry switch use the pinned boot APIs without initializing a profile
+ok 9 - bundle compatibility and telemetry switch use the pinned boot APIs without initializing a profile
+  ---
+  duration_ms: 1.4738
+  type: 'test'
+  ...
+# Subtest: the audit guard blocks covered connection APIs and earlier imports or cases did not invoke these covered sinks
+ok 10 - the audit guard blocks covered connection APIs and earlier imports or cases did not invoke these covered sinks
+  ---
+  duration_ms: 0.4449
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 184.3829

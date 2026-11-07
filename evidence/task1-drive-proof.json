@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "checked_on": "2026-11-04",
+  "method": "kernel32.GetDriveTypeW",
+  "accepted_type": 3,
+  "drives": [
+    {
+      "root": "C:\\",
+      "drive_type": 3
+    },
+    {
+      "root": "E:\\",
+      "drive_type": 3
+    },
+    {
+      "root": "H:\\",
+      "drive_type": 3
+    }
+  ],
+  "scope": "This machine, current implementation; Host startup must revalidate before installation"
+}

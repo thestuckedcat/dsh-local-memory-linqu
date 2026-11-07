@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: native LLM services cannot prepare without an explicit execution authority
+ok 1 - native LLM services cannot prepare without an explicit execution authority
+  ---
+  duration_ms: 70.5815
+  type: 'test'
+  ...
+# Subtest: native preparation awaiting permission revocation never starts the adapter stream
+ok 2 - native preparation awaiting permission revocation never starts the adapter stream
+  ---
+  duration_ms: 101.6789
+  type: 'test'
+  ...
+# Subtest: native stream revocation stays unknown after late stop and leaves the next job gated
+ok 3 - native stream revocation stays unknown after late stop and leaves the next job gated
+  ---
+  duration_ms: 154.6904
+  type: 'test'
+  ...
+# Subtest: native successful execution commits only with the same live authority
+ok 4 - native successful execution commits only with the same live authority
+  ---
+  duration_ms: 214.0248
+  type: 'test'
+  ...
+# Subtest: native execution cases do not invoke covered network sinks
+ok 5 - native execution cases do not invoke covered network sinks
+  ---
+  duration_ms: 0.0667
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 715.4532

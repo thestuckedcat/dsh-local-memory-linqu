@@ -1,0 +1,760 @@
+TAP version 13
+# Subtest: CJK recall and management export stay inside explicit project/worktree/version scopes
+ok 1 - CJK recall and management export stay inside explicit project/worktree/version scopes
+  ---
+  duration_ms: 366.7182
+  type: 'test'
+  ...
+# Subtest: records survive reopen without a model or network dependency
+ok 2 - records survive reopen without a model or network dependency
+  ---
+  duration_ms: 152.2507
+  type: 'test'
+  ...
+# Subtest: missing scope, caller scope override, and source identity overwrite fail closed
+ok 3 - missing scope, caller scope override, and source identity overwrite fail closed
+  ---
+  duration_ms: 125.5109
+  type: 'test'
+  ...
+# Subtest: same source/version/content yields one evidence record across reopen
+ok 4 - same source/version/content yields one evidence record across reopen
+  ---
+  duration_ms: 172.5812
+  type: 'test'
+  ...
+# Subtest: FTS operators do not widen recall and empty query never lists all records
+ok 5 - FTS operators do not widen recall and empty query never lists all records
+  ---
+  duration_ms: 135.5359
+  type: 'test'
+  ...
+# Subtest: secret-like material and model-assigned path fields cannot enter local records
+ok 6 - secret-like material and model-assigned path fields cannot enter local records
+  ---
+  duration_ms: 43.8659
+  type: 'test'
+  ...
+# Subtest: unknown future schema and damaged FTS do not silently fall back to raw LIKE
+ok 7 - unknown future schema and damaged FTS do not silently fall back to raw LIKE
+  ---
+  duration_ms: 120.9018
+  type: 'test'
+  ...
+# Subtest: scope identity is deterministic and keeps worktree/revision/build distinctions
+ok 8 - scope identity is deterministic and keeps worktree/revision/build distinctions
+  ---
+  duration_ms: 38.8142
+  type: 'test'
+  ...
+# Subtest: quoted credential labels in JSON snippets are rejected before persistence
+ok 9 - quoted credential labels in JSON snippets are rejected before persistence
+  ---
+  duration_ms: 44.722
+  type: 'test'
+  ...
+# Subtest: a bounded snapshot rejects overflow rather than silently dropping saved records
+ok 10 - a bounded snapshot rejects overflow rather than silently dropping saved records
+  ---
+  duration_ms: 20767.7409
+  type: 'test'
+  ...
+# Subtest: missing or rewritten index triggers and changed FTS definition are refused before writing
+ok 11 - missing or rewritten index triggers and changed FTS definition are refused before writing
+  ---
+  duration_ms: 281.9826
+  type: 'test'
+  ...
+# Subtest: common prefixed and camelCase credential labels never reach storage or export
+ok 12 - common prefixed and camelCase credential labels never reach storage or export
+  ---
+  duration_ms: 40.5877
+  type: 'test'
+  ...
+# Subtest: ordinary assignments cannot hide a later credential assignment
+ok 13 - ordinary assignments cannot hide a later credential assignment
+  ---
+  duration_ms: 48.8057
+  type: 'test'
+  ...
+# Subtest: a quoted value cannot hide its own credential assignment from input filtering
+ok 14 - a quoted value cannot hide its own credential assignment from input filtering
+  ---
+  duration_ms: 33.0353
+  type: 'test'
+  ...
+# Subtest: single CJK character recall is preserved
+ok 15 - single CJK character recall is preserved
+  ---
+  duration_ms: 78.3509
+  type: 'test'
+  ...
+# Subtest: UNC, device, relative and unapproved drives fail before filesystem access
+ok 16 - UNC, device, relative and unapproved drives fail before filesystem access
+  ---
+  duration_ms: 0.7165
+  type: 'test'
+  ...
+# Subtest: ancestor reparse metadata is rejected before any access below it
+ok 17 - ancestor reparse metadata is rejected before any access below it
+  ---
+  duration_ms: 5.0164
+  type: 'test'
+  ...
+# Subtest: execution is denied by default even for an intact queued job and approved model route
+ok 18 - execution is denied by default even for an intact queued job and approved model route
+  ---
+  duration_ms: 131.914
+  type: 'test'
+  ...
+# Subtest: revoking a queued admission prevents dispatch and discards the durable input
+ok 19 - revoking a queued admission prevents dispatch and discards the durable input
+  ---
+  duration_ms: 95.7604
+  type: 'test'
+  ...
+# Subtest: permission revoked in flight returns unknown, retains quarantine, and ignores late output
+ok 20 - permission revoked in flight returns unknown, retains quarantine, and ignores late output
+  ---
+  duration_ms: 224.5942
+  type: 'test'
+  ...
+# Subtest: a claim-to-dispatch denial is not dispatched and a replaced signal cannot reuse a lease
+ok 21 - a claim-to-dispatch denial is not dispatched and a replaced signal cannot reuse a lease
+  ---
+  duration_ms: 272.4336
+  type: 'test'
+  ...
+# Subtest: post-write authorization failure rolls back ordinary and annual records atomically
+ok 22 - post-write authorization failure rolls back ordinary and annual records atomically
+  ---
+  duration_ms: 397.3276
+  type: 'test'
+  ...
+# Subtest: annual merge may advance its own epoch but post-merge revocation rolls the whole change back
+ok 23 - annual merge may advance its own epoch but post-merge revocation rolls the whole change back
+  ---
+  duration_ms: 471.4103
+  type: 'test'
+  ...
+# Subtest: a synchronous Provider throw becomes a contained unknown outcome
+ok 24 - a synchronous Provider throw becomes a contained unknown outcome
+  ---
+  duration_ms: 108.8048
+  type: 'test'
+  ...
+# Subtest: revocation winning the completion race keeps quarantine even if the Provider fulfills immediately
+ok 25 - revocation winning the completion race keeps quarantine even if the Provider fulfills immediately
+  ---
+  duration_ms: 137.5722
+  type: 'test'
+  ...
+# Subtest: caller cancellation between fulfilled response and queue commit never saves results
+ok 26 - caller cancellation between fulfilled response and queue commit never saves results
+  ---
+  duration_ms: 541.5927
+  type: 'test'
+  ...
+# Subtest: lifecycle or route changes inside final approval cannot overwrite current worker state
+ok 27 - lifecycle or route changes inside final approval cannot overwrite current worker state
+  ---
+  duration_ms: 313.1355
+  type: 'test'
+  ...
+# Subtest: a changed approval after model completion cannot commit ordinary or annual output
+ok 28 - a changed approval after model completion cannot commit ordinary or annual output
+  ---
+  duration_ms: 230.0952
+  type: 'test'
+  ...
+# Subtest: authorization callbacks receive immutable task identity without plaintext
+ok 29 - authorization callbacks receive immutable task identity without plaintext
+  ---
+  duration_ms: 168.0095
+  type: 'test'
+  ...
+# Subtest: invalid, throwing or asynchronous execution authority is observed and fails closed
+ok 30 - invalid, throwing or asynchronous execution authority is observed and fails closed
+  ---
+  duration_ms: 252.1604
+  type: 'test'
+  ...
+# Subtest: bridge sends only the bounded fragment and fixed purpose prompt through one prepared call
+ok 31 - bridge sends only the bounded fragment and fixed purpose prompt through one prepared call
+  ---
+  duration_ms: 10.3855
+  type: 'test'
+  ...
+# Subtest: each allowed purpose has a fixed schema prompt and unknown purposes cannot dispatch
+ok 32 - each allowed purpose has a fixed schema prompt and unknown purposes cannot dispatch
+  ---
+  duration_ms: 1.9245
+  type: 'test'
+  ...
+# Subtest: text followed by EOF without explicit finish is unknown
+ok 33 - text followed by EOF without explicit finish is unknown
+  ---
+  duration_ms: 1.624
+  type: 'test'
+  ...
+# Subtest: synthesized error, aborted and truncation finishes do not become known completion
+ok 34 - synthesized error, aborted and truncation finishes do not become known completion
+  ---
+  duration_ms: 1.7187
+  type: 'test'
+  ...
+# Subtest: duplicate finish, text after stop, and an iterator throw after stop stay unknown
+ok 35 - duplicate finish, text after stop, and an iterator throw after stop stay unknown
+  ---
+  duration_ms: 1.9905
+  type: 'test'
+  ...
+# Subtest: once prepareCall was touched its failure is unknown even when stream never started
+ok 36 - once prepareCall was touched its failure is unknown even when stream never started
+  ---
+  duration_ms: 0.4464
+  type: 'test'
+  ...
+# Subtest: changed approval before prepare is refused without dispatch and activation versions do not rebind
+ok 37 - changed approval before prepare is refused without dispatch and activation versions do not rebind
+  ---
+  duration_ms: 0.8968
+  type: 'test'
+  ...
+# Subtest: all four host configuration events permanently invalidate an activation and remove listeners on dispose
+ok 38 - all four host configuration events permanently invalidate an activation and remove listeners on dispose
+  ---
+  duration_ms: 0.5352
+  type: 'test'
+  ...
+# Subtest: approval changes during preparation are unknown and never reach prepared.stream
+ok 39 - approval changes during preparation are unknown and never reach prepared.stream
+  ---
+  duration_ms: 2.9662
+  type: 'test'
+  ...
+# Subtest: an invalidation between preparation and dispatch is rechecked before sending the fragment
+ok 40 - an invalidation between preparation and dispatch is rechecked before sending the fragment
+  ---
+  duration_ms: 0.4826
+  type: 'test'
+  ...
+# Subtest: cancellation during a non-cooperative prepare returns unknown and observes its later rejection
+ok 41 - cancellation during a non-cooperative prepare returns unknown and observes its later rejection
+  ---
+  duration_ms: 6.217
+  type: 'test'
+  ...
+# Subtest: stop without EOF cannot complete and dispose waits only its cleanup budget
+ok 42 - stop without EOF cannot complete and dispose waits only its cleanup budget
+  ---
+  duration_ms: 15.8415
+  type: 'test'
+  ...
+# Subtest: late stop after queue timeout does not write memory or release the unknown root gate
+ok 43 - late stop after queue timeout does not write memory or release the unknown root gate
+  ---
+  duration_ms: 365.066
+  type: 'test'
+  ...
+# Subtest: a rejecting iterator return is observed without exposing details and is never retried
+ok 44 - a rejecting iterator return is observed without exposing details and is never retried
+  ---
+  duration_ms: 0.7082
+  type: 'test'
+  ...
+# Subtest: old activation cancellation and late cleanup cannot disable a newly created activation
+ok 45 - old activation cancellation and late cleanup cannot disable a newly created activation
+  ---
+  duration_ms: 1.8478
+  type: 'test'
+  ...
+# Subtest: EOF microtasks cannot return success after cancellation or activation invalidation
+ok 46 - EOF microtasks cannot return success after cancellation or activation invalidation
+  ---
+  duration_ms: 1.713
+  type: 'test'
+  ...
+# Subtest: async or malformed approved route readers are rejected without leaking their errors
+ok 47 - async or malformed approved route readers are rejected without leaking their errors
+  ---
+  duration_ms: 0.7067
+  type: 'test'
+  ...
+# Subtest: oversized or tool-bearing protocol data is refused while known complete secret text is classified separately
+ok 48 - oversized or tool-bearing protocol data is refused while known complete secret text is classified separately
+  ---
+  duration_ms: 0.9955
+  type: 'test'
+  ...
+# Subtest: contradictory or repeated block frames cannot be silently accepted by a tolerant assembler
+ok 49 - contradictory or repeated block frames cannot be silently accepted by a tolerant assembler
+  ---
+  duration_ms: 2.2618
+  type: 'test'
+  ...
+# Subtest: system prompt plus fragment fits exactly 8000 UTF-16 units and excess is refused before SDK preparation
+ok 50 - system prompt plus fragment fits exactly 8000 UTF-16 units and excess is refused before SDK preparation
+  ---
+  duration_ms: 0.7205
+  type: 'test'
+  ...
+# Subtest: input accounting includes whitespace that direct execution actually forwards to the SDK
+ok 51 - input accounting includes whitespace that direct execution actually forwards to the SDK
+  ---
+  duration_ms: 0.6333
+  type: 'test'
+  ...
+# Subtest: durable queue includes fixed prompts in the daily input limit and replay reserves only once
+ok 52 - durable queue includes fixed prompts in the daily input limit and replay reserves only once
+  ---
+  duration_ms: 333.4751
+  type: 'test'
+  ...
+# Subtest: invalid or changing input meters never spend budget or silently update an existing reservation
+ok 53 - invalid or changing input meters never spend budget or silently update an existing reservation
+  ---
+  duration_ms: 115.1498
+  type: 'test'
+  ...
+# Subtest: authenticated older queued payloads without frozen input accounting cannot resume
+ok 54 - authenticated older queued payloads without frozen input accounting cannot resume
+  ---
+  duration_ms: 105.1696
+  type: 'test'
+  ...
+# Subtest: execution authorization revoked during prepare prevents the prepared stream from starting
+ok 55 - execution authorization revoked during prepare prevents the prepared stream from starting
+  ---
+  duration_ms: 168.5966
+  type: 'test'
+  ...
+# Subtest: a source invalidated during prepare cannot reach a later prepared stream
+ok 56 - a source invalidated during prepare cannot reach a later prepared stream
+  ---
+  duration_ms: 234.8268
+  type: 'test'
+  ...
+# Subtest: persistent queue binds original route and request identity despite active model switching
+ok 57 - persistent queue binds original route and request identity despite active model switching
+  ---
+  duration_ms: 320.5584
+  type: 'test'
+  ...
+# Subtest: revoked or changed route fails before dispatch with no fallback
+ok 58 - revoked or changed route fails before dispatch with no fallback
+  ---
+  duration_ms: 102.4865
+  type: 'test'
+  ...
+# Subtest: timeout becomes outcome_unknown and ignored late result never writes back
+ok 59 - timeout becomes outcome_unknown and ignored late result never writes back
+  ---
+  duration_ms: 176.8856
+  type: 'test'
+  ...
+# Subtest: an unknown timed-out dispatch keeps the root gate after settling until trusted confirmation
+ok 60 - an unknown timed-out dispatch keeps the root gate after settling until trusted confirmation
+  ---
+  duration_ms: 368.9941
+  type: 'test'
+  ...
+# Subtest: foreign scopes cannot clear quarantine and a late old callback cannot clear the new owner lock
+ok 61 - foreign scopes cannot clear quarantine and a late old callback cannot clear the new owner lock
+  ---
+  duration_ms: 477.5551
+  type: 'test'
+  ...
+# Subtest: forget during a model request rejects its late result under the old epoch
+ok 62 - forget during a model request rejects its late result under the old epoch
+  ---
+  duration_ms: 198.7647
+  type: 'test'
+  ...
+# Subtest: ordinary and annual jobs share durable daily and session budgets
+ok 63 - ordinary and annual jobs share durable daily and session budgets
+  ---
+  duration_ms: 75.2988
+  type: 'test'
+  ...
+# Subtest: global concurrency one leaves a second request queued instead of dispatching twice
+ok 64 - global concurrency one leaves a second request queued instead of dispatching twice
+  ---
+  duration_ms: 319.887
+  type: 'test'
+  ...
+# Subtest: model scope/path overrides and secret output are rejected atomically
+ok 65 - model scope/path overrides and secret output are rejected atomically
+  ---
+  duration_ms: 194.955
+  type: 'test'
+  ...
+# Subtest: worker death is recovered as unknown without replay
+ok 66 - worker death is recovered as unknown without replay
+  ---
+  duration_ms: 475.3127
+  type: 'test'
+  ...
+# Subtest: restoring a pre-completion body database never dispatches the completed request again
+ok 67 - restoring a pre-completion body database never dispatches the completed request again
+  ---
+  duration_ms: 184.8924
+  type: 'test'
+  ...
+# Subtest: queued requests expire at the next Shanghai budget day instead of spending yesterday reservation
+ok 68 - queued requests expire at the next Shanghai budget day instead of spending yesterday reservation
+  ---
+  duration_ms: 69.076
+  type: 'test'
+  ...
+# Subtest: cancellation of a dispatched request is unknown and provider errors cannot expose raw secrets
+ok 69 - cancellation of a dispatched request is unknown and provider errors cannot expose raw secrets
+  ---
+  duration_ms: 145.624
+  type: 'test'
+  ...
+# Subtest: work model output is an unverified draft in its own collection
+ok 70 - work model output is an unverified draft in its own collection
+  ---
+  duration_ms: 163.1357
+  type: 'test'
+  ...
+# Subtest: forget invalidates warm readers, late generations, snapshots and index reconstruction
+ok 71 - forget invalidates warm readers, late generations, snapshots and index reconstruction
+  ---
+  duration_ms: 314.3582
+  type: 'test'
+  ...
+# Subtest: correction supersedes old body and archive is distinct from irreversible forget
+ok 72 - correction supersedes old body and archive is distinct from irreversible forget
+  ---
+  duration_ms: 397.672
+  type: 'test'
+  ...
+# Subtest: restoring an entire old body file cannot roll back the independent deletion authority
+ok 73 - restoring an entire old body file cannot roll back the independent deletion authority
+  ---
+  duration_ms: 213.5443
+  type: 'test'
+  ...
+# Subtest: missing or corrupt authority refuses opening and warm cache never becomes a fallback
+ok 74 - missing or corrupt authority refuses opening and warm cache never becomes a fallback
+  ---
+  duration_ms: 124.1969
+  type: 'test'
+  ...
+# Subtest: source invalidation is scoped, replay safe and closes warm recall
+ok 75 - source invalidation is scoped, replay safe and closes warm recall
+  ---
+  duration_ms: 226.8601
+  type: 'test'
+  ...
+# Subtest: DDL damage on an open content database cannot be hidden by a warm recall cache
+ok 76 - DDL damage on an open content database cannot be hidden by a warm recall cache
+  ---
+  duration_ms: 95.385
+  type: 'test'
+  ...
+# Subtest: all lifecycle invalidation and an old body restore purge queued plaintext inputs
+ok 77 - all lifecycle invalidation and an old body restore purge queued plaintext inputs
+  ---
+  duration_ms: 181.3874
+  type: 'test'
+  ...
+# Subtest: forget clears unique tokens from current FTS shadow blocks and current database bytes
+ok 78 - forget clears unique tokens from current FTS shadow blocks and current database bytes
+  ---
+  duration_ms: 96.679
+  type: 'test'
+  ...
+# Subtest: reopening an old insecure FTS index removes already deleted historical segments
+ok 79 - reopening an old insecure FTS index removes already deleted historical segments
+  ---
+  duration_ms: 64.455
+  type: 'test'
+  ...
+# Subtest: a disabled secure-delete policy is unavailable until a verified reopen rebuilds it
+ok 80 - a disabled secure-delete policy is unavailable until a verified reopen rebuilds it
+  ---
+  duration_ms: 131.225
+  type: 'test'
+  ...
+# Subtest: session removal always invalidates its registered session even with empty affected refs
+ok 81 - session removal always invalidates its registered session even with empty affected refs
+  ---
+  duration_ms: 96.0759
+  type: 'test'
+  ...
+# Subtest: valid Task1 databases require explicit migration and retain their scoped records
+ok 82 - valid Task1 databases require explicit migration and retain their scoped records
+  ---
+  duration_ms: 188.4189
+  type: 'test'
+  ...
+# Subtest: explicit Task1 migration clears legacy deleted FTS segments before serving reads
+ok 83 - explicit Task1 migration clears legacy deleted FTS segments before serving reads
+  ---
+  duration_ms: 96.458
+  type: 'test'
+  ...
+# Subtest: only an accepted current user event enqueues and repeated delivery spends one reservation
+ok 84 - only an accepted current user event enqueues and repeated delivery spends one reservation
+  ---
+  duration_ms: 200.9072
+  type: 'test'
+  ...
+# Subtest: claimed rejection and claimed-only messages never enqueue or add recall
+ok 85 - claimed rejection and claimed-only messages never enqueue or add recall
+  ---
+  duration_ms: 115.6598
+  type: 'test'
+  ...
+# Subtest: same message ID with edited text or a second event sequence is refused as a new source
+ok 86 - same message ID with edited text or a second event sequence is refused as a new source
+  ---
+  duration_ms: 178.5588
+  type: 'test'
+  ...
+# Subtest: unapproved user tags and non-user producer classes do not gain extraction permission
+ok 87 - unapproved user tags and non-user producer classes do not gain extraction permission
+  ---
+  duration_ms: 82.0865
+  type: 'test'
+  ...
+# Subtest: attachments, secret-like text, oversized input and unsupported source data are not partly extracted
+ok 88 - attachments, secret-like text, oversized input and unsupported source data are not partly extracted
+  ---
+  duration_ms: 74.1165
+  type: 'test'
+  ...
+# Subtest: a forged event object or replay into an unapproved session cannot reuse an admission
+ok 89 - a forged event object or replay into an unapproved session cannot reuse an admission
+  ---
+  duration_ms: 129.9097
+  type: 'test'
+  ...
+# Subtest: a delayed A event cannot be rebound to a newly selected B scope
+ok 90 - a delayed A event cannot be rebound to a newly selected B scope
+  ---
+  duration_ms: 104.6736
+  type: 'test'
+  ...
+# Subtest: post-enqueue permission revocation rolls back jobs, plaintext and budget together
+ok 91 - post-enqueue permission revocation rolls back jobs, plaintext and budget together
+  ---
+  duration_ms: 104.1114
+  type: 'test'
+  ...
+# Subtest: a foreign queue is refused before any cross-store write
+ok 92 - a foreign queue is refused before any cross-store write
+  ---
+  duration_ms: 69.1471
+  type: 'test'
+  ...
+# Subtest: recall preserves the final decision and injects only ordinary active memory once
+ok 93 - recall preserves the final decision and injects only ordinary active memory once
+  ---
+  duration_ms: 170.8107
+  type: 'test'
+  ...
+# Subtest: replaced or removed claimed input cannot become a historical fallback query
+ok 94 - replaced or removed claimed input cannot become a historical fallback query
+  ---
+  duration_ms: 125.6804
+  type: 'test'
+  ...
+# Subtest: scope and authorization changes while next is awaiting never inject the old scope
+ok 95 - scope and authorization changes while next is awaiting never inject the old scope
+  ---
+  duration_ms: 135.5022
+  type: 'test'
+  ...
+# Subtest: uncommitted reentry keeps identity but deletion removes old recalled body instead of caching it
+ok 96 - uncommitted reentry keeps identity but deletion removes old recalled body instead of caching it
+  ---
+  duration_ms: 296.3732
+  type: 'test'
+  ...
+# Subtest: changed recalled content gets a new injection ID rather than reusing the old body identity
+ok 97 - changed recalled content gets a new injection ID rather than reusing the old body identity
+  ---
+  duration_ms: 257.2684
+  type: 'test'
+  ...
+# Subtest: only an exact self-commit receipt suppresses reentry and never enqueues the recalled content
+ok 98 - only an exact self-commit receipt suppresses reentry and never enqueues the recalled content
+  ---
+  duration_ms: 307.3088
+  type: 'test'
+  ...
+# Subtest: same-root sibling fibers and a second module copy cannot install duplicate writers
+ok 99 - same-root sibling fibers and a second module copy cannot install duplicate writers
+  ---
+  duration_ms: 117.9123
+  type: 'test'
+  ...
+# Subtest: dispose drops not-yet-admitted material and late callbacks but reports durable queued material retained
+ok 100 - dispose drops not-yet-admitted material and late callbacks but reports durable queued material retained
+  ---
+  duration_ms: 97.9861
+  type: 'test'
+  ...
+# Subtest: retrieval or authorization failures never return a previous recalled body or raw diagnostic error
+ok 101 - retrieval or authorization failures never return a previous recalled body or raw diagnostic error
+  ---
+  duration_ms: 139.7211
+  type: 'test'
+  ...
+# Subtest: non-canonical session IDs and asynchronous authority callbacks fail closed
+ok 102 - non-canonical session IDs and asynchronous authority callbacks fail closed
+  ---
+  duration_ms: 60.486
+  type: 'test'
+  ...
+# Subtest: partial installation failure removes every listener and does not reserve the owner
+ok 103 - partial installation failure removes every listener and does not reserve the owner
+  ---
+  duration_ms: 86.5186
+  type: 'test'
+  ...
+# Subtest: pending capacity, cumulative body size and expired admission do not create extra jobs
+ok 104 - pending capacity, cumulative body size and expired admission do not create extra jobs
+  ---
+  duration_ms: 246.2758
+  type: 'test'
+  ...
+# Subtest: recall bounds skip whole records and never search work summaries or session history
+ok 105 - recall bounds skip whole records and never search work summaries or session history
+  ---
+  duration_ms: 236.137
+  type: 'test'
+  ...
+# Subtest: evicted recall metadata does not retain body or reuse a different cached message identity
+ok 106 - evicted recall metadata does not retain body or reuse a different cached message identity
+  ---
+  duration_ms: 220.5343
+  type: 'test'
+  ...
+# Subtest: an asynchronous rejected message factory is observed and cannot leak its raw failure
+ok 107 - an asynchronous rejected message factory is observed and cannot leak its raw failure
+  ---
+  duration_ms: 125.3339
+  type: 'test'
+  ...
+# Subtest: configuration cannot enlarge the promised recall or admission lifetime bounds
+ok 108 - configuration cannot enlarge the promised recall or admission lifetime bounds
+  ---
+  duration_ms: 117.0903
+  type: 'test'
+  ...
+# Subtest: admission accepts fixed source and refuses another host or runtime
+ok 109 - admission accepts fixed source and refuses another host or runtime
+  ---
+  duration_ms: 11.2827
+  type: 'test'
+  ...
+# Subtest: changed vendor bytes fail before any vendor code can load
+ok 110 - changed vendor bytes fail before any vendor code can load
+  ---
+  duration_ms: 52.5495
+  type: 'test'
+  ...
+# Subtest: undeclared executable file and removed license are rejected
+ok 111 - undeclared executable file and removed license are rejected
+  ---
+  duration_ms: 66.6123
+  type: 'test'
+  ...
+# Subtest: a lock cannot introduce an alternative vendor or network module
+ok 112 - a lock cannot introduce an alternative vendor or network module
+  ---
+  duration_ms: 55.5531
+  type: 'test'
+  ...
+# Subtest: backend import verifies bytes before a modified vendor can cause a side effect
+ok 113 - backend import verifies bytes before a modified vendor can cause a side effect
+  ---
+  duration_ms: 237.6751
+  type: 'test'
+  ...
+# Subtest: manual work drafts persist independently with unknown dates and missing proof
+ok 114 - manual work drafts persist independently with unknown dates and missing proof
+  ---
+  duration_ms: 173.9189
+  type: 'test'
+  ...
+# Subtest: a model supplied calendar date remains inferred and pending until explicit user confirmation
+ok 115 - a model supplied calendar date remains inferred and pending until explicit user confirmation
+  ---
+  duration_ms: 161.9452
+  type: 'test'
+  ...
+# Subtest: contradictory dates remain visible without overwriting a confirmed date and replay is a no-op
+ok 116 - contradictory dates remain visible without overwriting a confirmed date and replay is a no-op
+  ---
+  duration_ms: 205.1068
+  type: 'test'
+  ...
+# Subtest: goal and association changes become explicit candidates instead of disappearing from a merge
+ok 117 - goal and association changes become explicit candidates instead of disappearing from a merge
+  ---
+  duration_ms: 111.8312
+  type: 'test'
+  ...
+# Subtest: evidence registration never certifies claims; explicit review is limited to one claim and version
+ok 118 - evidence registration never certifies claims; explicit review is limited to one claim and version
+  ---
+  duration_ms: 221.9536
+  type: 'test'
+  ...
+# Subtest: source replay avoids duplicate items and model merges preserve user confirmation
+ok 119 - source replay avoids duplicate items and model merges preserve user confirmation
+  ---
+  duration_ms: 187.3898
+  type: 'test'
+  ...
+# Subtest: replaying the same work merge does not advance lifecycle epoch or content revision
+ok 120 - replaying the same work merge does not advance lifecycle epoch or content revision
+  ---
+  duration_ms: 110.7693
+  type: 'test'
+  ...
+# Subtest: a new version of the same source anchor requires a revision rather than a new work item
+ok 121 - a new version of the same source anchor requires a revision rather than a new work item
+  ---
+  duration_ms: 131.1358
+  type: 'test'
+  ...
+# Subtest: reviewing a new version for one claim cannot refresh another claims obsolete proof
+ok 122 - reviewing a new version for one claim cannot refresh another claims obsolete proof
+  ---
+  duration_ms: 183.0205
+  type: 'test'
+  ...
+# Subtest: registering the same document for another claim extends links without increasing proof count
+ok 123 - registering the same document for another claim extends links without increasing proof count
+  ---
+  duration_ms: 144.9472
+  type: 'test'
+  ...
+# Subtest: revoked proof read authorization prevents automatic content revalidation
+ok 124 - revoked proof read authorization prevents automatic content revalidation
+  ---
+  duration_ms: 143.3715
+  type: 'test'
+  ...
+# Subtest: work forget, source invalidation and restore use the same independent authority
+ok 125 - work forget, source invalidation and restore use the same independent authority
+  ---
+  duration_ms: 177.3709
+  type: 'test'
+  ...
+1..125
+# tests 125
+# suites 0
+# pass 125
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 22596.825

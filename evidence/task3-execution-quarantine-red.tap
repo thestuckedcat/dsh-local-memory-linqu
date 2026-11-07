@@ -1,0 +1,82 @@
+TAP version 13
+# Subtest: execution is denied by default even for an intact queued job and approved model route
+ok 1 - execution is denied by default even for an intact queued job and approved model route
+  ---
+  duration_ms: 71.8758
+  type: 'test'
+  ...
+# Subtest: revoking a queued admission prevents dispatch and discards the durable input
+ok 2 - revoking a queued admission prevents dispatch and discards the durable input
+  ---
+  duration_ms: 54.0733
+  type: 'test'
+  ...
+# Subtest: permission revoked in flight returns unknown, retains quarantine, and ignores late output
+not ok 3 - permission revoked in flight returns unknown, retains quarantine, and ignores late output
+  ---
+  duration_ms: 115.9676
+  type: 'test'
+  location: 'E:\\dsh\\plugin\\05-local-memory\\tests\\execution-authorization.test.mjs:31:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'execution_authorization_unavailable'
+    - 'dispatch_gate_held'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'dispatch_gate_held'
+  actual: 'execution_authorization_unavailable'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///E:/dsh/plugin/05-local-memory/tests/execution-authorization.test.mjs:38:182)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: a claim-to-dispatch denial is not dispatched and a replaced signal cannot reuse a lease
+ok 4 - a claim-to-dispatch denial is not dispatched and a replaced signal cannot reuse a lease
+  ---
+  duration_ms: 143.3286
+  type: 'test'
+  ...
+# Subtest: post-write authorization failure rolls back ordinary and annual records atomically
+ok 5 - post-write authorization failure rolls back ordinary and annual records atomically
+  ---
+  duration_ms: 209.0401
+  type: 'test'
+  ...
+# Subtest: a synchronous Provider throw becomes a contained unknown outcome
+ok 6 - a synchronous Provider throw becomes a contained unknown outcome
+  ---
+  duration_ms: 66.6418
+  type: 'test'
+  ...
+# Subtest: a changed approval after model completion cannot commit ordinary or annual output
+ok 7 - a changed approval after model completion cannot commit ordinary or annual output
+  ---
+  duration_ms: 154.4639
+  type: 'test'
+  ...
+# Subtest: authorization callbacks receive immutable task identity without plaintext
+ok 8 - authorization callbacks receive immutable task identity without plaintext
+  ---
+  duration_ms: 85.3566
+  type: 'test'
+  ...
+# Subtest: invalid, throwing or asynchronous execution authority is observed and fails closed
+ok 9 - invalid, throwing or asynchronous execution authority is observed and fails closed
+  ---
+  duration_ms: 161.7557
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 8
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1183.8572

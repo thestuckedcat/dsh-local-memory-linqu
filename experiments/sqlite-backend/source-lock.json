@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "package": "@local/dsh-controlled-memory",
+  "host_versions": [
+    "0.2.1-rc.5"
+  ],
+  "runtime": {
+    "version": "v26.13.0",
+    "path": "runtime/node.exe",
+    "sha256": "14319838b3f355e0398c13569a90270bce4fc68f25189f58c59b03dadae0e6d5"
+  },
+  "upstream": {
+    "repository": "kovey/dsh-memory",
+    "commit": "73e0a3b47fb047cc9fe3cd8269a5f267c6cda45c",
+    "version": "0.3.2",
+    "license_declared": "Apache-2.0",
+    "root_license_file_present": false
+  },
+  "files": [
+    {
+      "path": "vendor/kovey/log.js",
+      "sha256": "f36890cbe34a616f43c897e13cc4b9ff989be101c8df18b35a587ededfedb45a"
+    },
+    {
+      "path": "vendor/kovey/store/sqlite/cjk.js",
+      "sha256": "a00944c7b478c00045ac95ebc8efb65f4d1a110916515e99462fe052de18335a"
+    },
+    {
+      "path": "vendor/kovey/store/sqlite/db.js",
+      "sha256": "a94243bb94c28d5e4ca7e7b450cb30e7e7e499dd58cf12751548b43cfbb895ea"
+    },
+    {
+      "path": "vendor/kovey/store/sqlite/records.js",
+      "sha256": "11aadfc96012f96849e22c1aee4e3fa9d464e51cbfd1dac99c79c03fb9e64054"
+    },
+    {
+      "path": "vendor/kovey/store/sqlite/schema.js",
+      "sha256": "d5b08ad1399ae6299e335f6d578011d5ffaf4fdfabf9e64b2d09fdc6e67fabcd"
+    }
+  ],
+  "forbidden_runtime_features": [
+    "sync",
+    "remote-embedding",
+    "automatic-download",
+    "telemetry",
+    "automatic-history-import"
+  ]
+}

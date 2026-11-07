@@ -1,0 +1,19 @@
+{
+  "date": "2026-11-05",
+  "purpose": "current explicit volume snapshot; not junction or continuous locality proof",
+  "api": "GetDriveTypeW",
+  "drives": [
+    {
+      "root": "C:\\",
+      "getDriveTypeW": 3
+    },
+    {
+      "root": "E:\\",
+      "getDriveTypeW": 3
+    },
+    {
+      "root": "H:\\",
+      "getDriveTypeW": 3
+    }
+  ]
+}

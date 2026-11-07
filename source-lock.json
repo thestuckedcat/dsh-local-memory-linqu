@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "package": "@local/dsh-controlled-memory",
+  "host_versions": [
+    "0.2.1-rc.5"
+  ],
+  "runtime_versions": [
+    "24.21.0",
+    "26.13.0"
+  ],
+  "test_runtime": {
+    "path": "runtime/node.exe",
+    "version": "26.13.0",
+    "sha256": "14319838b3f355e0398c13569a90270bce4fc68f25189f58c59b03dadae0e6d5"
+  },
+  "host_baseline": {
+    "embedded_node": "24.21.0",
+    "version": "0.2.1-rc.5",
+    "api_snapshot": "evidence/host-api/source-manifest.json",
+    "electron": "44.7.0",
+    "app_asar_sha256": "e1b6f25fa937da98086c3e77af77aa14791105963c4d337a1c42179d232c6915",
+    "executable_sha256": "7ae939b5a82b220fbd8ad04dfbafaaedb5a49ab43dc884a5db6381f678dd0cc4",
+    "service_activation_verified": false,
+    "build_commit": "d4db512a969fccf0c5cc7ec8fe38e9c1d27af916"
+  },
+  "upstream": {
+    "commit": "73e0a3b47fb047cc9fe3cd8269a5f267c6cda45c",
+    "version": "0.3.2",
+    "repository": "kovey/dsh-memory",
+    "root_license_file_present": false,
+    "license_declared": "Apache-2.0",
+    "cjk_git_blob": "b2ad929db70287f2e6b2647955d91df0abb523e4"
+  },
+  "files": [
+    {
+      "sha256": "95d0db52226fa4719d679a4a4cc2ed0de7f232cf8e2e0d304c9d752af2b6c8cb",
+      "path": "vendor/kovey/cjk.js"
+    },
+    {
+      "sha256": "074e6e32c86a4c0ef8b3ed25b721ca23aca83df277cd88106ef7177c354615ff",
+      "path": "licenses/Apache-2.0.txt"
+    },
+    {
+      "sha256": "7b988c63272cbbe6f1b4ee68c503cdbc5532ce6495ec7b159183881a82caf242",
+      "path": "licenses/kovey-package.json"
+    },
+    {
+      "sha256": "c055bd796660fc8092de63fd3a32bf5467b40d0dd44106edd745138e701d6433",
+      "path": "THIRD_PARTY_NOTICES.md"
+    }
+  ],
+  "forbidden_runtime_features": [
+    "sync",
+    "remote-embedding",
+    "automatic-download",
+    "telemetry",
+    "automatic-history-import",
+    "provider-fallback"
+  ]
+}
