@@ -313,6 +313,12 @@
     "shared.empty": "没有匹配的共享明细。",
     "shared.resultRevision": "来源摘要修订 {n}",
     "shared.noCopy": "不提供复制动作；未核验内容不能当作事实。",
-    "footer.hint": "状态未知的任务不会自动重试；删除经验记忆不可恢复，归档可恢复。"
+    "footer.hint": "状态未知的任务不会自动重试；删除经验记忆不可恢复，归档可恢复。",
+    "experience.label": "记忆状态",
+    "experience.remembering": "正在记忆",
+    "experience.queued": "等待整理",
+    "experience.paused": "记忆暂缓",
+    "experience.idle": "记忆就绪",
+    "attribution.label": "记忆影响"
   }
 }

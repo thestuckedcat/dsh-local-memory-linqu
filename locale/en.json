@@ -313,6 +313,12 @@
     "shared.empty": "No shared detail matches.",
     "shared.resultRevision": "Source abstract revision {n}",
     "shared.noCopy": "No copy action; unverified content is not a fact.",
-    "footer.hint": "Unknown-outcome jobs are never retried automatically; deleting an experience is irreversible while archiving is reversible."
+    "footer.hint": "Unknown-outcome jobs are never retried automatically; deleting an experience is irreversible while archiving is reversible.",
+    "experience.label": "Memory status",
+    "experience.remembering": "Remembering",
+    "experience.queued": "Queued",
+    "experience.paused": "Memory paused",
+    "experience.idle": "Memory ready",
+    "attribution.label": "Memory influence"
   }
 }

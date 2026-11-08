@@ -302,8 +302,10 @@ test('onRecallMessage receives the exact projection envelope while injection pro
  assert.equal(info.textDigest,digest(own[0].content[0].text));
  assert.equal(info.scopeRef,SCOPE);assert.equal(info.generation,h.store.generation());assert.equal(info.revision,h.store.revision());
  assert.equal(info.authorizationVersion,'auth-1');assert.ok(!Number.isNaN(Date.parse(info.createdAt)));
- assert.deepEqual(Object.keys(info.records[0]).sort(),['generation','id','sourceRef','sourceVersion']);
- assert.deepEqual({...info.records[0]},{id:live.id,sourceRef:live.sourceRef,sourceVersion:live.sourceVersion,generation:live.generation});
+ assert.deepEqual(Object.keys(info.records[0]).sort(),['generation','id','ref','sourceRef','sourceVersion']);
+ assert.deepEqual({...info.records[0]},{id:live.id,sourceRef:live.sourceRef,sourceVersion:live.sourceVersion,generation:live.generation,ref:'记1'});
+ assert.equal(info.turn,1);
+ assert.ok(Number.isSafeInteger(info.step));
 });
 test('a throwing or asynchronous onRecallMessage is contained and the recall message is not injected',async t=>{
  for(const callback of [()=>{throw new Error('CANARY recall callback detail');},()=>Promise.reject(new Error('CANARY recall callback detail'))]){

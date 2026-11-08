@@ -4,8 +4,8 @@ import {routeApproval,routeRefFor} from './configuration.mjs';
 
 const PLUGIN='@local/dsh-controlled-memory';
 const BLOCK_MESSAGE='Local memory recall projection is stale; this request was not dispatched.';
-const SCHEMA_FIELDS=Object.freeze(['sessionId','messageId','textDigest','scopeRef','generation','revision','authorizationVersion','records','createdAt']);
-const RECORD_FIELDS=Object.freeze(['id','sourceRef','sourceVersion','generation']);
+const SCHEMA_FIELDS=Object.freeze(['sessionId','messageId','textDigest','scopeRef','generation','revision','authorizationVersion','records','createdAt','turn','step']);
+const RECORD_FIELDS=Object.freeze(['id','sourceRef','sourceVersion','generation','ref']);
 const MAX_PROJECTIONS=1024,MAX_RECORDS=8;
 const HEX=/^[a-f0-9]{64}$/;
 const denied=()=>new Error('Memory projection is unavailable');

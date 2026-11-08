@@ -40,6 +40,12 @@ window.__ModuleLoader__.load({
         'tabs.work': '年度工作记录',
         'tabs.tasks': '处理任务',
         'tabs.sharing': '项目摘要与共享',
+        'experience.label': '记忆状态',
+        'experience.remembering': '正在记忆',
+        'experience.queued': '等待整理',
+        'experience.paused': '记忆暂缓',
+        'experience.idle': '记忆就绪',
+        'attribution.label': '记忆影响',
         'status.projects': '{n} 个项目',
         'status.scheduler.running': '调度运行中',
         'status.scheduler.idle': '调度空闲',
@@ -352,6 +358,12 @@ window.__ModuleLoader__.load({
         'tabs.work': 'Annual work records',
         'tabs.tasks': 'Processing jobs',
         'tabs.sharing': 'Abstracts & Sharing',
+        'experience.label': 'Memory status',
+        'experience.remembering': 'Remembering',
+        'experience.queued': 'Queued',
+        'experience.paused': 'Memory paused',
+        'experience.idle': 'Memory ready',
+        'attribution.label': 'Memory influence',
         'status.projects': '{n} projects',
         'status.scheduler.running': 'Scheduler running',
         'status.scheduler.idle': 'Scheduler idle',
@@ -712,6 +724,16 @@ window.__ModuleLoader__.load({
       const source = text(value);
       return source.length > size ? `${source.slice(0, size)}…` : source;
     }
+    /** Reading-first presentation: a short title and a bounded summary from the stored text. */
+    function readingTitle(value) {
+      const first = text(value).trim().split(/\r?\n/).find((line) => line.trim() !== '') || '';
+      return truncate(first.trim(), 80);
+    }
+    function readingSummary(value, title) {
+      const normalized = text(value).trim();
+      const rest = normalized.startsWith(title) ? normalized.slice(title.length).trim() : normalized;
+      return truncate(rest || normalized, 180);
+    }
     function reasonCodeLabel(t, code) {
       const key = `errors.${code}`;
       const known = lookup(DICTIONARIES.en, key);
@@ -855,6 +877,90 @@ window.__ModuleLoader__.load({
       return h(Badge, {tone}, props.label);
     }
 
+    /**
+     * Small ambient status under the composer. It is read-only: it polls the same-origin status
+     * route while visible, stops when the page is hidden, and renders nothing on failure or when
+     * the plugin is unavailable. No chat message is injected for memory bookkeeping.
+     */
+    function ExperienceBar(props) {
+      const [phase, setPhase] = React.useState(null);
+      const call = props.call;
+      React.useEffect(() => {
+        let cancelled = false;
+        let timer = null;
+        const refresh = () => {
+          Promise.resolve(call('status', {})).then((value) => {
+            if (!cancelled) setPhase(value && value.experience && typeof value.experience.phase === 'string' ? value.experience.phase : null);
+          }, () => {
+            if (!cancelled) setPhase(null);
+          });
+        };
+        const start = () => {
+          if (timer !== null) return;
+          refresh();
+          timer = setInterval(refresh, 10000);
+        };
+        const stop = () => {
+          if (timer === null) return;
+          clearInterval(timer);
+          timer = null;
+        };
+        const onVisibility = () => {
+          if (typeof document !== 'undefined' && document.visibilityState === 'hidden') stop();
+          else start();
+        };
+        if (typeof document !== 'undefined') document.addEventListener('visibilitychange', onVisibility);
+        if (typeof document === 'undefined' || document.visibilityState !== 'hidden') start();
+        return () => {
+          cancelled = true;
+          stop();
+          if (typeof document !== 'undefined') document.removeEventListener('visibilitychange', onVisibility);
+        };
+      }, [call]);
+      if (phase === null) return null;
+      const key = phase === 'remembering' ? 'experience.remembering'
+        : phase === 'queued' ? 'experience.queued'
+        : phase === 'paused' ? 'experience.paused'
+        : 'experience.idle';
+      const color = phase === 'paused' ? 'var(--dsw-alias-state-warn-primary)'
+        : phase === 'idle' ? 'var(--dsw-alias-label-tertiary)'
+        : 'var(--dsw-alias-state-success-primary)';
+      return h('div', {
+        role: 'status',
+        'aria-live': 'polite',
+        style: {display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.82em', color: 'var(--dsw-alias-label-tertiary)', padding: '2px 2px'},
+      },
+      h('span', {'aria-hidden': 'true', style: {width: '6px', height: '6px', borderRadius: '999px', background: color}}),
+      props.translate(key));
+    }
+
+    /**
+     * Turn-tail attribution: shows the validated mapping the Host recorded for this exact turn.
+     * It never reads memory bodies and renders nothing when no adopted record was declared.
+     */
+    function AttributionTail(props) {
+      const [value, setValue] = React.useState(null);
+      const call = props.call;
+      const sessionId = props.sessionId;
+      const turn = typeof props.turn === 'number' ? props.turn
+        : props.turn && typeof props.turn === 'object' ? Number(props.turn.turn ?? props.turn.index ?? NaN)
+        : NaN;
+      React.useEffect(() => {
+        let cancelled = false;
+        if (typeof sessionId !== 'string' || !Number.isSafeInteger(turn)) { setValue(null); return undefined; }
+        Promise.resolve(call('memory.attribution', {sessionId, turn})).then((result) => {
+          if (!cancelled) setValue(result && result.state === 'available' && typeof result.mapping === 'string' ? result : null);
+        }, () => {
+          if (!cancelled) setValue(null);
+        });
+        return () => { cancelled = true; };
+      }, [call, sessionId, turn]);
+      if (!value) return null;
+      return h('div', {className: 'dshlm-attribution', 'data-state': value.state},
+        h('span', {className: 'dshlm-attribution-title'}, props.translate('attribution.label')),
+        h('span', null, value.mapping));
+    }
+
     /* ------------------------------------------------------------------ */
     /* Project panel: registration, preferences, retirement                */
     /* ------------------------------------------------------------------ */
@@ -980,8 +1086,9 @@ window.__ModuleLoader__.load({
     /* ------------------------------------------------------------------ */
 
     function MemoryTab(props) {
-      const {t, projectId, call, onError, onNotice, onChanged, refreshSignal} = props;
+      const {t, projectId, projects, call, onError, onNotice, onChanged, refreshSignal} = props;
       const mounted = useMounted();
+      const projectName = asArray(projects).find((entry) => entry && entry.projectId === projectId)?.name || '';
       const [items, setItems] = React.useState([]);
       const [counts, setCounts] = React.useState({active: 0, archived: 0, deleted: 0});
       const [nextCursor, setNextCursor] = React.useState(null);
@@ -1149,11 +1256,13 @@ window.__ModuleLoader__.load({
                 selected: selectedId === entry.id,
                 onClick: () => { setSelectedId(entry.id); setDeleteOpen(false); },
               },
-              h('div', {className: 'dshlm-row-line'},
-                h(StateBadge, {tone: entry.state === 'active' ? 'success' : 'neutral', label: t(`memory.state.${entry.state}`)}),
-                h(Badge, {tone: 'neutral', title: t(`memory.origin.${entry.origin}`)}, entry.kind ? t(`memory.kind.${entry.kind}`) : t('common.unknown')),
-                h('span', {className: 'dshlm-muted'}, t(`memory.origin.${entry.origin}`))),
-              h('div', {className: 'dshlm-row-text'}, truncate(entry.text, 110))))),
+              h('div', {className: 'dshlm-row-title'}, readingTitle(entry.text) || t('common.unknown')),
+              h('div', {className: 'dshlm-row-summary'}, readingSummary(entry.text, readingTitle(entry.text))),
+              h('div', {className: 'dshlm-row-meta'},
+                projectName ? h('span', null, projectName) : null,
+                h('span', null, t(`memory.origin.${entry.origin}`)),
+                entry.createdAt ? h('span', null, truncate(entry.createdAt, 10)) : null,
+                entry.state === 'archived' ? h(StateBadge, {tone: 'neutral', label: t('memory.state.archived')}) : null)))),
             nextCursor ? h(Button, {
               variant: 'ghost',
               onClick: () => reload({cursor: nextCursor, append: true}),
@@ -2214,6 +2323,11 @@ window.__ModuleLoader__.load({
       .dshlm-row[data-selected="true"] { background: var(--dsw-alias-interactive-bg-hover-solid); border-color: var(--dsw-alias-border-l2); }
       .dshlm-row-line { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; min-width: 0; }
       .dshlm-row-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .dshlm-row-title { font-weight: 600; color: var(--dsw-alias-label-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .dshlm-row-summary { color: var(--dsw-alias-label-secondary); font-size: 0.92em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+      .dshlm-row-meta { display: flex; gap: 8px; flex-wrap: wrap; color: var(--dsw-alias-label-tertiary); font-size: 0.82em; }
+      .dshlm-attribution { display: flex; gap: 6px; flex-wrap: wrap; align-items: baseline; color: var(--dsw-alias-label-tertiary); font-size: 0.82em; padding: 2px 0; }
+      .dshlm-attribution-title { color: var(--dsw-alias-label-secondary); font-weight: 600; }
       .dshlm-project { max-height: 420px; overflow: auto; }
       .dshlm-project-row { display: flex; flex-direction: column; gap: 3px; padding: 6px; border-radius: 6px; border: 1px solid var(--dsw-alias-border-l1); }
       .dshlm-project-row[data-selected="true"] { border-color: var(--dsw-alias-state-business-primary); }
@@ -2282,6 +2396,23 @@ window.__ModuleLoader__.load({
           locale: NS,
           inject: () => ({translate: t, call: postOperation}),
         }, MemoryCenter));
+        // Ambient composer status: read-only, no chat message, no memory body.
+        ctx.slots.inject('conversation.composer.dock', () => ctx.slots.register({
+          name: 'conversation.composer.dock',
+          id: 'local-memory-status',
+          order: 5,
+          label: () => t('experience.label'),
+          locale: NS,
+          inject: () => ({translate: t, call: postOperation}),
+        }, ExperienceBar));
+        ctx.slots.inject('conversation.chat.turnTail', () => ctx.slots.register({
+          name: 'conversation.chat.turnTail',
+          id: 'local-memory-attribution',
+          order: 10,
+          label: () => t('attribution.label'),
+          locale: NS,
+          inject: () => ({translate: t, call: postOperation}),
+        }, AttributionTail));
       },
     };
   },

@@ -55,6 +55,10 @@ test('activation registers tools, command, HTTP route and a ready status', async
   assert.match(value, /"registry"/);
   assert.match(value, /"state":"ready"/);
   assert.doesNotMatch(value, /[A-Z]:\\\\/);
+  assert.ok(result.value.experience, 'status exposes the read-only experience phase');
+  assert.ok(['idle', 'queued', 'remembering', 'paused'].includes(result.value.experience.phase));
+  assert.equal(typeof result.value.experience.pendingScopes, 'number');
+  assert.equal(typeof result.value.experience.running, 'number');
 });
 
 test('closed loop: extraction persists, recall injects, stale projection blocks dispatch', async (t) => {

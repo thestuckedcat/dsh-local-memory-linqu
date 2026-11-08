@@ -14,6 +14,8 @@ import {createFinalProjection} from './final-projection.mjs';
 import {createManagementOperations, createManagementHttp} from './management.mjs';
 import {createWorkOperations} from './work-management.mjs';
 import {createM2Operations} from './m2-management.mjs';
+import {createAttributionManager} from './attribution.mjs';
+import {createExperienceOperations} from './experience-operations.mjs';
 import {installProofReminders} from './proof-reminders.mjs';
 import {normalizeConfig, routeApproval, routeRefFor, configErrorReason} from './configuration.mjs';
 import {createUserMessage, createSystemMessage, BlockAssembler} from './harness-sdk.mjs';
@@ -116,7 +118,20 @@ export function apply(ctx, rawConfig = {}) {
   let abstracts;
   let sharing;
   let m2Operations;
+  let attribution;
   let disposed = false;
+  /** Read-only experience phase for the Memory Center/composer bar; never dispatches work. */
+  function experienceStatus() {
+    const snapshot = scheduler ? schedulerFacade.status() : Object.freeze({state: 'unavailable', running: 0, pendingScopes: []});
+    const pending = Array.isArray(snapshot.pendingScopes) ? snapshot.pendingScopes.length : 0;
+    const running = Number.isSafeInteger(snapshot.running) ? snapshot.running : 0;
+    const phase = status.state !== 'ready' ? 'paused'
+      : status.automaticDisabled ? 'paused'
+      : running > 0 ? 'remembering'
+      : pending > 0 ? 'queued'
+      : 'idle';
+    return Object.freeze({phase, running, pendingScopes: pending, automaticDisabled: status.automaticDisabled ?? false, updatedAt: new Date().toISOString()});
+  }
   const schedulerFacade = {
     status: () => scheduler?.status() ?? Object.freeze({state: 'unavailable'}),
     tick: () => scheduler?.tick(),
@@ -235,15 +250,17 @@ export function apply(ctx, rawConfig = {}) {
       thresholds: {dirtyCountThreshold: config.abstracts.dirtyCountThreshold, ageHours: config.abstracts.ageHours},
     });
     sharing = createSharingManager({catalog: registry.catalog, registry, abstracts});
+    attribution = createAttributionManager({registry});
     const workOperations = createWorkOperations({registry, config, reports, approval: ctx.approval, sessions: ctx.sessions});
     m2Operations = createM2Operations({registry, abstracts, sharing, sessions: ctx.sessions});
+    const experienceOperations = createExperienceOperations({attribution, sessions: ctx.sessions});
     operations = createManagementOperations({
       config,
       registry,
       grants,
       scheduler: schedulerFacade,
       provider: bridge.provider,
-      extras: {...workOperations, ...m2Operations},
+      extras: {...workOperations, ...m2Operations, ...experienceOperations},
       onMemoryChange: (change) => {
         try {
           if (typeof change.projectId === 'string' && change.projectId) abstracts.noteChange(change.projectId, {count: 1});
@@ -258,6 +275,8 @@ export function apply(ctx, rawConfig = {}) {
         grants: grants.status(),
         abstracts: abstracts.status(),
         sharing: sharing.status(),
+        experience: experienceStatus(),
+        attribution: attribution.status(),
       }),
     });
     http = createManagementHttp({operations, getOrigin: () => ctx.webServer.getOrigin()});
@@ -299,9 +318,40 @@ export function apply(ctx, rawConfig = {}) {
       createUserMessage: (input) => HOST_SDK.createUserMessage(input),
       onDiagnostic: (entry) => noteDiagnostic(entry),
       limits: {maxRecallRecords: config.recall.maxRecords, maxRecallChars: config.recall.maxChars},
-      onRecallMessage: (info) => projection.record(info),
+      onRecallMessage: (info) => {
+        // The projection contract accepts only its documented fields; strip the additive
+        // experience metadata (turn/step/ref) before recording, while attribution keeps it.
+        const projectionInfo = {
+          ...info,
+          records: Array.isArray(info.records) ? info.records.map((record) => ({
+            id: record.id, sourceRef: record.sourceRef, sourceVersion: record.sourceVersion, generation: record.generation,
+          })) : info.records,
+        };
+        delete projectionInfo.turn;
+        delete projectionInfo.step;
+        const recorded = projection.record(projectionInfo);
+        try { attribution.noteRecall(info); } catch { noteDiagnostic('attribution_recall_failed'); }
+        return recorded;
+      },
       onMessageAdmitted: (info) => enqueueAnnualDraft(info),
     });
+
+    // Optional prompt/citation seam: the Host must expose systemPrompt; if it does not, the
+    // attribution UI still works but the model gets no citation instruction.
+    const systemPrompt = typeof ctx.get === 'function' ? ctx.get('systemPrompt') : undefined;
+    if (systemPrompt && typeof systemPrompt.section === 'function') {
+      ctx.effect(() => systemPrompt.section({
+        name: 'local-memory-citations',
+        order: 900,
+        text: () => 'When local memory records are injected, cite only a record you actually relied on for a conclusion, using the exact marker 〔记N〕 (for example 〔记1〕). Do not cite records that were merely retrieved, do not invent refs, and do not add your own memory attribution footer; the Memory Center validates and renders it.',
+      }), 'local-memory: citation prompt');
+    }
+    ctx.effect(() => {
+      const off = ctx.on('agent/turn-stopping', (payload) => {
+        try { attribution.handleTurnStopping({agent: payload?.agent, turn: payload?.turn}); } catch { noteDiagnostic('attribution_turn_failed'); }
+      });
+      return () => { try { off?.(); } catch { /* local cleanup only */ } };
+    }, 'local-memory: attribution turn observer');
 
 
     // Tools: the model may read and propose; user-only actions stay in the memory center UI/commands.
@@ -319,6 +369,7 @@ export function apply(ctx, rawConfig = {}) {
             provider: status.provider,
             recallIntegration: status.recallIntegration,
             cold: status.cold,
+            experience: experienceStatus(),
             automaticDisabled: status.automaticDisabled ?? false,
             degraded: status.degraded,
             lastDiagnostic: status.lastDiagnostic,

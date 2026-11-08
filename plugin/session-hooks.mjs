@@ -124,7 +124,7 @@ export function installSessionHooks(ctx,options={}){
    const rendered=[];
    for(const record of records){
     const live=b.store.get(record.id);if(!live||live.scopeRef!==b.scopeRef||live.generation!==record.generation||fingerprint(live)!==fingerprint(record))throw denied();
-    const item={id:live.id,sourceRef:live.sourceRef,sourceVersion:live.sourceVersion,generation:live.generation,verification:'unverified',text:live.text};
+    const item={id:live.id,sourceRef:live.sourceRef,sourceVersion:live.sourceVersion,generation:live.generation,verification:'unverified',text:live.text,ref:`记${rendered.length+1}`};
     if(PREFIX.length+JSON.stringify([...rendered,item]).length<=policy.maxRecallChars)rendered.push(item);
    }
    if(!rendered.length)return base;
@@ -143,7 +143,7 @@ export function installSessionHooks(ctx,options={}){
    if(payload.signal?.aborted||state!=='active'||b.store.revision()!==revision)throw denied();
    if(!cache.has(key)){if(cache.size>=policy.maxCacheEntries){const oldest=cache.keys().next().value,removed=cache.get(oldest);cache.delete(oldest);if(byId.get(removed.id)===removed)byId.delete(removed.id);}cache.set(key,entry);byId.set(entry.id,entry);}
    if(entry.committed)return base;
-   const recallInfo=Object.freeze({sessionId:b.sessionId,messageId:message.id,textDigest:digest(text),scopeRef:b.scopeRef,generation:b.generation,revision,authorizationVersion:b.authorizationVersion,records:Object.freeze(rendered.map(item=>Object.freeze({id:item.id,sourceRef:item.sourceRef,sourceVersion:item.sourceVersion,generation:item.generation}))),createdAt:new Date().toISOString()});
+   const recallInfo=Object.freeze({sessionId:b.sessionId,messageId:message.id,textDigest:digest(text),scopeRef:b.scopeRef,generation:b.generation,revision,authorizationVersion:b.authorizationVersion,turn:payload.turn,step:payload.step,records:Object.freeze(rendered.map(item=>Object.freeze({ref:item.ref,id:item.id,sourceRef:item.sourceRef,sourceVersion:item.sourceVersion,generation:item.generation}))),createdAt:new Date().toISOString()});
    let projected=false;
    try{const result=onRecallMessage(recallInfo);if(result&&typeof result.then==='function'){Promise.resolve(result).catch(()=>{});throw denied();}projected=result!==false;}catch{diagnostic('recall_projection_refused');}
    // A recall message must never enter history without a recorded projection: the final

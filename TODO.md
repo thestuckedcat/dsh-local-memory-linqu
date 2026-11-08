@@ -105,6 +105,18 @@ M4退出：从合成开发对话形成草稿→缺证提示→仅引用/经授�
 - [ ] **MEM-503 最终验证与独立评审**：已完成：范围隔离/Provider预算/撤权/最终请求/队列故障/删除/年度审定/安装与停用的组件与安装级负例、独立评审（`docs/m1-independent-review.md`）。仍缺：真实业务Provider旅程、完整GUI视觉走查、OS级出口与子进程/DNS/代理负例、M2剩余（MEM-204）与冷档（M3未实现）。
 - [ ] **MEM-504 完整机制交付**：`docs/mechanisms.md`已按[机制说明合同](docs/shared/mechanism-document-contract.md)交付（稳定机制ID、触发、规则、硬边界、代码/接口、命令与证据、失败恢复、skill可改参数），但独立评审曾判阻断（F-01..F-05），修复后的复核通过前不勾选；原阶段机制保留历史身份。
 
+### M6：体验与后台巩固增量（MEM-EXP-1 / MEM-BG-1，2026-11-09 起）
+
+设计依据：[MEM-EXP-1](docs/memory-experience-contract.md)、[MEM-BG-1](docs/memory-background-plan.md)、[实施计划](docs/experience-implementation-plan.md)。本增量与既有 M1–M5 并行，不把设计稿当已实现。
+
+- [x] **EXP-T1 阅读优先界面（Phase A 子集）**：经验列表改为短标题/摘要/项目/日期优先，归档状态弱化；详情保留原有管理动作。证据：`client.js`、`tests/management.test.mjs` 客户端用例、`evidence/experience-phase-ab.json`。未做完整视觉验收。
+- [x] **EXP-T2 小 bar 底座（Phase A）**：`conversation.composer.dock` 注册只读 `local-memory-status`，轮询 `status.experience`，页面隐藏时停止；真实 slot 已在运行客户端 active。仍缺聊天正文不插入、失败自动恢复的完整验证。
+- [x] **EXP-T3 结论归因底座（Phase B）**：召回短引用 `记1..`、系统 prompt 引用规则、`agent/turn-stopping` 解析与实时复核、≤100 码点映射、`memory.attribution` 只读操作、`conversation.chat.turnTail` slot（active）。边界：归因当前仅进程内存储，重启丢失；assistant 正文无可替换 slot，内联可点击角标未实现，turnTail 显示映射文本。
+- [ ] **EXP-T2/T3 真实模型闭环**：真实 Provider 输出引用、行内标记校验、超限重生成、点击定位记忆与旧角标更正；待真实 Host/Provider 验证。
+- [ ] **EXP-T4 自然语言纠正与后台反思**：尚未实现。
+- [ ] **EXP-T5 自动后台巩固与证据摘录**：尚未实现（需 schema v3/证据摘录/独立 purpose/空闲调度）。
+- [ ] **EXP-T6 真实集成**：小 bar/归因/纠正的真实 Host 连续性、失效上下文清理与普通聊天连续性未验证。
+
 ## 4. 接口与状态合同（v0.2.0已实现子集）
 
 以下为设计合同；v0.2.0已实现 `project.register/update/retire/preference`、`memory.search/list/get/correct/archive/restore/delete`、`task.list/inspect/cancel/confirmRemoteQuiescence`、`recovery.confirm`、`work.*`、`report.draft/get/approve/export`、`reminder.defer/disable`，通过同源HTTP `/dsh-local-memory/api` 与模型工具复用同一实现。`MEM-API-ABSTRACT` 未实现；`MEM-API-PROOF` 的正文读取确认仍受同步dispatch限制（见README已知限制）。

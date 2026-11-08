@@ -59,6 +59,7 @@ const READ_ONLY_OPERATIONS = new Set([
   'status', 'project.list', 'memory.search', 'memory.list', 'memory.get', 'task.list', 'task.inspect',
   'work.list', 'work.get', 'report.list', 'report.get',
   'abstract.list', 'share.discover', 'share.list', 'shared.search',
+  'memory.attribution',
 ]);
 const PASSTHROUGH_ERROR_CODES = new Set([
   'PROJECT_NOT_FOUND', 'STALE_REVISION', 'PROJECT_RETIRED', 'PROJECT_EXISTS', 'DUPLICATE_NAME',
@@ -66,6 +67,7 @@ const PASSTHROUGH_ERROR_CODES = new Set([
   'INVALID_ORIGIN', 'INVALID_OPERATION', 'SCOPE_NOT_FOUND', 'SCOPE_LIMIT', 'STORE_UNAVAILABLE',
   'QUEUE_UNAVAILABLE', 'REGISTRY_UNAVAILABLE', 'CATALOG_UNAVAILABLE', 'CATALOG_IDENTITY_MISMATCH',
   'CATALOG_SCHEMA_MISMATCH', 'CATALOG_IDENTITY_UNAVAILABLE', 'OPERATION_CONFLICT',
+  'SESSION_NOT_FOUND', 'SESSION_REQUIRED',
 ]);
 const UNSAFE_STATUS_KEY = /(?:dataRoot|databasePath|canonicalRoot|worktreeRoot|localPath|exportRoot|exportRootRef|anchor|^path$|^paths$|^root$|^roots$|^dir$|^directory$|^file$|^files$)/i;
 const ABSOLUTE_PATH = /(?:^|[^A-Za-z0-9])(?:[A-Za-z]:[\\/]|\\\\[^\\/\s]+[\\/])/;

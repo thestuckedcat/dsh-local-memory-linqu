@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-09",
+  "scope": "MEM-EXP-1 Phase A/B (experience shell, composer status, turn attribution) — not the complete v0.4.0 experience",
+  "baseline": {
+    "code": "d75472f (v0.3.0)",
+    "design": "fa258ac / 9e40da2",
+    "runtimePlugin": "v0.3.0+PhaseA/B"
+  },
+  "suite": {
+    "tests": 324,
+    "pass": 324,
+    "fail": 0,
+    "command": ".\\runtime\\node.exe --test tests/*.test.mjs"
+  },
+  "newTests": {
+    "attribution": "tests/attribution.test.mjs (4)",
+    "experienceOperations": "tests/experience-operations.test.mjs (2)",
+    "clientSlots": "tests/management.test.mjs updated for 3 slots"
+  },
+  "live": {
+    "statusRoute": "POST /dsh-local-memory/api operation=status",
+    "state": "ready",
+    "experience": {
+      "phase": "idle",
+      "running": 0,
+      "pendingScopes": 0,
+      "automaticDisabled": false
+    },
+    "attribution": {
+      "turns": 0,
+      "available": 0,
+      "unavailable": 0,
+      "overLimit": 0
+    },
+    "slots": {
+      "conversation.composer.dock": {
+        "occupant": "local-memory-status",
+        "order": 5,
+        "active": true
+      },
+      "conversation.chat.turnTail": {
+        "occupant": "local-memory-attribution",
+        "order": 10,
+        "active": true
+      }
+    }
+  },
+  "implemented": [
+    "reading-first memory list (title/summary/project/date; archived indicator)",
+    "read-only ExperienceBar on conversation.composer.dock polling status.experience while visible",
+    "status.experience read-only phase projection",
+    "recall items carry stable refs 记1..; projection boundary accepts additive turn/step/ref",
+    "systemPrompt citation instruction when the Host exposes systemPrompt.section",
+    "agent/turn-stopping attribution parse/validation (<=100 Unicode code points, exact markers only)",
+    "read-only memory.attribution operation for the turn-tail slot"
+  ],
+  "limitations": [
+    "Attribution is in-process memory only; lost on restart. Durable storage is not implemented.",
+    "No visual/browser acceptance of the small bar or turn-tail mapping; only live slot registration and static/render tests.",
+    "No real model output was tested with citation markers; the citation instruction is prompt-only.",
+    "Inline clickable badges next to conclusions are not implemented (no assistant-text render slot); turnTail renders the mapping instead.",
+    "Background consolidation, natural-language correction, evidence excerpts, idle scheduling, cold tier and MEM-204 are not part of Phase A/B."
+  ]
+}

@@ -3,6 +3,8 @@
 > 版本 `0.3.0`（2026-11-08）。这是05“本地长期记忆”能力的**可安装增量版本**：在 v0.2.0 的 M1 闭环之上，新增 **M2 项目 abstract（二次压缩）、用户授权的跨项目共享、项目退休适用性**，记忆中心增加第 4 个 tab。
 >
 > 本版本完成统一待办的 **M1（单个登记项目的最小 Host 闭环）**、**M2 的 MEM-201/202/203 子集**，以及管理界面/年度工作记录的基础可用子集；**MEM-204 能力事件、M3 非C盘冷档、年度维度模板（MEM-405）仍未实现**，M4 亦只完成到“自动草稿＋缺证提醒＋人工审定报告＋本地导出”。完整交付边界见 [TODO.md](TODO.md) 与 [实现合同](docs/m1-plugin-design.md)、[M2 设计合同](docs/m2-design.md)。
+>
+> **2026-11-09 进行中：v0.4.0 体验增量（Phase A/B 已实现）**：阅读优先经验列表、composer 小 bar（只读 `status.experience`）、召回短引用与 turnTail 记忆影响映射；设计见 [MEM-EXP-1](docs/memory-experience-contract.md)、[MEM-BG-1](docs/memory-background-plan.md) 与[实施计划](docs/experience-implementation-plan.md)。纠正/后台巩固/证据摘录/冷档仍未实现；归因仅进程内存储，内联可点击角标受 Host 正文 slot 限制未实现。当前本地 324/324 测试（含 Phase A/B 新用例），真实视觉与真实模型引用未验收。
 
 ## 1. 它解决什么
 
