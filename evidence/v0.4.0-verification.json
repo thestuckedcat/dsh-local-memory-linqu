@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "date": "2026-11-09",
-  "startedAtUtc": "2026-11-08T16:48:01.964Z",
-  "durationMs": 37182.9623,
+  "startedAtUtc": "2026-11-08T16:56:02.881Z",
+  "durationMs": 36849.4937,
   "purpose": "v0.4.0 experience/background delivery evidence: reading-first UI, attribution, excerpts, consolidation manifest/validator/queue/runJob/candidate/publish/derived views, correction suspension, M3 layout/journal skeleton; local full suite plus the real installed-library final-gate regression probe and live install observation",
   "runtime": {
     "node": "26.13.0",
@@ -10,14 +10,14 @@
   },
   "packageVersion": "0.4.0",
   "commands": {
-    "suite": "E:\\dsh\\plugin\\05-local-memory\\runtime\\node.exe --test --test-concurrency=1 --test-reporter=tap tests/abstracts.test.mjs tests/attribution.test.mjs tests/backend.test.mjs tests/capability-events.test.mjs tests/configuration.test.mjs tests/consolidation-inputs.test.mjs tests/consolidation-output.test.mjs tests/consolidation-queue.test.mjs tests/consolidation-storage.test.mjs tests/consolidation-versions.test.mjs tests/correction.test.mjs tests/excerpt-lifecycle.test.mjs tests/execution-authorization.test.mjs tests/experience-operations.test.mjs tests/final-projection.test.mjs tests/harness-provider.test.mjs tests/harness-sdk.test.mjs tests/host-grants.test.mjs tests/idle-gate.test.mjs tests/jobs.test.mjs tests/lifecycle.test.mjs tests/m2-management.test.mjs tests/management.test.mjs tests/migration.test.mjs tests/plugin-entry.test.mjs tests/project-registry.test.mjs tests/projects.test.mjs tests/proof-reminders.test.mjs tests/reports.test.mjs tests/scheduler.test.mjs tests/session-hooks.test.mjs tests/sharing.test.mjs tests/source-lock.test.mjs tests/storage-layout.test.mjs tests/work-management.test.mjs tests/work-summary.test.mjs",
+    "suite": "E:\\dsh\\plugin\\05-local-memory\\runtime\\node.exe --test --test-concurrency=1 --test-reporter=tap tests/abstracts.test.mjs tests/attribution.test.mjs tests/backend.test.mjs tests/capability-events.test.mjs tests/configuration.test.mjs tests/consolidation-inputs.test.mjs tests/consolidation-operations.test.mjs tests/consolidation-output.test.mjs tests/consolidation-queue.test.mjs tests/consolidation-storage.test.mjs tests/consolidation-versions.test.mjs tests/correction.test.mjs tests/excerpt-lifecycle.test.mjs tests/execution-authorization.test.mjs tests/experience-operations.test.mjs tests/final-projection.test.mjs tests/harness-provider.test.mjs tests/harness-sdk.test.mjs tests/host-grants.test.mjs tests/idle-gate.test.mjs tests/jobs.test.mjs tests/lifecycle.test.mjs tests/m2-management.test.mjs tests/management.test.mjs tests/migration.test.mjs tests/plugin-entry.test.mjs tests/project-registry.test.mjs tests/projects.test.mjs tests/proof-reminders.test.mjs tests/reports.test.mjs tests/scheduler.test.mjs tests/session-hooks.test.mjs tests/sharing.test.mjs tests/source-lock.test.mjs tests/storage-layout.test.mjs tests/work-management.test.mjs tests/work-summary.test.mjs",
     "hostProbe": "E:\\dsh\\plugin\\05-local-memory\\runtime\\node.exe tools/test-m1-host.mjs"
   },
   "suite": {
     "tap": "evidence/v0.4.0-node26.tap",
     "exitCode": 0,
-    "tests": 387,
-    "pass": 387,
+    "tests": 390,
+    "pass": 390,
     "fail": 0,
     "cancelled": 0,
     "skipped": 0,
@@ -48,7 +48,7 @@
           "state": "running",
           "running": 0,
           "pendingScopes": [],
-          "lastTickAt": "2026-11-08T16:48:38.483Z",
+          "lastTickAt": "2026-11-08T16:56:39.449Z",
           "lastError": null
         },
         "grants": {
@@ -58,7 +58,7 @@
           "recoveryConfirmations": 0,
           "manualConfirmations": 0,
           "revoked": false,
-          "authorizationVersion": "grant-v1:9fc42f6a-c0ed-4c84-8c54-6d77c18b6457:1"
+          "authorizationVersion": "grant-v1:ab8ff62f-39ec-4291-8a61-5c36fd2fbabf:1"
         },
         "provider": "active",
         "config": {
@@ -114,7 +114,7 @@
           "running": 0,
           "pendingScopes": 0,
           "automaticDisabled": false,
-          "updatedAt": "2026-11-08T16:48:39.069Z"
+          "updatedAt": "2026-11-08T16:56:39.657Z"
         },
         "attribution": {
           "turns": 0,
@@ -138,12 +138,20 @@
         "background": {
           "state": "unknown",
           "running": 0,
-          "unknown": 9,
+          "unknown": 7,
           "idle": 0,
-          "agents": 9,
-          "quietForMs": 19227,
+          "agents": 7,
+          "quietForMs": 103226,
           "quietMs": 30000,
-          "at": "2026-11-08T16:48:39.069Z"
+          "at": "2026-11-08T16:56:39.658Z"
+        },
+        "consolidation": {
+          "pending": 0,
+          "running": false,
+          "enqueued": 0,
+          "published": 0,
+          "failed": 0,
+          "lastError": "[unavailable]"
         }
       }
     },
@@ -203,7 +211,7 @@
     },
     {
       "path": "src/consolidation-versions.mjs",
-      "sha256": "f60a4263af141c62cd20d96b183a13b4ebf44b3f989513a5f15864955822f26c"
+      "sha256": "498c7542c660cef373283977aae07c682719fa59775a533a7f8762f67c706d45"
     },
     {
       "path": "src/storage-layout.mjs",
@@ -219,7 +227,7 @@
     },
     {
       "path": "plugin/index.mjs",
-      "sha256": "a8d87262857e8b8143f1f53c514fbba4ea275f3140ae0759195d5435cc4717dc"
+      "sha256": "23af01e4ac270015ed35f89bcad60b4606971809e4b9e56d53e76d21c3a7e834"
     },
     {
       "path": "plugin/attribution.mjs",
@@ -238,6 +246,10 @@
       "sha256": "eb625066818b10faf1e0a8a20f02ec6a3ec9684d98523ea11319c19a983f0317"
     },
     {
+      "path": "plugin/consolidation-operations.mjs",
+      "sha256": "21db6f8b21b56e8769fbdae733b4da6a796a6a31a9d1943639f28b46db81d952"
+    },
+    {
       "path": "plugin/harness-provider.mjs",
       "sha256": "919030b5096c5eddb8fcc14def9cf84c6eb346314651e4762f07cd4b61c9bb03"
     },
@@ -247,11 +259,11 @@
     },
     {
       "path": "plugin/management.mjs",
-      "sha256": "b0a49d9feb8af99840092368158556ac48953ec0c9dbb1748f0af09163c31b8e"
+      "sha256": "eddf718ebe92f3a1e765705ae1b585fa66a67ad84719b16b799aabe945327f19"
     },
     {
       "path": "client.js",
-      "sha256": "709d64b7677b3b8c99e1e879b1600929d8c42a5f3f750a3755f190f43366d8fb"
+      "sha256": "6f7ba0ad5d88505d70b8ca4840eacec6c8480ca711eccb6abb82a546e4bdcb9b"
     },
     {
       "path": "package.json",
@@ -259,11 +271,11 @@
     },
     {
       "path": "locale/en.json",
-      "sha256": "815cabb6181306b2a8d687b9cbdbf3e796ebaf3fa5f6f999ed530e8fb03e0ad9"
+      "sha256": "4b6f14e9ec590dd2e87af0d9fbd34b9bd9cc2cbd05c6015ac001d638e630ee97"
     },
     {
       "path": "locale/zh.json",
-      "sha256": "a25302ce7efcc3d38cefaffca27196d7683e1179347fa2a77d4d7c22905cc7ac"
+      "sha256": "0f2e9b14bd8a1ccae1a63d38e146b66be213dff0fe3de8bbabd8191e0a30d890"
     },
     {
       "path": "tests/consolidation-inputs.test.mjs",
@@ -290,6 +302,10 @@
       "sha256": "ac12b6980d4f4c12353da155ab3590ea24782536cbd8f6d6029157d8a2f978c2"
     },
     {
+      "path": "tests/consolidation-operations.test.mjs",
+      "sha256": "e56b34a0eb587820418cc8c0a104081aced8c037ed46389fe0783f0f283f15b5"
+    },
+    {
       "path": "tests/excerpt-lifecycle.test.mjs",
       "sha256": "0e9c323294a5d409f005868d07636cddac8859460bdec0694f6ffd4809d5f529"
     },
@@ -307,7 +323,7 @@
     },
     {
       "path": "tests/plugin-entry.test.mjs",
-      "sha256": "29cdc56596576473d46376ba8d82d0ca7101b8efc28dc962f7e8412fc64d9317"
+      "sha256": "c646ace185ba5f8011153c1f021ca316012dd5945f6ab73804a4a0a83aba5bd7"
     },
     {
       "path": "tests/harness-provider.test.mjs",
@@ -315,19 +331,19 @@
     },
     {
       "path": "README.md",
-      "sha256": "b1c0eb3b2d117ac7d1f16ff0c49649c6dc3f83901cf055412ff2c92a6f9d732f"
+      "sha256": "e7966b42657f58c863b49b52147a493d40dd5dff9d968bc439c1c4d26aa78e7e"
     },
     {
       "path": "TODO.md",
-      "sha256": "3cbcbd76935cc83bfb15a9738d43836194e00718f22ad0242f1d35fe9f060423"
+      "sha256": "8b13b8acf383dc0414ed931a3136c8ffec58dc140c7348565589db34af8006bd"
     },
     {
       "path": "docs/mechanisms.md",
-      "sha256": "1c935dca4cc617e58c01d7bc0dfe0a3830da179123559214e43b3d7da4908dfb"
+      "sha256": "cc5256e2b753c006997190c2e84b1b22313054e565166546f25cf3e27a4bb3e3"
     },
     {
       "path": "docs/implementation-route.md",
-      "sha256": "61c069a13c8d6d577e4088fea1835fe6accdf26ed2dd7b57eee21893f9576e9f"
+      "sha256": "586f77de337b292d64a1bed4f18cd30483234dd376a5e99924573f0262f55118"
     },
     {
       "path": "docs/experience-implementation-plan.md",
@@ -335,9 +351,9 @@
     }
   ],
   "artifactsHashBasis": "SHA256 computed from the clean HEAD tree before this evidence file was written; compare with git show <git.head>:<path>",
-  "tapSha256": "e75093462a0b4d47cc4567102615a761ad5f3849d6b706acd0a207e50a2ee113",
+  "tapSha256": "7c8c9f86726344bd368b5b6409c32ab0d088fc83b68c01ef9f29814014e8da06",
   "git": {
-    "head": "8787f43cd2e2f1e151415a34378acffaf14d1cad",
+    "head": "fc549a25b86f500a9181359864e3050436e3a8c8",
     "cleanAtStart": true,
     "cleanAtEnd": true
   },
