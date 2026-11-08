@@ -20,6 +20,7 @@ function fixture(t) {
     buildVariant: 'win-node24', scopeRef: 'A', bindingRevision: 2,
   };
   const registry = {
+    list: () => [project],
     getProject: (id) => (id === 'project-1' ? project : undefined),
     bindingForScope: (scopeRef) => (scopeRef === 'A' ? binding : undefined),
     projectForScope: (scopeRef) => (scopeRef === 'A' ? project : undefined),
@@ -48,7 +49,7 @@ function fixture(t) {
     try { store.close(); } catch { /* closed */ }
     rmSync(root, {recursive: true, force: true, maxRetries: 10, retryDelay: 50});
   });
-  return {store, registry, operations, inputs: createConsolidationInputs(store, {registry})};
+  return {store, registry, provider, operations, inputs: createConsolidationInputs(store, {registry})};
 }
 function memory(store, id, text) {
   return store.put({id, sourceRef: `session-A/${id}`, sourceVersion: 'v1', kind: 'lesson', text, origin: 'user'});
@@ -87,4 +88,17 @@ test('only a user can start consolidation and at least two active memories are r
   const single = f.operations['memory.consolidate']({projectId: 'project-1'}, {actor: 'user'});
   assert.equal(single.ok, false);
   assert.equal(single.error.code, 'CONSOLIDATE_SELECTION');
+});
+
+test('persisted publication permission lets a new worker instance recover and publish a queued user-gesture job', async (t) => {
+  const f = fixture(t);
+  memory(f.store, 'memory-1', 'Descriptor reclamation waits for completion.');
+  memory(f.store, 'memory-2', 'Ownership barrier precedes reclamation.');
+  const queued = f.operations['memory.consolidate']({projectId: 'project-1'}, {actor: 'user'});
+  assert.equal(queued.ok, true, JSON.stringify(queued));
+  const restarted = createConsolidationOperations({config: {routes: [{routeRef: 'registered-A', provider: 'provider-A', model: 'model-A'}], extraction: {routeRef: 'registered-A'}, workSummary: {routeRef: 'registered-A'}, limits: {maxOutputTokens: 512}}, registry: f.registry, provider: f.provider, now: () => new Date('2026-11-09T00:00:00.000Z')});
+  assert.equal(restarted.recover(), 1);
+  const ticked = await restarted.tick({canDispatch: () => true});
+  assert.equal(ticked.results[0].state, 'published');
+  assert.equal(restarted.status().published, 1);
 });

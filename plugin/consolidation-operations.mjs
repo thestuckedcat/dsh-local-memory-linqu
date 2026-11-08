@@ -1,5 +1,6 @@
 import {checkedText} from '../src/scope.mjs';
 import {fingerprint} from '../src/validation.mjs';
+import {contextOf, write} from '../src/store-internals.mjs';
 import {createConsolidationInputs} from '../src/consolidation-inputs.mjs';
 import {createConsolidationQueue} from '../src/consolidation-queue.mjs';
 import {createConsolidationVersions} from '../src/consolidation-versions.mjs';
@@ -27,6 +28,22 @@ function enabledRepos(project) {
 }
 function configDigestOf(config) {
   return fingerprint({routes: config.routes, extraction: config.extraction, limits: config.limits, workSummary: config.workSummary});
+}
+function publicationRow(store, candidateId) {
+  const ctx = contextOf(store);
+  return ctx.db.prepare("SELECT id,state,subject_id,expires_at FROM ledger.consolidation_permissions WHERE scope_ref=? AND kind='publication' AND state='active' AND subject_id=?").get(store.scopeRef, candidateId);
+}
+function grantPublication(store, candidateId, manifestDigest, now) {
+  const ctx = contextOf(store);
+  return write(ctx, () => {
+    const policy = ctx.db.prepare('SELECT revision FROM ledger.consolidation_policy WHERE scope_ref=?').get(store.scopeRef)?.revision ?? 1;
+    const existing = publicationRow(store, candidateId);
+    if (existing) return {permissionId: existing.id};
+    const permissionId = `local-publication:${candidateId}`;
+    ctx.db.prepare(`INSERT INTO ledger.consolidation_permissions(id,scope_ref,kind,state,subject_id,subject_digest,route_digest,epoch,policy_revision,expires_at,created_at)
+ VALUES(?,?,?,?,?,?,?,?,?,?,?)`).run(permissionId, store.scopeRef, 'publication', 'active', candidateId, manifestDigest, null, store.generation(), policy, null, now().toISOString());
+    return {permissionId};
+  });
 }
 
 export function createConsolidationOperations({config, registry, provider, now = () => new Date()} = {}) {
@@ -80,7 +97,13 @@ export function createConsolidationOperations({config, registry, provider, now =
     const expected = {expectedEpoch: store.generation(), expectedScopeRevision: store.revision(), expectedHeadRevision: head.revision};
     const requestId = `manual-consolidate:${fingerprint({projectId, repoId: repository.repoId, memoryIds, ...expected})}`;
     const job = queue.enqueue({requestId, selection: {memoryIds, excerptIds: [], mode: 'memory_only'}, route, ...expected});
-    pending.set(job.jobId, {queue, versions, store, projectId, repoId: repository.repoId, memoryIds});
+    const candidateId = `mc-candidate:${job.jobId}`;
+    try { grantPublication(store, candidateId, job.manifestDigest, now); }
+    catch (error) {
+      try { queue.cancel({requestId: `cancel-no-publication:${job.jobId}`, jobId: job.jobId, expectedEpoch: store.generation()}); } catch { /* best effort */ }
+      throw error;
+    }
+    pending.set(job.jobId, {queue, versions, store, projectId, repoId: repository.repoId, memoryIds, candidateId});
     counters.enqueued += 1;
     return Object.freeze({projectId, repoId: repository.repoId, jobId: job.jobId, state: job.state, queued: true, selected: memoryIds.length});
   }
@@ -111,7 +134,9 @@ export function createConsolidationOperations({config, registry, provider, now =
             expectedHeadRevision: grant.versions.head().revision,
             publication: {authorize: ({candidateId, digest}) => {
               if (candidateId !== job.candidateId || digest !== candidate.digest) throw failure('MC_PUBLICATION_UNAVAILABLE', 'publication does not match this user gesture');
-              return {permissionId: `local-user-publication:${jobId}`};
+              const row = publicationRow(grant.store, job.candidateId);
+              if (!row) throw failure('MC_PUBLICATION_UNAVAILABLE', 'persistent publication permission is missing');
+              return {permissionId: row.id};
             }},
           });
           counters.published += 1;
@@ -125,11 +150,37 @@ export function createConsolidationOperations({config, registry, provider, now =
     } finally { running = false; }
     return Object.freeze({state: 'ticked', results: Object.freeze(results)});
   }
+  function recover() {
+    let recovered = 0;
+    let projects;
+    try { projects = registry.list(); } catch { projects = []; }
+    for (const project of projects) {
+      for (const repository of enabledRepos(project)) {
+        let store, queue, versions;
+        try {
+          store = registry.storeFor(repository.scopeRef);
+          const inputs = createConsolidationInputs(store, {registry, now, configDigest: configDigestOf(config)});
+          versions = createConsolidationVersions(store, {inputs});
+          queue = createConsolidationQueue(store, {inputs, provider, now, authorizeExecution: ({jobId}) => ({authorizationVersion: `persisted-user-consolidation:${jobId}`})});
+        } catch { continue; }
+        let jobs;
+        try { jobs = queue.list({state: 'queued', limit: 2}).items; } catch { continue; }
+        for (const job of jobs) {
+          const candidateId = `mc-candidate:${job.jobId}`;
+          if (!publicationRow(store, candidateId)) continue;
+          if (pending.has(job.jobId)) continue;
+          pending.set(job.jobId, {queue, versions, store, projectId: project.projectId, repoId: repository.repoId, memoryIds: [], candidateId});
+          recovered += 1;
+        }
+      }
+    }
+    return recovered;
+  }
   function status() {
     const {lastError, ...rest} = counters;
     return Object.freeze({pending: pending.size, running, ...rest, ...(lastError ? {lastError} : {})});
   }
-  return Object.freeze({'memory.consolidate': (input, context) => {
+  return Object.freeze({recover, 'memory.consolidate': (input, context) => {
     try { return {ok: true, value: consolidate(input, context)}; }
     catch (error) {
       const code = typeof error?.code === 'string' ? error.code : 'INVALID_INPUT';

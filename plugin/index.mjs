@@ -283,6 +283,7 @@ export function apply(ctx, rawConfig = {}) {
     capability = createCapabilityEventConsumer({catalog: registry.catalog, registry});
     busyGate = createBusyGate({agents: ctx.agents, now: () => Date.now(), quietMs: 30_000});
     const consolidationOperations = createConsolidationOperations({config, registry, provider: bridge.provider, now: () => new Date()});
+    try { consolidationOperations.recover(); } catch { noteDiagnostic('consolidation_recovery_failed'); }
     const workOperations = createWorkOperations({registry, config, reports, approval: ctx.approval, sessions: ctx.sessions});
     m2Operations = createM2Operations({registry, abstracts, sharing, sessions: ctx.sessions});
     const experienceOperations = createExperienceOperations({attribution, sessions: ctx.sessions, registry});
