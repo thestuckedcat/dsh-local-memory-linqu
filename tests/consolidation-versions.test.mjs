@@ -7,6 +7,7 @@ import {openStore} from '../src/backend.mjs';
 import {createConsolidationInputs} from '../src/consolidation-inputs.mjs';
 import {createConsolidationQueue} from '../src/consolidation-queue.mjs';
 import {createConsolidationVersions} from '../src/consolidation-versions.mjs';
+import {createExperienceOperations} from '../plugin/experience-operations.mjs';
 import {createControlledProvider} from '../src/provider.mjs';
 import {routeA} from './helpers.mjs';
 import {contextOf} from '../src/store-internals.mjs';
@@ -51,7 +52,7 @@ function fixture(t) {
     try { store.close(); } catch { /* already closed */ }
     rmSync(root, {recursive: true, force: true, maxRetries: 10, retryDelay: 50});
   });
-  return {store, inputs, queue, versions};
+  return {store, inputs, queue, versions, registry};
 }
 function memory(store, id, text = 'Descriptor reclamation waits for completion.') {
   return store.put({id, sourceRef: `session-A/${id}`, sourceVersion: 'v1', kind: 'lesson', text, origin: 'user'});
@@ -115,4 +116,29 @@ test('a memory mutation before publish blocks the candidate and version read fai
   const candidate = f.versions.getCandidate(candidateId);
   f.store.correct({id: first.id, text: 'Descriptor reclamation requires the completion barrier.', sourceVersion: 'v2', expectedGeneration: f.store.generation()});
   assert.throws(() => f.versions.publish({requestId: 'publish-1', candidateId, expectedDigest: candidate.digest, expectedEpoch: f.store.generation(), expectedScopeRevision: f.store.revision(), expectedHeadRevision: 0}), (error) => error.code === 'MC_DEPENDENCY_CHANGED' || error.code === 'MC_EPOCH_CHANGED');
+});
+
+test('memory.derived exposes the published head with full original texts and unverified markers', async (t) => {
+  const f = fixture(t);
+  const {candidateId} = await readyCandidate(f);
+  const candidate = f.versions.getCandidate(candidateId);
+  f.versions.publish({requestId: 'publish-derived', candidateId, expectedDigest: candidate.digest, expectedEpoch: f.store.generation(), expectedScopeRevision: f.store.revision(), expectedHeadRevision: 0});
+  const operations = createExperienceOperations({
+    attribution: {read: () => ({state: 'none'})},
+    sessions: {get: () => undefined},
+    registry: {
+      getProject: (id) => (id === 'project-1' ? {projectId: id, repositories: [{scopeRef: 'A', enabled: true}]} : undefined),
+      storeFor: () => f.store,
+    },
+  });
+  const result = operations['memory.derived']({projectId: 'project-1'}, {actor: 'user'});
+  assert.equal(result.ok, true, JSON.stringify(result));
+  assert.equal(result.value.head.revision, 1);
+  assert.equal(result.value.verification, 'unverified');
+  assert.equal(result.value.semanticValidation, 'not_performed');
+  assert.equal(result.value.groups.length, 1);
+  assert.equal(result.value.groups[0].materials.length, 2);
+  assert.match(result.value.groups[0].materials[0].text, /reclamation/i);
+  assert.equal(result.value.groups[0].materials[0].textAvailable, true);
+  assert.ok(result.value.warnings.includes('semantic_support_unverified'));
 });

@@ -149,6 +149,21 @@ window.__ModuleLoader__.load({
         'project.origin.user': '用户登记',
         'project.origin.config': '配置登记',
         'memory.searchPlaceholder': '手动检索本地经验…',
+    'derived.title': "Consolidated view",
+    'derived.revision': "Version {n}",
+    'derived.unverified': "Unverified derived view",
+    'derived.notFact': "This is a local derived view, not a fact. It never replaces the original memories.",
+    'derived.semanticNotPerformed': "Semantic support was not machine-verified.",
+    'derived.materials': "Original memories: {n}",
+    'derived.materialUnavailable': "Original text is no longer available.",
+    'derived.type.duplicates': "Duplicates",
+    'derived.type.related': "Related",
+    'derived.type.conflict': "Conflict",
+    'derived.type.source_correction': "Source correction",
+    'derived.status.unverified': "Unverified",
+    'derived.status.hypothesis': "Hypothesis",
+    'derived.status.conflict': "Conflict",
+    'derived.status.unknown': "Unknown",
         'memory.filter.all': '全部',
         'memory.filter.active': '有效',
         'memory.filter.archived': '已归档',
@@ -467,6 +482,21 @@ window.__ModuleLoader__.load({
         'project.origin.user': 'User registered',
         'project.origin.config': 'Configured',
         'memory.searchPlaceholder': 'Search local experiences…',
+    'derived.title': "整理视图",
+    'derived.revision': "版本 {n}",
+    'derived.unverified': "未验证派生视图",
+    'derived.notFact': "这是本地派生视图，不是事实；不会替换原记忆。",
+    'derived.semanticNotPerformed': "语义支持未做机器验证。",
+    'derived.materials': "原记忆：{n}",
+    'derived.materialUnavailable': "原记忆正文已不可用。",
+    'derived.type.duplicates': "重复",
+    'derived.type.related': "相关",
+    'derived.type.conflict': "冲突",
+    'derived.type.source_correction': "来源纠正",
+    'derived.status.unverified': "未验证",
+    'derived.status.hypothesis': "假设",
+    'derived.status.conflict': "冲突",
+    'derived.status.unknown': "未知",
         'memory.filter.all': 'All',
         'memory.filter.active': 'Active',
         'memory.filter.archived': 'Archived',
@@ -1101,6 +1131,7 @@ window.__ModuleLoader__.load({
       const [editText, setEditText] = React.useState('');
       const [deleteOpen, setDeleteOpen] = React.useState(false);
       const [loadError, setLoadError] = React.useState(null);
+      const [derived, setDerived] = React.useState(null);
       const searchInput = React.useRef('');
 
       const loadPage = React.useCallback(async (options) => {
@@ -1124,6 +1155,13 @@ window.__ModuleLoader__.load({
           if (mounted.current && !settings.silent) setBusy(false);
         }
       }, [projectId, stateFilter]);
+      const loadDerived = React.useCallback(async () => {
+        if (!projectId) { setDerived(null); return; }
+        try {
+          const value = await call('memory.derived', {projectId});
+          if (mounted.current) setDerived(value);
+        } catch { if (mounted.current) setDerived(null); }
+      }, [projectId]);
       const runSearch = React.useCallback(async (options) => {
         const settings = options || {};
         const term = settings.term !== undefined ? settings.term : searchInput.current;
@@ -1171,7 +1209,8 @@ window.__ModuleLoader__.load({
 
       React.useEffect(() => {
         setItems([]); setCounts({active: 0, archived: 0, deleted: 0}); setNextCursor(null); setSelectedId(null); setDetail(null);
-        if (projectId) reload({silent: false});
+        if (projectId) { reload({silent: false}); loadDerived(); }
+        else setDerived(null);
       }, [projectId, stateFilter, refreshSignal]);
       React.useEffect(() => {
         if (selectedId) detailRef.current(selectedId, true);
@@ -1179,6 +1218,7 @@ window.__ModuleLoader__.load({
       useVisiblePolling(() => {
         if (!projectId) return;
         reloadRef.current({silent: true});
+        loadDerived();
         if (selectedId) detailRef.current(selectedId, true);
       }, Boolean(projectId) && !busy);
 
@@ -2324,6 +2364,10 @@ window.__ModuleLoader__.load({
       .dshlm-row-line { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; min-width: 0; }
       .dshlm-row-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .dshlm-row-title { font-weight: 600; color: var(--dsw-alias-label-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+ .dshlm-derived { border-left: 3px solid var(--dsw-alias-label-warning, #b7791f); display: flex; flex-direction: column; gap: 8px; }
+ .dshlm-derived-group { display: flex; flex-direction: column; gap: 4px; padding-top: 6px; border-top: 1px solid var(--dsw-alias-border-secondary, rgba(127,127,127,.2)); }
+ .dshlm-derived-statement { margin: 0; font-weight: 600; color: var(--dsw-alias-label-primary); }
+ .dshlm-derived-material { margin: 0; color: var(--dsw-alias-label-secondary); font-size: 12px; white-space: pre-wrap; }
       .dshlm-row-summary { color: var(--dsw-alias-label-secondary); font-size: 0.92em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
       .dshlm-row-meta { display: flex; gap: 8px; flex-wrap: wrap; color: var(--dsw-alias-label-tertiary); font-size: 0.82em; }
       .dshlm-attribution { display: flex; gap: 6px; flex-wrap: wrap; align-items: baseline; color: var(--dsw-alias-label-tertiary); font-size: 0.82em; padding: 2px 0; }

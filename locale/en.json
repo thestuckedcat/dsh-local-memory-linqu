@@ -319,6 +319,21 @@
     "experience.queued": "Queued",
     "experience.paused": "Memory paused",
     "experience.idle": "Memory ready",
-    "attribution.label": "Memory influence"
+    "attribution.label": "Memory influence",
+    "derived.title": "Consolidated view",
+    "derived.revision": "Version {n}",
+    "derived.unverified": "Unverified derived view",
+    "derived.notFact": "This is a local derived view, not a fact. It never replaces the original memories.",
+    "derived.semanticNotPerformed": "Semantic support was not machine-verified.",
+    "derived.materials": "Original memories: {n}",
+    "derived.materialUnavailable": "Original text is no longer available.",
+    "derived.type.duplicates": "Duplicates",
+    "derived.type.related": "Related",
+    "derived.type.conflict": "Conflict",
+    "derived.type.source_correction": "Source correction",
+    "derived.status.unverified": "Unverified",
+    "derived.status.hypothesis": "Hypothesis",
+    "derived.status.conflict": "Conflict",
+    "derived.status.unknown": "Unknown"
   }
 }

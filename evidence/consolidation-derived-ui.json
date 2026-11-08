@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-09",
+  "scope": "Phase D derived-view read API + reading-first UI card (published head only)",
+  "suite": {
+    "tests": 370,
+    "pass": 370,
+    "fail": 0,
+    "command": ".\\runtime\\node.exe --test tests/*.test.mjs"
+  },
+  "newTests": [
+    "tests/consolidation-versions.test.mjs memory.derived (+1)",
+    "tests/plugin-entry.test.mjs empty derived head assertion"
+  ],
+  "behavior": [
+    "read-only memory.derived management operation: resolves project store, reads consolidation head, returns published head groups with full original memory texts and unverified/semanticValidation markers",
+    "empty head returns {head:null,groups:[]} without error",
+    "client Memory Center shows a derived-view card above the memory list: revision, unverified badge, group type/status, statement, full original materials, semantic-not-verified hint",
+    "locale keys added in en/zh and client runtime dictionaries; client locale-completeness test passes",
+    "derived view never replaces or hides original memories; no model recall uses it"
+  ],
+  "realInstall": {
+    "state": "ready",
+    "experience": "idle",
+    "memoryDerived": {
+      "ok": true,
+      "head": null,
+      "note": "real profile has no published consolidation version yet"
+    }
+  },
+  "limitations": [
+    "No publish/candidate UI action; server API only exposes the published head (no candidate/publish permission flow in UI).",
+    "Client rendering was verified by source/unit/locale tests and a live empty-head API call, not by a browser visual screenshot.",
+    "The page must be refreshed/reloaded to pick up the client change; no automatic HMR promise is made here.",
+    "No version search/list, deletion propagation or historical view UI; only the current head is shown.",
+    "No automatic background scheduling yet; publish still requires a trusted caller."
+  ]
+}

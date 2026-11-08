@@ -319,6 +319,21 @@
     "experience.queued": "等待整理",
     "experience.paused": "记忆暂缓",
     "experience.idle": "记忆就绪",
-    "attribution.label": "记忆影响"
+    "attribution.label": "记忆影响",
+    "derived.title": "整理视图",
+    "derived.revision": "版本 {n}",
+    "derived.unverified": "未验证派生视图",
+    "derived.notFact": "这是本地派生视图，不是事实；不会替换原记忆。",
+    "derived.semanticNotPerformed": "语义支持未做机器验证。",
+    "derived.materials": "原记忆：{n}",
+    "derived.materialUnavailable": "原记忆正文已不可用。",
+    "derived.type.duplicates": "重复",
+    "derived.type.related": "相关",
+    "derived.type.conflict": "冲突",
+    "derived.type.source_correction": "来源纠正",
+    "derived.status.unverified": "未验证",
+    "derived.status.hypothesis": "假设",
+    "derived.status.conflict": "冲突",
+    "derived.status.unknown": "未知"
   }
 }

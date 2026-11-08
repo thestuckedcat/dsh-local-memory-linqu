@@ -86,6 +86,9 @@ test('closed loop: extraction persists, recall injects, stale projection blocks 
   assert.ok(excerpts.value.total >= 1, JSON.stringify(excerpts.value));
   assert.ok(excerpts.value.items[0].fragmentId);
   assert.equal('text' in excerpts.value.items[0], false, 'excerpt listing never returns the body');
+  const derived = await api(host, 'memory.derived', {projectId: project.id});
+  assert.equal(derived.ok, true, JSON.stringify(derived));
+  assert.equal(derived.value.head, null, 'no consolidation version has been published in this test');
 
   const {session: second} = host.addSession({id: 'session-2', cwd: repo});
   const query = userQuery('q-1', 'How does descriptor reclamation work?');
