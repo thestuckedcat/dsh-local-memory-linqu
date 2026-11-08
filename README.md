@@ -4,7 +4,7 @@
 >
 > v0.3.0 基线完成 **M1**、**M2 的 MEM-201/202/203**、管理界面/年度工作记录基础子集；v0.4.0 增量已交付 MEM-204 消费器、阅读优先/归因/小 bar、证据摘录、整理输入/校验/队列/候选/版本、派生视图与删除传播、显式纠正挂起、M3 layout/journal 骨架。**未完成**：自动空闲派发/profile 预算、反思根因、版本 search/list/GC、M3 实际搬移与冷召回、年度维度模板（MEM-405）、完整 GUI/真实 Provider/OS 出口/独立评审。完整边界见 [TODO.md](TODO.md)、[机制说明](docs/mechanisms.md) 与 [实施路线](docs/implementation-route.md)。
 >
-> **2026-11-09 进行中：v0.4.0 体验/后台增量**：已实现阅读优先列表、composer 小 bar、turnTail 归因、MEM-204 能力事件消费器、content v3/authority v2 与真实 profile 迁移、证据摘录自动捕获/删除清理、`mc-output-v1` 严格校验、整理 manifest/用户批次许可、持久整理队列、`memory_consolidate` purpose/prompt、runJob 候选落库、CAS 发布/版本读取、派生视图只读 API 与阅读卡片、删除/纠正传播、显式自然语言纠正挂起、M3 layout/journal 骨架。**仍缺**：自动空闲派发/profile 预算 broker、发布与候选 UI、版本 search/list/历史保留/GC、纠正后台根因反思、M3 实际搬移/冷召回/崩溃恢复、真实 Provider/03 事件/视觉验收与独立评审；不得把本版本称为完整 05 交付。全量 **385/385** 通过（Node 26.13.0，独立评审修复后；证据需重新生成），真实安装库最终门探针 3/3、live 安装观测见 [v0.4.0-verification.json](evidence/v0.4.0-verification.json)（生成时 379，旧快照）。
+> **2026-11-09 进行中：v0.4.0 体验/后台增量**：已实现阅读优先列表、composer 小 bar、turnTail 归因、MEM-204 能力事件消费器、content v3/authority v2 与真实 profile 迁移、证据摘录自动捕获/删除清理、`mc-output-v1` 严格校验、整理 manifest/用户批次许可、持久整理队列、`memory_consolidate` purpose/prompt、runJob 候选落库、CAS 发布/版本读取、派生视图只读 API 与阅读卡片、删除/纠正传播、显式自然语言纠正挂起、M3 layout/journal 骨架。**仍缺**：自动空闲派发/profile 预算 broker、发布与候选 UI、版本 search/list/历史保留/GC、纠正后台根因反思、M3 实际搬移/冷召回/崩溃恢复、真实 Provider/03 事件/视觉验收与独立评审；不得把本版本称为完整 05 交付。全量 **385/385** 通过（Node 26.13.0，独立评审修复后），真实安装库最终门探针 3/3、live `state:ready`、content v3/authority v2、TAP sha256 与 41 个构件哈希见 [v0.4.0-verification.json](evidence/v0.4.0-verification.json)。
 >
 > **阅读提示（2026-11-09）**：本文 §5–§8 保留 v0.3.0/M2 历史基线；其中“318/318”“MEM-204 未实现”“M3 未实现”“冷档未创建”等表述已过时。v0.4.0 的当前实现/验证边界以本提示、§7 的 v0.4 行、[TODO MEM-TODO-5](TODO.md)、[mechanisms §3.7](docs/mechanisms.md) 与 [v0.4.0 证据](evidence/v0.4.0-verification.json) 为准；独立评审见 [v0.4.0-independent-review.md](docs/v0.4.0-independent-review.md)。
 
@@ -139,7 +139,7 @@ docs/                        设计、阶段机制、评审、共享合同副本
 | 流接口修复与现场复验 | `llm/stream` 监听器改为同步返回 `AsyncIterable`；重启桌面 Harness 后普通流式对话恢复；安装库回归 34/34 | `docs/stream-contract-fix.md`、`evidence/stream-contract-*.tap` |
 | 端到端闭环（测试内 FakeHost：登记→审批→提炼→持久化→召回→最终门→删除后阻断→重启/晚到结果） | 通过 | `tests/plugin-entry.test.mjs` 等 |
 
-**v0.4.0 补充证据（2026-11-09）**：HEAD `a35b550` 时全量 379/379 通过（随后修复独立评审 CR-1/I-4/I-5/I-6/I-7/I-8/I-9 后为 385/385，需重新生成证据）；真实安装库最终门 3/3、live `state:ready`、content v3/authority v2、41 构件哈希见 [v0.4.0-verification.json](evidence/v0.4.0-verification.json)；独立评审 1 Critical/9 Important/9 Minor 见 [审查报告](docs/v0.4.0-independent-review.md)。
+**v0.4.0 补充证据（2026-11-09）**：当前 HEAD 全量 385/385 通过（独立评审修复后）；真实安装库最终门 3/3、live `state:ready`、content v3/authority v2、TAP sha256 与 41 个构件哈希见 [v0.4.0-verification.json](evidence/v0.4.0-verification.json)。独立评审 1 Critical/9 Important/9 Minor 见 [审查报告](docs/v0.4.0-independent-review.md)，修复响应见 [response](docs/v0.4.0-independent-review-response.md)；作者修复尚未经独立复评。
 
 **未证明边界**：v0.4.0 仍无真实 Provider 业务调用、完整 GUI 视觉、OS 级出口、自动空闲派发、真实 03 事件源、M3 实际搬冷/冷召回、浏览器 slot 现场复核；MEM-204 仅有消费器与未来 `capability/event` 接缝；M3 只有 layout/journal 骨架。
 
