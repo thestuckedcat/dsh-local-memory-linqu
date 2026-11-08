@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "date": "2026-11-09",
-  "startedAtUtc": "2026-11-08T17:02:34.838Z",
-  "durationMs": 36936.1857,
+  "startedAtUtc": "2026-11-08T17:16:09.855Z",
+  "durationMs": 39501.7097,
   "purpose": "v0.4.0 experience/background delivery evidence: reading-first UI, attribution, excerpts, consolidation manifest/validator/queue/runJob/candidate/publish/derived views, correction suspension, M3 layout/journal skeleton; local full suite plus the real installed-library final-gate regression probe and live install observation",
   "runtime": {
     "node": "26.13.0",
@@ -16,8 +16,8 @@
   "suite": {
     "tap": "evidence/v0.4.0-node26.tap",
     "exitCode": 0,
-    "tests": 396,
-    "pass": 396,
+    "tests": 398,
+    "pass": 398,
     "fail": 0,
     "cancelled": 0,
     "skipped": 0,
@@ -48,7 +48,7 @@
           "state": "running",
           "running": 0,
           "pendingScopes": [],
-          "lastTickAt": "2026-11-08T17:03:11.050Z",
+          "lastTickAt": "2026-11-08T17:16:49.271Z",
           "lastError": null
         },
         "grants": {
@@ -58,7 +58,7 @@
           "recoveryConfirmations": 0,
           "manualConfirmations": 0,
           "revoked": false,
-          "authorizationVersion": "grant-v1:fecbd901-2137-456f-9102-a9be39330e00:1"
+          "authorizationVersion": "grant-v1:22b20735-119c-47ca-9cff-88f8ce892111:1"
         },
         "provider": "active",
         "config": {
@@ -114,7 +114,7 @@
           "running": 0,
           "pendingScopes": 0,
           "automaticDisabled": false,
-          "updatedAt": "2026-11-08T17:03:11.707Z"
+          "updatedAt": "2026-11-08T17:16:49.285Z"
         },
         "attribution": {
           "turns": 0,
@@ -138,12 +138,12 @@
         "background": {
           "state": "unknown",
           "running": 0,
-          "unknown": 8,
+          "unknown": 7,
           "idle": 0,
-          "agents": 8,
-          "quietForMs": 88323,
+          "agents": 7,
+          "quietForMs": 48482,
           "quietMs": 30000,
-          "at": "2026-11-08T17:03:11.707Z"
+          "at": "2026-11-08T17:16:49.286Z"
         },
         "consolidation": {
           "pending": 0,
@@ -243,7 +243,7 @@
     },
     {
       "path": "plugin/correction.mjs",
-      "sha256": "03c69c1b9c47138f3291d3c370b39082463f750d1d4fd3df0d13f8198fde5bab"
+      "sha256": "60571369a5047ca625320300aa77fc3be4cfb5233c24101e07a27b42c93bb997"
     },
     {
       "path": "plugin/idle-gate.mjs",
@@ -251,7 +251,7 @@
     },
     {
       "path": "plugin/consolidation-operations.mjs",
-      "sha256": "0bbf5f9b4cfbc7d8084a4be276021f8edf59e72fdeff5f37982abe2d2f7cbacb"
+      "sha256": "3447ef2c031c09fe917d60a48e44a23496aaaba81c8d8c7a2f0e591e50d710c7"
     },
     {
       "path": "plugin/harness-provider.mjs",
@@ -303,7 +303,7 @@
     },
     {
       "path": "tests/correction.test.mjs",
-      "sha256": "ac12b6980d4f4c12353da155ab3590ea24782536cbd8f6d6029157d8a2f978c2"
+      "sha256": "94671b18ca643861050521d873b2dd919014f61f0de971ab2626f3542658fe4c"
     },
     {
       "path": "tests/consolidation-dirty.test.mjs",
@@ -311,7 +311,7 @@
     },
     {
       "path": "tests/consolidation-operations.test.mjs",
-      "sha256": "f94885f0cb4fdf6c960a050fb96f669614b45467714528f666686c71bc5d9832"
+      "sha256": "28ac27dcd6dd1f87f853361a79dafec5653fb06c322a2a3b4253a999f6d01cea"
     },
     {
       "path": "tests/excerpt-lifecycle.test.mjs",
@@ -339,19 +339,19 @@
     },
     {
       "path": "README.md",
-      "sha256": "65bf5612f75cbfdc8f517db90dee15cafd2ee5bf355bb5348c709f9db0dd9955"
+      "sha256": "0c126d02ad717c1e7bbae226a17f16987b5da106c33de37d1d508648c3927b85"
     },
     {
       "path": "TODO.md",
-      "sha256": "061573a5e1a2188a3f0172d8eced42b6ef5346a42e792e3febc5f53b3b5ab089"
+      "sha256": "c346c1fca6d48cd757304f1674a1757dac465c3c793c91d20002c7d0cffd5625"
     },
     {
       "path": "docs/mechanisms.md",
-      "sha256": "02280130e4c9701ceb03a6a36dcd74db7e500c63b5eeaff7724ae21486165931"
+      "sha256": "96e146489ffb3d78af52902d9dc5d855c389a8f97c5691a4f2a25dca71d6f62d"
     },
     {
       "path": "docs/implementation-route.md",
-      "sha256": "7c6490f054ea962d50606725307471f2fb14e184342675b1dbf6c3700f3b94e4"
+      "sha256": "a86a9179fd53af58511b65f8dc8cdc846641cb2a4b0f44e9353d5a4306869e53"
     },
     {
       "path": "docs/experience-implementation-plan.md",
@@ -359,9 +359,9 @@
     }
   ],
   "artifactsHashBasis": "SHA256 computed from the clean HEAD tree before this evidence file was written; compare with git show <git.head>:<path>",
-  "tapSha256": "138e85ef466dda144b9a68767e927d7ae8412afc207f145748e30cfc818994a4",
+  "tapSha256": "d40ac7f9ad3f39d6b4ed46899dd3427893509c0ada614ddd502c141bf53ae3d8",
   "git": {
-    "head": "8fdba9a6fda4d27e89fa4da6d53b0ab8ebb43e79",
+    "head": "b405135bea2ebfde4aa3661d309812867d54a73e",
     "cleanAtStart": true,
     "cleanAtEnd": true
   },
@@ -380,10 +380,10 @@
   },
   "verified": true,
   "limitations": [
-    "Host probe uses a synthetic TextAdapter and installed Cordis/LlmRuntime; it does not boot the full Web profile or call a real Provider.",
+    "Host probe uses a synthetic TextAdapter and installed Cordis/LlmRuntime; it does not boot the full Web profile, call a real Provider, or verify real idle worker dispatch.",
     "No real business Provider call, real consolidation on the installed profile, browser visual walkthrough, OS-level egress test, or independent review is included in this evidence.",
-    "Consolidation is storage/queue/runJob/publish-tested but not wired to automatic idle dispatch or a profile budget broker.",
+    "Consolidation is storage/queue/runJob/publish-tested; opt-in dirty-triggered auto dispatch and user-gesture UI exist, but real Host idle status events, profile budget broker, and real Provider execution are not verified.",
     "M3 layout/journal is validated only; no actual body transfer, cold recall, GC or crash-during-copy test was run.",
-    "Correction reflection/root-cause and cross-restart attribution were not implemented; derived/candidate UI actions remain read-only."
+    "Correction reflection/root-cause and cross-restart attribution were not implemented; derived views have a user-gesture consolidate button but no candidate/publish/version-history UI."
   ]
 }
