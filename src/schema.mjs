@@ -1,5 +1,7 @@
 import {DatabaseSync} from 'node:sqlite';
 import {digest} from './scope.mjs';
+import {AUTHORITY_V2_ADDITIONS,CONTENT_V3_ADDITIONS} from './consolidation-schema.mjs';
+// Historical v1 content schema. Kept byte-for-byte at its reviewed meaning.
 export const LEGACY_SCHEMA=`
 CREATE TABLE metadata(key TEXT PRIMARY KEY,value TEXT NOT NULL);
 CREATE TABLE records(id TEXT PRIMARY KEY,scope_ref TEXT NOT NULL,source_ref TEXT NOT NULL,
@@ -13,11 +15,14 @@ CREATE TRIGGER memory_au AFTER UPDATE ON records BEGIN
  INSERT INTO memory_fts(memory_fts,rowid,text,cjk) VALUES('delete',old.rowid,old.text,old.cjk);
  INSERT INTO memory_fts(rowid,text,cjk) VALUES(new.rowid,new.text,new.cjk); END;
 PRAGMA user_version=1;`;
+// Historical v1→v2 content extension. The combination below is content v2.
 export const EXTENSION_SCHEMA=`
 ALTER TABLE records ADD COLUMN supersedes TEXT;
 CREATE TABLE work_summaries(id TEXT PRIMARY KEY,scope_ref TEXT NOT NULL,payload TEXT NOT NULL,text_hash TEXT NOT NULL,generation INTEGER NOT NULL);
 CREATE TABLE job_inputs(id TEXT PRIMARY KEY,payload TEXT NOT NULL);
 PRAGMA user_version=2;`;
+// Historical v1 authority schema. The combination with the v2 additions is
+// authority v2.
 export const AUTHORITY_SCHEMA=`
 CREATE TABLE metadata(key TEXT PRIMARY KEY,value TEXT NOT NULL);
 CREATE TABLE scope_state(scope_ref TEXT PRIMARY KEY,epoch INTEGER NOT NULL CHECK(epoch>=0),revision INTEGER NOT NULL CHECK(revision>=0));
@@ -34,6 +39,14 @@ CREATE TABLE session_budget(scope_ref TEXT NOT NULL,session_ref TEXT NOT NULL,re
 PRAGMA user_version=1;`;
 export function schemaSignature(db,namespace='main'){if(!['main','ledger'].includes(namespace))throw new Error('Invalid schema namespace');return digest(JSON.stringify(db.prepare(`SELECT type,name,tbl_name,sql FROM ${namespace}.sqlite_schema WHERE sql IS NOT NULL ORDER BY type,name`).all()));}
 function expected(sql){const db=new DatabaseSync(':memory:');try{db.exec(sql);return schemaSignature(db);}finally{db.close();}}
+// Historical signatures. These must keep their v1/v2 meanings so migration can
+// positively identify an old store instead of treating it as unknown.
 export const LEGACY_SIGNATURE=expected(LEGACY_SCHEMA);
 export const CONTENT_SIGNATURE=expected(LEGACY_SCHEMA+EXTENSION_SCHEMA);
 export const AUTHORITY_SIGNATURE=expected(AUTHORITY_SCHEMA);
+// Current schemas/signatures: content v3 and authority v2.
+export const CONTENT_V3_SCHEMA=LEGACY_SCHEMA+EXTENSION_SCHEMA+CONTENT_V3_ADDITIONS;
+export const AUTHORITY_V2_SCHEMA=AUTHORITY_SCHEMA+AUTHORITY_V2_ADDITIONS;
+export const CONTENT_V3_SIGNATURE=expected(CONTENT_V3_SCHEMA);
+export const AUTHORITY_V2_SIGNATURE=expected(AUTHORITY_V2_SCHEMA);
+export {AUTHORITY_SCHEMA_VERSION,CONSOLIDATION_AUTHORITY_SCHEMA,CONSOLIDATION_CONTENT_SCHEMA,CONTENT_SCHEMA_VERSION,CONTENT_V3_ADDITIONS,AUTHORITY_V2_ADDITIONS,migrateConsolidationSchema} from './consolidation-schema.mjs';

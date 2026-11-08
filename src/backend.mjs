@@ -4,11 +4,12 @@ import {join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {verifySourceLock} from './source-lock.mjs';
 import {checkedText,checkedPath,digest} from './scope.mjs';
-import {LEGACY_SCHEMA,EXTENSION_SCHEMA,LEGACY_SIGNATURE,CONTENT_SIGNATURE,schemaSignature} from './schema.mjs';
-import {registerStore,contextOf,initializeAuthority,assertAuthority,write,scopeState,checkEpoch,advance,entryState,assertSources,setEntry,memoryDigest,memoryLive,reconcile} from './store-internals.mjs';
+import {EXTENSION_SCHEMA,LEGACY_SIGNATURE,CONTENT_SIGNATURE,CONTENT_V3_SCHEMA,CONTENT_V3_SIGNATURE,AUTHORITY_V2_SIGNATURE,AUTHORITY_SCHEMA_VERSION,CONTENT_SCHEMA_VERSION,schemaSignature,migrateConsolidationSchema} from './schema.mjs';
+import {registerStore,contextOf,initializeAuthority,assertAuthority,write,scopeState,checkEpoch,advance,entryState,assertSources,setEntry,memoryDigest,memoryLive,reconcile,registerExcerpt,readExcerpt,forgetExcerpt,restoreSnapshot} from './store-internals.mjs';
 import {shape} from './validation.mjs';
-import {forget,archive,restoreArchived,correctMemory,restoreSnapshot} from './lifecycle.mjs';
+import {forget,archive,restoreArchived,correctMemory} from './lifecycle.mjs';
 export {createScope} from './scope.mjs';
+export {registerExcerpt,readExcerpt,forgetExcerpt,restoreSnapshot};
 verifySourceLock(fileURLToPath(new URL('../',import.meta.url)));
 const {cjkBigrams,cjkClause,hasCjk}=await import('../vendor/kovey/cjk.js');
 
@@ -19,35 +20,59 @@ export function openStore(root,{scopeRef,allowLegacyMigration=false}={}){
  const ctx={db,root,scopeRef,authority,databasePath,depth:0,closed:false,cache:new Map()};
  try{
   db.exec('PRAGMA busy_timeout=5000;');
-  const version=db.prepare('PRAGMA user_version').get().user_version;
-  if(existing&&![1,2].includes(version))throw new Error('Unknown memory schema; no automatic migration');
-  if(existing&&schemaSignature(db)!==(version===1?LEGACY_SIGNATURE:CONTENT_SIGNATURE))throw new Error('Memory schema/FTS index definition mismatch');
-  if(existing&&version===1&&!allowLegacyMigration)throw new Error('Explicit legacy migration required');
-  if(existing&&(db.prepare("SELECT value FROM metadata WHERE key='scope_ref'").get()?.value!==scopeRef||db.prepare("SELECT value FROM metadata WHERE key='owner'").get()?.value!=='@local/dsh-controlled-memory'))throw new Error('Memory scope/schema identity mismatch');
+  const originalVersion=existing?db.prepare('PRAGMA user_version').get().user_version:undefined;
+  if(existing){
+   if(![1,2,3].includes(originalVersion))throw new Error('Unknown memory schema; no automatic migration');
+   const signature=originalVersion===1?LEGACY_SIGNATURE:originalVersion===2?CONTENT_SIGNATURE:CONTENT_V3_SIGNATURE;
+   if(schemaSignature(db)!==signature)throw new Error('Memory schema/FTS index definition mismatch');
+   if(originalVersion===1&&!allowLegacyMigration)throw new Error('Explicit legacy migration required');
+   if(db.prepare("SELECT value FROM metadata WHERE key='scope_ref'").get()?.value!==scopeRef||db.prepare("SELECT value FROM metadata WHERE key='owner'").get()?.value!=='@local/dsh-controlled-memory')throw new Error('Memory scope/schema identity mismatch');
+   const saved=db.prepare("SELECT value FROM metadata WHERE key='authority_id'").get()?.value;
+   if(saved&&saved!==authority.identity)throw new Error('Deletion authority identity mismatch');
+   if(originalVersion>=2&&!saved)throw new Error('Deletion authority identity missing');
+   ctx.contentVersion=CONTENT_SCHEMA_VERSION;
+  }
   db.exec('PRAGMA journal_mode=DELETE;PRAGMA synchronous=FULL;PRAGMA secure_delete=ON;');
   db.prepare('ATTACH DATABASE ? AS ledger').run(authority.file);
   db.exec('PRAGMA ledger.journal_mode=DELETE;PRAGMA ledger.synchronous=FULL;PRAGMA ledger.secure_delete=ON;');
-  write(ctx,()=>{
-   if(!existing){db.exec(LEGACY_SCHEMA+EXTENSION_SCHEMA);const set=db.prepare('INSERT INTO metadata VALUES(?,?)');set.run('scope_ref',scopeRef);set.run('owner','@local/dsh-controlled-memory');set.run('generation','0');}
-   else if(version===1)db.exec(EXTENSION_SCHEMA);
-   const saved=db.prepare("SELECT value FROM metadata WHERE key='authority_id'").get()?.value;
-   if(saved&&saved!==authority.identity)throw new Error('Deletion authority identity mismatch');
-   if(existing&&version===2&&!saved)throw new Error('Deletion authority identity missing');
-   db.prepare("INSERT OR IGNORE INTO metadata VALUES('authority_id',?)").run(authority.identity);
-   const legacyRevision=Number(db.prepare("SELECT value FROM metadata WHERE key='generation'").get().value);
-   db.prepare('INSERT OR IGNORE INTO ledger.scope_state VALUES(?,0,?)').run(scopeRef,legacyRevision);
-   if(existing&&version===1){for(const row of db.prepare('SELECT * FROM records').all()){
-    checkedText(row.text,'legacy memory');if(row.scope_ref!==scopeRef)throw new Error('Legacy scope mismatch');
-    if(!entryState(ctx,'memories',row.id))setEntry(ctx,{collection:'memories',id:row.id,bodyDigest:memoryDigest(row),sources:[{sourceRef:row.source_ref,sourceVersion:row.source_version,fragmentRef:'whole'}],generation:row.generation});
-   }}
+  const finishFts=()=>{
    const priorSecureDelete=db.prepare("SELECT v FROM memory_fts_config WHERE k='secure-delete'").get()?.v;
    db.exec("INSERT INTO memory_fts(memory_fts,rank) VALUES('secure-delete',1)");
    reconcile(ctx);
    if(priorSecureDelete!==1)db.exec("INSERT INTO memory_fts(memory_fts) VALUES('rebuild')");
-  });
-  if(schemaSignature(db)!==CONTENT_SIGNATURE)throw new Error('Memory schema/FTS index definition mismatch');
+  };
+  const initializeExisting=()=>{
+   const saved=db.prepare("SELECT value FROM metadata WHERE key='authority_id'").get()?.value;
+   if(saved&&saved!==authority.identity)throw new Error('Deletion authority identity mismatch');
+   db.prepare("INSERT OR IGNORE INTO metadata VALUES('authority_id',?)").run(authority.identity);
+   const legacyRevision=Number(db.prepare("SELECT value FROM metadata WHERE key='generation'").get().value);
+   db.prepare('INSERT OR IGNORE INTO ledger.scope_state VALUES(?,0,?)').run(scopeRef,legacyRevision);
+   if(originalVersion===1){for(const row of db.prepare('SELECT * FROM records').all()){
+    checkedText(row.text,'legacy memory');if(row.scope_ref!==scopeRef)throw new Error('Legacy scope mismatch');
+    if(!entryState(ctx,'memories',row.id))setEntry(ctx,{collection:'memories',id:row.id,bodyDigest:memoryDigest(row),sources:[{sourceRef:row.source_ref,sourceVersion:row.source_version,fragmentRef:'whole'}],generation:row.generation});
+   }}
+   finishFts();
+  };
+  const initializeNew=()=>{
+   db.exec(CONTENT_V3_SCHEMA);
+   const set=db.prepare('INSERT INTO metadata VALUES(?,?)');set.run('scope_ref',scopeRef);set.run('owner','@local/dsh-controlled-memory');set.run('generation','0');
+   db.prepare("INSERT INTO metadata VALUES('authority_id',?)").run(authority.identity);
+   db.prepare('INSERT INTO ledger.scope_state VALUES(?,0,0)').run(scopeRef);
+   finishFts();
+  };
+  const verify=()=>{
+   if(existing&&schemaSignature(db)!==CONTENT_V3_SIGNATURE)throw new Error('Memory schema/FTS index definition mismatch');
+   if(schemaSignature(db,'ledger')!==AUTHORITY_V2_SIGNATURE)throw new Error('Deletion authority schema/identity unavailable');
+  };
+  if(!existing){
+   if(authority.version<AUTHORITY_SCHEMA_VERSION)migrateConsolidationSchema(db,{contentVersion:CONTENT_SCHEMA_VERSION,authorityVersion:authority.version,verify,afterMigration:initializeNew});
+   else write(ctx,initializeNew);
+  }else if(originalVersion<CONTENT_SCHEMA_VERSION||authority.version<AUTHORITY_SCHEMA_VERSION){
+   migrateConsolidationSchema(db,{contentVersion:originalVersion,authorityVersion:authority.version,legacyContentSql:EXTENSION_SCHEMA,verify,afterMigration:initializeExisting});
+  }else write(ctx,initializeExisting);
+  if(schemaSignature(db)!==CONTENT_V3_SIGNATURE)throw new Error('Memory schema/FTS index definition mismatch');
   try{db.exec("INSERT INTO memory_fts(memory_fts,rank) VALUES('integrity-check',1)");}catch{throw new Error('Memory FTS index unavailable; no fallback');}
-  ctx.mainSchemaVersion=db.prepare('PRAGMA main.schema_version').get().schema_version;ctx.ftsSecureDeleteRequired=true;
+  ctx.mainSchemaVersion=db.prepare('PRAGMA main.schema_version').get().schema_version;ctx.contentVersion=CONTENT_SCHEMA_VERSION;ctx.authority.version=AUTHORITY_SCHEMA_VERSION;ctx.ftsSecureDeleteRequired=true;
   const store=new MemoryStore(ctx);ctx.insertMemory=(value,generation)=>insertMemory(ctx,value,generation);return store;
  }catch(error){try{db.exec('ROLLBACK');}catch{}db.close();throw error;}
 }
@@ -97,12 +122,25 @@ class MemoryStore{
  }
  exportSnapshot(){const ctx=contextOf(this);return write(ctx,()=>{
   const records=this.list({limit:500}),work=ctx.db.prepare("SELECT w.id,w.payload,w.generation FROM work_summaries w JOIN ledger.entries e ON e.scope_ref=w.scope_ref AND e.collection='work_summaries' AND e.id=w.id AND e.state='active' WHERE w.scope_ref=?").all(this.scopeRef);
-  const count=ctx.db.prepare("SELECT count(*) AS n FROM ledger.entries WHERE scope_ref=? AND state='active'").get(this.scopeRef).n;
+  const count=ctx.db.prepare("SELECT count(*) AS n FROM ledger.entries WHERE scope_ref=? AND state='active' AND collection IN('memories','work_summaries')").get(this.scopeRef).n;
   if(count>500||work.length>500)throw new Error('Snapshot exceeds the bounded export limit; pagination required');
   for(const row of work){const state=entryState(ctx,'work_summaries',row.id);if(state.generation!==row.generation||state.body_digest!==digest(row.payload))throw new Error('Work authority integrity unavailable');}
-  return {schema_version:2,scopeRef:this.scopeRef,authorityId:ctx.authority.identity,records,workSummaries:work.map(r=>JSON.parse(r.payload))};
+  const head=ctx.db.prepare('SELECT revision,version_id AS versionId FROM ledger.consolidation_head WHERE scope_ref=?').get(this.scopeRef);
+  const versionRows=ctx.db.prepare("SELECT v.id AS versionId,v.revision,v.digest,v.manifest_digest AS manifestDigest,v.created_at AS createdAt FROM ledger.consolidation_versions v JOIN ledger.entries e ON e.scope_ref=v.scope_ref AND e.collection='consolidation_versions' AND e.id=v.id AND e.state='active' WHERE v.scope_ref=? ORDER BY v.revision DESC").all(this.scopeRef);
+  if(versionRows.length>25)throw new Error('Snapshot exceeds the bounded export limit; pagination required');
+  const versions=versionRows.map(row=>{
+   const sources=ctx.db.prepare('SELECT source_ref AS sourceRef,source_version AS sourceVersion,fragment_ref AS fragmentRef FROM ledger.entry_sources WHERE scope_ref=? AND collection=? AND id=? ORDER BY source_ref,source_version,fragment_ref').all(this.scopeRef,'consolidation_versions',row.versionId);
+   if(sources.length>64)throw new Error('Snapshot exceeds the bounded export limit; pagination required');
+   const dependencies=ctx.db.prepare("SELECT owner_kind AS ownerKind,owner_id AS ownerId,base_kind AS baseKind,base_id AS baseId,base_generation AS baseGeneration,base_digest AS baseDigest FROM ledger.consolidation_dependencies WHERE scope_ref=? AND owner_kind='version' AND owner_id=? ORDER BY base_kind,base_id").all(this.scopeRef,row.versionId);
+   if(dependencies.length>128)throw new Error('Snapshot exceeds the bounded export limit; pagination required');
+   return {versionId:row.versionId,revision:row.revision,digest:row.digest,manifestDigest:row.manifestDigest,createdAt:row.createdAt,head:head?.versionId===row.versionId,sources:sources.map(s=>({sourceRef:s.sourceRef,sourceVersion:s.sourceVersion,fragmentRef:s.fragmentRef})),dependencies:dependencies.map(d=>({ownerKind:d.ownerKind,ownerId:d.ownerId,baseKind:d.baseKind,baseId:d.baseId,baseGeneration:d.baseGeneration,baseDigest:d.baseDigest}))};
+  });
+  return {schema_version:3,scopeRef:this.scopeRef,authorityId:ctx.authority.identity,records,workSummaries:work.map(r=>JSON.parse(r.payload)),versions};
  });}
  restoreSnapshot(snapshot){return restoreSnapshot(this,snapshot);}
+ registerExcerpt(args){return registerExcerpt(this,args);}
+ readExcerpt(id){return readExcerpt(this,id);}
+ forgetExcerpt(id){return forgetExcerpt(this,id);}
  correct(args){return correctMemory(this,args);}
  forget(args){return forget(this,args);}
  archive(args){return archive(this,args);}

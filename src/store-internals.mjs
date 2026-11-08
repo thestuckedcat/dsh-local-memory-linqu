@@ -3,8 +3,8 @@ import {existsSync,readdirSync,readFileSync,writeFileSync} from 'node:fs';
 import {join} from 'node:path';
 import {randomUUID} from 'node:crypto';
 import {checkedPath,checkedText,digest} from './scope.mjs';
-import {AUTHORITY_SCHEMA,AUTHORITY_SIGNATURE,LEGACY_SIGNATURE,schemaSignature} from './schema.mjs';
-import {fingerprint} from './validation.mjs';
+import {AUTHORITY_SIGNATURE,AUTHORITY_V2_SCHEMA,AUTHORITY_V2_SIGNATURE,CONTENT_V3_SIGNATURE,LEGACY_SIGNATURE,AUTHORITY_SCHEMA_VERSION,CONTENT_SCHEMA_VERSION,schemaSignature,migrateConsolidationSchema} from './schema.mjs';
+import {shape,clean,canonical,fingerprint} from './validation.mjs';
 const contexts=new WeakMap();
 export function registerStore(store,ctx){contexts.set(store,ctx);}
 export function contextOf(store){const ctx=contexts.get(store);if(!ctx||ctx.closed)throw new Error('Memory store unavailable');return ctx;}
@@ -17,19 +17,24 @@ export function initializeAuthority(root,{allowLegacyMigration=false}={}){
   if(oldFiles.length&&!allowLegacyMigration)throw new Error('Deletion authority missing; explicit legacy migration required');
   for(const name of oldFiles){const db=new DatabaseSync(checkedPath(join(root,name)),{readOnly:true});try{if(db.prepare('PRAGMA user_version').get().user_version!==1||schemaSignature(db)!==LEGACY_SIGNATURE)throw new Error('Deletion authority missing for nonlegacy data');}finally{db.close();}}
   const identity=randomUUID(),db=new DatabaseSync(file);
-  try{db.exec('PRAGMA journal_mode=DELETE;PRAGMA synchronous=FULL;BEGIN IMMEDIATE;');db.exec(AUTHORITY_SCHEMA);db.prepare('INSERT INTO metadata VALUES(?,?)').run('identity',identity);db.exec('COMMIT');writeFileSync(anchor,JSON.stringify({schema_version:1,identity}),{flag:'wx',mode:0o600});}catch(e){try{db.exec('ROLLBACK');}catch{}throw e;}finally{db.close();}
+  try{db.exec('PRAGMA journal_mode=DELETE;PRAGMA synchronous=FULL;BEGIN IMMEDIATE;');db.exec(AUTHORITY_V2_SCHEMA);db.prepare('INSERT INTO metadata VALUES(?,?)').run('identity',identity);db.exec('COMMIT');writeFileSync(anchor,JSON.stringify({schema_version:1,identity}),{flag:'wx',mode:0o600});}catch(e){try{db.exec('ROLLBACK');}catch{}throw e;}finally{db.close();}
  }
  const identity=readAnchor(anchor),db=new DatabaseSync(file,{readOnly:true});
- try{if(db.prepare('PRAGMA user_version').get().user_version!==1||schemaSignature(db)!==AUTHORITY_SIGNATURE||db.prepare("SELECT value FROM metadata WHERE key='identity'").get()?.value!==identity)throw new Error('Invalid deletion authority schema/identity');}finally{db.close();}
- return {file,anchor,identity};
+ try{
+  const version=db.prepare('PRAGMA user_version').get().user_version,signature=schemaSignature(db);
+  const known=(version===1&&signature===AUTHORITY_SIGNATURE)||(version===AUTHORITY_SCHEMA_VERSION&&signature===AUTHORITY_V2_SIGNATURE);
+  if(!known||db.prepare("SELECT value FROM metadata WHERE key='identity'").get()?.value!==identity)throw new Error('Invalid deletion authority schema/identity');
+  return {file,anchor,identity,version};
+ }finally{db.close();}
 }
 function readAnchor(path){try{const raw=readFileSync(path);if(raw.length>256)throw 0;const v=JSON.parse(raw.toString());if(v.schema_version!==1||typeof v.identity!=='string'||!/^[a-f0-9-]{36}$/.test(v.identity))throw 0;return v.identity;}catch{throw new Error('Deletion authority identity unavailable');}}
 export function assertAuthority(ctx){
  if(ctx.closed)throw new Error('Memory store is closed');
  if(ctx.mainSchemaVersion!==undefined&&ctx.db.prepare('PRAGMA main.schema_version').get().schema_version!==ctx.mainSchemaVersion)throw new Error('Content schema/FTS changed while open');
+ if(ctx.contentVersion!==undefined&&ctx.db.prepare('PRAGMA main.user_version').get().user_version!==ctx.contentVersion)throw new Error('Content schema changed while open');
  if(ctx.ftsSecureDeleteRequired&&ctx.db.prepare("SELECT v FROM memory_fts_config WHERE k='secure-delete'").get()?.v!==1)throw new Error('FTS secure-delete policy unavailable');
  if(!existsSync(checkedPath(ctx.authority.file))||readAnchor(checkedPath(ctx.authority.anchor))!==ctx.authority.identity)throw new Error('Deletion authority missing or replaced');
- if(ctx.db.prepare('PRAGMA ledger.user_version').get().user_version!==1||schemaSignature(ctx.db,'ledger')!==AUTHORITY_SIGNATURE||ctx.db.prepare("SELECT value FROM ledger.metadata WHERE key='identity'").get()?.value!==ctx.authority.identity)throw new Error('Deletion authority schema/identity unavailable');
+ if(ctx.db.prepare('PRAGMA ledger.user_version').get().user_version!==AUTHORITY_SCHEMA_VERSION||schemaSignature(ctx.db,'ledger')!==AUTHORITY_V2_SIGNATURE||ctx.db.prepare("SELECT value FROM ledger.metadata WHERE key='identity'").get()?.value!==ctx.authority.identity)throw new Error('Deletion authority schema/identity unavailable');
 }
 export function write(ctx,fn){
  assertAuthority(ctx);if(ctx.depth)return sync(fn);
@@ -75,4 +80,131 @@ export function reconcile(ctx){
 export function operation(ctx,requestId,payload,fn){
  requestId=checkedText(requestId,'request ID',256);const hash=fingerprint(payload);
  return write(ctx,()=>{const prior=ctx.db.prepare('SELECT fingerprint,result_json FROM ledger.operations WHERE scope_ref=? AND request_id=?').get(ctx.scopeRef,requestId);if(prior){if(prior.fingerprint!==hash)throw new Error('Operation identity changed');return JSON.parse(prior.result_json);}const result=fn();ctx.db.prepare('INSERT INTO ledger.operations VALUES(?,?,?,?)').run(ctx.scopeRef,requestId,hash,JSON.stringify(result));return result;});
+}
+
+// ---- Evidence excerpts (content body + authority entry/roots) -------------
+// Minimal Phase D storage API: the grants/expiry, queue and publication
+// layers are not wired yet. Bodies live only in the content database.
+export const EXCERPT_COLLECTION='consolidation_excerpts';
+const EXCERPT_TEXT_LIMIT=1500;
+function memoryRoots(ctx,memoryId){
+ return ctx.db.prepare('SELECT source_ref AS sourceRef,source_version AS sourceVersion,fragment_ref AS fragmentRef FROM ledger.entry_sources WHERE scope_ref=? AND collection=? AND id=?').all(ctx.scopeRef,'memories',memoryId);
+}
+function currentRootFirst(roots,row){const current=roots.find(s=>s.sourceRef===row.source_ref&&s.sourceVersion===row.source_version);return current?[current,...roots.filter(s=>s!==current)]:roots;}
+export function registerExcerpt(store,args){
+ shape(args,['requestId','memoryId','expectedRecordGeneration','sourceVersion','fragmentRef','text'],'excerpt');
+ const ctx=contextOf(store),requestId=checkedText(args.requestId,'request ID',256),memoryId=checkedText(args.memoryId,'memory reference',256);
+ const sourceVersion=checkedText(args.sourceVersion,'source version',512),fragmentRef=checkedText(args.fragmentRef,'fragment reference',512);
+ const text=checkedText(args.text,'excerpt text',EXCERPT_TEXT_LIMIT);
+ if(!Number.isSafeInteger(args.expectedRecordGeneration)||args.expectedRecordGeneration<0)throw new Error('Invalid excerpt record generation');
+ const payload={memoryId,expectedRecordGeneration:args.expectedRecordGeneration,sourceVersion,fragmentRef,text},hash=fingerprint(payload);
+ return write(ctx,()=>{
+  const prior=ctx.db.prepare('SELECT fingerprint,result_json FROM ledger.operations WHERE scope_ref=? AND request_id=?').get(ctx.scopeRef,requestId);
+  if(prior){
+   if(prior.fingerprint!==hash)throw new Error('Operation identity changed');
+   // A revoked/forgotten excerpt must never be replayed as if it were still readable.
+   const replay=JSON.parse(prior.result_json),current=entryState(ctx,EXCERPT_COLLECTION,replay.fragmentId);
+   if(!current||current.state!=='active')throw new Error('Excerpt registration is no longer active');
+   return replay;
+  }
+  const row=ctx.db.prepare('SELECT * FROM records WHERE id=? AND scope_ref=?').get(memoryId,ctx.scopeRef);
+  if(!row)throw new Error('Excerpt source memory is unavailable');
+  const state=entryState(ctx,'memories',memoryId);
+  if(!state||state.state!=='active'||!memoryLive(ctx,row))throw new Error('Excerpt source memory is unavailable');
+  if(row.generation!==args.expectedRecordGeneration)throw new Error('Stale excerpt record generation');
+  if(row.source_version!==sourceVersion)throw new Error('Excerpt source version changed');
+  const roots=memoryRoots(ctx,memoryId);if(!roots.length)throw new Error('Excerpt source roots unavailable');
+  assertSources(ctx,roots);
+  const id=`mc-excerpt:${randomUUID()}`,bodyDigest=digest(text),generation=advance(ctx);
+  ctx.db.prepare('INSERT INTO consolidation_excerpts VALUES(?,?,?,?)').run(id,ctx.scopeRef,text,bodyDigest);
+  setEntry(ctx,{collection:EXCERPT_COLLECTION,id,bodyDigest,sources:currentRootFirst(roots,row),generation});
+  ctx.db.prepare('INSERT INTO ledger.consolidation_dependencies VALUES(?,?,?,?,?,?,?)').run(ctx.scopeRef,'excerpt',id,'memory',memoryId,row.generation,memoryDigest(row));
+  const result={fragmentId:id,digest:bodyDigest,sourceRef:row.source_ref,sourceVersion:row.source_version,recordGeneration:row.generation,generation,state:'active'};
+  ctx.db.prepare('INSERT INTO ledger.operations VALUES(?,?,?,?)').run(ctx.scopeRef,requestId,hash,JSON.stringify(result));
+  return result;
+ });
+}
+export function readExcerpt(store,id){
+ const ctx=contextOf(store);assertAuthority(ctx);id=checkedText(id,'excerpt ID',256);
+ const entry=entryState(ctx,EXCERPT_COLLECTION,id);if(!entry||entry.state!=='active')return undefined;
+ const row=ctx.db.prepare('SELECT * FROM consolidation_excerpts WHERE id=? AND scope_ref=?').get(id,ctx.scopeRef);
+ if(!row||row.scope_ref!==ctx.scopeRef||row.digest!==digest(row.text)||entry.body_digest!==row.digest)throw new Error('Excerpt body/authority integrity unavailable');
+ const deps=ctx.db.prepare("SELECT * FROM ledger.consolidation_dependencies WHERE scope_ref=? AND owner_kind='excerpt' AND owner_id=? AND base_kind='memory'").all(ctx.scopeRef,id);
+ if(deps.length!==1)throw new Error('Excerpt dependency unavailable');
+ const dep=deps[0],memory=ctx.db.prepare('SELECT * FROM records WHERE id=? AND scope_ref=?').get(dep.base_id,ctx.scopeRef);
+ if(!memory)return undefined;
+ const memoryState=entryState(ctx,'memories',dep.base_id),memoryBody=memoryDigest(memory);
+ if(memory.generation!==dep.base_generation||memoryBody!==dep.base_digest)throw new Error('Excerpt dependency integrity unavailable');
+ if(!memoryState||memoryState.state!=='active'||!memoryLive(ctx,memory))return undefined;
+ if(entry.source_ref!==memory.source_ref||entry.source_version!==memory.source_version)throw new Error('Excerpt source identity changed');
+ const roots=ctx.db.prepare('SELECT source_ref AS sourceRef,source_version AS sourceVersion,fragment_ref AS fragmentRef FROM ledger.entry_sources WHERE scope_ref=? AND collection=? AND id=?').all(ctx.scopeRef,EXCERPT_COLLECTION,id);
+ if(!roots.length||!roots.some(s=>s.sourceRef===memory.source_ref&&s.sourceVersion===memory.source_version))throw new Error('Excerpt root sources unavailable');
+ for(const source of roots)if(isSourceBlocked(ctx,source))return undefined;
+ return {fragmentId:row.id,scopeRef:row.scope_ref,text:row.text,digest:row.digest,sourceRef:entry.source_ref,sourceVersion:entry.source_version,recordGeneration:dep.base_generation,generation:entry.generation,state:'active'};
+}
+export function forgetExcerpt(store,id){
+ const ctx=contextOf(store);id=checkedText(id,'excerpt ID',256);
+ return write(ctx,()=>{
+  const entry=entryState(ctx,EXCERPT_COLLECTION,id);if(!entry)throw new Error('Unknown excerpt');
+  if(entry.state==='deleted')return {deleted:true,alreadyDeleted:true,generation:store.generation(),currentSqliteBodyCleared:true,backupCopies:'not-revoked'};
+  advance(ctx);
+  ctx.db.prepare('DELETE FROM consolidation_excerpts WHERE id=? AND scope_ref=?').run(id,ctx.scopeRef);
+  ctx.db.prepare("UPDATE ledger.entries SET state='deleted' WHERE scope_ref=? AND collection=? AND id=?").run(ctx.scopeRef,EXCERPT_COLLECTION,id);
+  return {deleted:true,alreadyDeleted:false,generation:store.generation(),currentSqliteBodyCleared:true,backupCopies:'not-revoked'};
+ });
+}
+
+// ---- Snapshot restore (v2 compatibility plus the v3 safe subset) ----------
+function snapshotDigest(value,label){if(typeof value!=='string'||!/^[a-f0-9]{64}$/.test(value))throw new Error(`Invalid snapshot ${label}`);return value;}
+function snapshotSource(value){shape(value,['sourceRef','sourceVersion','fragmentRef'],'snapshot version source');checkedText(value.sourceRef,'source reference',2048);checkedText(value.sourceVersion,'source version',512);checkedText(value.fragmentRef,'fragment reference',512);}
+function snapshotDependency(value){
+ shape(value,['ownerKind','ownerId','baseKind','baseId','baseGeneration','baseDigest'],'snapshot version dependency');
+ if(value.ownerKind!=='version')throw new Error('Invalid snapshot dependency owner');checkedText(value.ownerId,'dependency owner ID',256);
+ if(!['memory','excerpt'].includes(value.baseKind))throw new Error('Invalid snapshot dependency base');checkedText(value.baseId,'dependency base ID',256);
+ if(!Number.isSafeInteger(value.baseGeneration)||value.baseGeneration<0)throw new Error('Invalid snapshot dependency generation');snapshotDigest(value.baseDigest,'dependency digest');
+}
+// The v3 subset exports live published version metadata and its source refs,
+// but no version body. Restore therefore revalidates each entry and skips it
+// fail-closed instead of fabricating a body; records/workSummaries keep their
+// historical v2 semantics.
+function snapshotVersion(value){
+ shape(value,['versionId','revision','digest','manifestDigest','createdAt','head','sources','dependencies'],'snapshot version');
+ const versionId=checkedText(value.versionId,'version ID',256);
+ if(!Number.isSafeInteger(value.revision)||value.revision<1)throw new Error('Invalid snapshot version revision');
+ snapshotDigest(value.digest,'version digest');snapshotDigest(value.manifestDigest,'manifest digest');checkedText(value.createdAt,'version date',64);
+ if(typeof value.head!=='boolean')throw new Error('Invalid snapshot version head');
+ if(!Array.isArray(value.sources)||value.sources.length>64)throw new Error('Invalid snapshot version sources');
+ for(const source of value.sources)snapshotSource(source);
+ if(!Array.isArray(value.dependencies)||value.dependencies.length>128)throw new Error('Invalid snapshot version dependencies');
+ for(const dependency of value.dependencies)snapshotDependency(dependency);
+ return versionId;
+}
+export function restoreSnapshot(store,snapshot){
+ shape(snapshot,['schema_version','scopeRef','authorityId','records','workSummaries','versions'],'snapshot');clean(snapshot);
+ const ctx=contextOf(store);
+ if(![2,3].includes(snapshot.schema_version)||snapshot.scopeRef!==ctx.scopeRef||snapshot.authorityId!==ctx.authority.identity||!Array.isArray(snapshot.records)||!Array.isArray(snapshot.workSummaries)||snapshot.records.length+snapshot.workSummaries.length>500)throw new Error('Snapshot scope/authority/size mismatch');
+ if(snapshot.schema_version===2&&snapshot.versions!==undefined)throw new Error('Snapshot schema/version mismatch');
+ if(snapshot.schema_version===3&&(!Array.isArray(snapshot.versions)||snapshot.versions.length>25))throw new Error('Snapshot version/size mismatch');
+ return write(ctx,()=>{
+  let restored=0,skipped=0;const seen=new Set();
+  for(const raw of snapshot.records){
+   shape(raw,['id','scopeRef','sourceRef','sourceVersion','text','kind','origin','verification','state','generation','createdAt','supersedes'],'snapshot memory');
+   if(raw.scopeRef!==ctx.scopeRef)throw new Error('Snapshot record scope mismatch');
+   const value=store.validate({id:raw.id,sourceRef:raw.sourceRef,sourceVersion:raw.sourceVersion,text:raw.text,kind:raw.kind,origin:raw.origin});
+   const key=`memories:${raw.id}`;if(seen.has(key))throw new Error('Duplicate snapshot identity');seen.add(key);
+   const state=entryState(ctx,'memories',raw.id),row={text:value.text,kind:value.kind,origin:value.origin,created_at:raw.createdAt,supersedes:raw.supersedes??null};
+   if(!state||state.state!=='active'||state.generation!==raw.generation||state.source_ref!==value.sourceRef||state.source_version!==value.sourceVersion||state.body_digest!==memoryDigest(row)){skipped++;continue;}
+   ctx.insertMemory({...value,createdAt:checkedText(raw.createdAt,'created date',64),supersedes:raw.supersedes},state.generation);restored++;
+  }
+  for(const raw of snapshot.workSummaries){
+   if(raw.collection!=='work_summaries'||raw.scopeRef!==ctx.scopeRef||typeof raw.id!=='string')throw new Error('Snapshot work scope mismatch');
+   const key=`work_summaries:${raw.id}`;if(seen.has(key))throw new Error('Duplicate snapshot identity');seen.add(key);
+   const payload=canonical(raw),state=entryState(ctx,'work_summaries',raw.id);
+   if(!state||state.state!=='active'||state.generation!==raw.generation||state.body_digest!==digest(payload)){skipped++;continue;}
+   ctx.db.prepare('INSERT INTO work_summaries VALUES(?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET payload=excluded.payload,text_hash=excluded.text_hash,generation=excluded.generation').run(raw.id,ctx.scopeRef,payload,digest(payload),state.generation);restored++;
+  }
+  let versionsSkipped=0;
+  for(const raw of snapshot.versions??[]){snapshotVersion(raw);versionsSkipped++;}
+  advance(ctx);return {restored,skipped,versionsRestored:0,versionsSkipped,authorityPreserved:true};
+ });
 }
