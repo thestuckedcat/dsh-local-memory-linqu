@@ -1,7 +1,8 @@
 import {randomUUID} from 'node:crypto';
 import {checkedText} from './scope.mjs';
 import {canonical, fingerprint, integer, shape} from './validation.mjs';
-import {assertAuthority, contextOf, write} from './store-internals.mjs';
+import {validateConsolidationOutput} from './consolidation-output.mjs';
+import {assertAuthority, contextOf, entryState, setEntry, write} from './store-internals.mjs';
 
 /**
  * Local consolidation queue (MC-API-05 partial).
@@ -42,10 +43,12 @@ function jobView(row) {
   });
 }
 
-export function createConsolidationQueue(store, {inputs, now = () => new Date(), maxOutputTokens = 1024, budgetDay} = {}) {
+export function createConsolidationQueue(store, {inputs, provider, authorizeExecution, now = () => new Date(), maxOutputTokens = 1024, budgetDay} = {}) {
   if (!store || typeof store.scopeRef !== 'string') throw failure('MC_QUEUE_UNAVAILABLE', 'memory store required');
   if (!inputs || typeof inputs.snapshot !== 'function' || typeof inputs.authorizeBatch !== 'function') throw failure('MC_QUEUE_UNAVAILABLE', 'consolidation inputs required');
   if (!Number.isSafeInteger(maxOutputTokens) || maxOutputTokens < 128 || maxOutputTokens > 2048) throw failure('MC_QUEUE_UNAVAILABLE', 'invalid output token bound');
+  if (provider !== undefined && (provider === null || typeof provider !== 'object' || typeof provider.execute !== 'function' || typeof provider.bind !== 'function')) throw failure('MC_QUEUE_UNAVAILABLE', 'controlled provider required for execution');
+  if (authorizeExecution !== undefined && typeof authorizeExecution !== 'function') throw failure('MC_QUEUE_UNAVAILABLE', 'execution authority must be a function');
   const ctx = contextOf(store);
   function clock() {
     try {
@@ -166,5 +169,108 @@ export function createConsolidationQueue(store, {inputs, now = () => new Date(),
       return rows.length;
     });
   }
-  return Object.freeze({enqueue, pending, get, list, cancel, recoverInterrupted});
+
+  function settleFailure(row, error, forcedState) {
+    const code = typeof error?.code === 'string' ? error.code : 'MC_EXECUTION_FAILED';
+    const state = forcedState ?? ( code === 'MC_OUTPUT_INVALID' || code === 'MC_OUTPUT_TOO_LARGE' || code === 'MC_SECRET_REJECTED'
+      || code === 'MC_COVERAGE_INCOMPLETE' || code === 'MC_REF_UNKNOWN' || code === 'MC_SUPPORT_COVERAGE'
+      || code === 'MC_DUPLICATE_VERBATIM_REQUIRED' || code === 'MC_EXCERPT_NOT_PERMITTED'
+      || code === 'MC_SOURCE_SUPPORT_REQUIRED' || code === 'MC_SOURCE_CORRECTION_STATUS' ? 'stale' : 'failed');
+    return write(ctx, () => {
+      const current = ctx.db.prepare('SELECT * FROM ledger.consolidation_jobs WHERE scope_ref=? AND id=?').get(store.scopeRef, row.id);
+      if (!current || current.run_token !== row.run_token || current.state !== 'running') return jobView(current);
+      if (typeof error === 'object' && error && error.preDispatch === true) {
+        ctx.db.prepare("UPDATE ledger.consolidation_jobs SET state='failed',reason='pre_dispatch_refused',cost_status='not_dispatched',run_token=NULL,updated_at=? WHERE scope_ref=? AND id=?").run(clock().toISOString(), store.scopeRef, row.id);
+      } else if (typeof error === 'object' && error && error.name === 'ProviderResponseError') {
+        ctx.db.prepare("UPDATE ledger.consolidation_jobs SET state='failed',reason='invalid_provider_response',cost_status='unknown',run_token=NULL,updated_at=? WHERE scope_ref=? AND id=?").run(clock().toISOString(), store.scopeRef, row.id);
+      } else {
+        ctx.db.prepare('UPDATE ledger.consolidation_jobs SET state=?,reason=?,cost_status=?,run_token=NULL,updated_at=? WHERE scope_ref=? AND id=?').run(state, code, 'unknown', clock().toISOString(), store.scopeRef, row.id);
+      }
+      ctx.db.prepare('DELETE FROM consolidation_inputs WHERE job_id=?').run(row.id);
+      return jobView(ctx.db.prepare('SELECT * FROM ledger.consolidation_jobs WHERE scope_ref=? AND id=?').get(store.scopeRef, row.id));
+    });
+  }
+  async function runJob(jobId, {timeoutMs = 30_000, signal} = {}) {
+    assertAuthority(ctx);
+    const id = checkedText(jobId, 'job id', 128);
+    const timeout = integer(timeoutMs, 100, 30_000, 'job timeout');
+    if (!provider) throw failure('MC_EXECUTION_UNAVAILABLE', 'no controlled provider is attached to the consolidation queue');
+    if (!authorizeExecution) throw failure('MC_EXECUTION_UNAVAILABLE', 'no trusted execution authorization is attached');
+    const claimed = write(ctx, () => {
+      const row = ctx.db.prepare('SELECT * FROM ledger.consolidation_jobs WHERE scope_ref=? AND id=?').get(store.scopeRef, id);
+      if (!row) throw failure('MC_JOB_NOT_FOUND');
+      if (row.state !== 'queued') return undefined;
+      const input = ctx.db.prepare('SELECT * FROM consolidation_inputs WHERE job_id=?').get(id);
+      if (!input) throw failure('MC_INPUT_UNAVAILABLE', 'queued job has no stored input');
+      const manifest = JSON.parse(row.manifest_json);
+      inputs.assertCurrent(manifest, {phase: 'dispatch'});
+      const token = randomUUID();
+      ctx.db.prepare("UPDATE ledger.consolidation_jobs SET state='running',run_token=?,cost_status='unknown',updated_at=? WHERE scope_ref=? AND id=?").run(token, clock().toISOString(), store.scopeRef, id);
+      return {row: ctx.db.prepare('SELECT * FROM ledger.consolidation_jobs WHERE scope_ref=? AND id=?').get(store.scopeRef, id), manifest, input: input.payload};
+    });
+    if (!claimed) return get(id);
+    const {row, manifest, input} = claimed;
+    const route = JSON.parse(row.route_json);
+    let approval;
+    try {
+      approval = authorizeExecution({jobId: id, scopeRef: store.scopeRef, manifestDigest: row.manifest_digest, inputDigest: manifest.inputDigest, permissionId: row.permission_id, route, epoch: row.epoch, phase: 'dispatch'});
+      if (approval && typeof approval.then === 'function') throw failure('MC_EXECUTION_UNAVAILABLE', 'asynchronous execution authorization is not supported');
+    } catch (error) { return settleFailure(row, error); }
+    const controller = new AbortController();
+    const signals = [controller.signal, signal, approval?.signal].filter((item) => item && typeof item.aborted === 'boolean');
+    const combined = signals.length > 1 && typeof AbortSignal.any === 'function' ? AbortSignal.any(signals) : controller.signal;
+    let timer;
+    let result;
+    try {
+      result = await Promise.race([
+        provider.execute(route, {purpose: 'memory_consolidate', input, requestId: id, maxTokens: row.max_tokens, signal: combined, assertExecution: () => inputs.assertCurrent(manifest, {phase: 'dispatch'})}),
+        new Promise((_, reject) => { timer = setTimeout(() => { controller.abort(); const error = new Error('consolidation timeout'); error.code = 'MC_TIMEOUT'; reject(error); }, timeout); }),
+      ]);
+    } catch (error) {
+      const forced = error?.preDispatch === true || error?.name === 'ProviderResponseError' ? 'failed' : 'outcome_unknown';
+      return settleFailure(row, error, forced);
+    } finally {
+      if (timer) clearTimeout(timer);
+    }
+    let validated;
+    try {
+      validated = validateConsolidationOutput(result.text, manifest, JSON.parse(input));
+      inputs.assertCurrent(manifest, {phase: 'candidate'});
+    } catch (error) { return settleFailure(row, error); }
+    return write(ctx, () => {
+      const current = ctx.db.prepare('SELECT * FROM ledger.consolidation_jobs WHERE scope_ref=? AND id=?').get(store.scopeRef, id);
+      if (!current || current.state !== 'running' || current.run_token !== row.run_token) return jobView(current);
+      const candidateId = 'mc-candidate:' + id;
+      const existing = entryState(ctx, 'consolidation_candidates', candidateId);
+      if (existing && existing.state !== 'active') throw failure('MC_CANDIDATE_TOMBSTONED', 'candidate identity was cleared; a new job is required');
+      const candidate = Object.freeze({
+        ...validated,
+        jobId: id,
+        scopeRef: store.scopeRef,
+        basis: Object.freeze(manifest.memories),
+        excerptBasis: Object.freeze(manifest.excerpts ?? []),
+        manifest: Object.freeze({manifestDigest: manifest.manifestDigest, inputDigest: manifest.inputDigest, baseHeadRevision: manifest.baseHeadRevision, configDigest: manifest.configDigest, policyRevision: manifest.policyRevision, bindingDigest: manifest.bindingDigest }),
+        createdAt: clock().toISOString(),
+      });
+      const payload = canonical(candidate);
+      const digest = fingerprint(candidate);
+      ctx.db.prepare('INSERT INTO consolidation_bodies(id,scope_ref,body_kind,payload,digest) VALUES(?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET payload=excluded.payload,digest=excluded.digest').run(candidateId, store.scopeRef, 'candidate', payload, digest);
+      const sources = [];
+      const seenSources = new Set();
+      for (const memory of manifest.memories) for (const root of memory.rootSources) {
+        const key = root.sourceRef + '\u0000' + root.sourceVersion + '\u0000' + root.fragmentRef;
+        if (!seenSources.has(key) && sources.length < 64) { seenSources.add(key); sources.push(root); }
+      }
+      if (sources.length === 0) throw failure('MC_SOURCE_UNAVAILABLE', 'candidate has no root sources');
+      setEntry(ctx, {collection: 'consolidation_candidates', id: candidateId, bodyDigest: digest, sources, generation: store.generation()});
+      for (const memory of manifest.memories) {
+        ctx.db.prepare('INSERT OR IGNORE INTO ledger.consolidation_dependencies(scope_ref,owner_kind,owner_id,base_kind,base_id,base_generation,base_digest) VALUES(?,?,?,?,?,?,?)')
+          .run(store.scopeRef, 'candidate', candidateId, 'memory', memory.id, memory.recordGeneration, memory.bodyDigest);
+      }
+      ctx.db.prepare("UPDATE ledger.consolidation_jobs SET state='ready',candidate_id=?,cost_status='reported',run_token=NULL,updated_at=? WHERE scope_ref=? AND id=?").run(candidateId, clock().toISOString(), store.scopeRef, id);
+      ctx.db.prepare('DELETE FROM consolidation_inputs WHERE job_id=?').run(id);
+      return jobView(ctx.db.prepare('SELECT * FROM ledger.consolidation_jobs WHERE scope_ref=? AND id=?').get(store.scopeRef, id));
+    });
+  }
+  return Object.freeze({enqueue, pending, get, list, cancel, recoverInterrupted, runJob});
 }

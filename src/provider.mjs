@@ -1,13 +1,15 @@
 import {checkedText} from './scope.mjs';
 import {shape,clean,fingerprint,integer} from './validation.mjs';
 export const PURPOSES=Object.freeze(['memory_extract','work_summary_extract','work_summary_merge']);
+export const CONSOLIDATION_PURPOSE='memory_consolidate';
+export const MODEL_PURPOSES=Object.freeze([...PURPOSES,CONSOLIDATION_PURPOSE]);
 function descriptor(value){shape(value,['routeRef','provider','model','routeVersion'],'approved route');const result={};for(const key of ['routeRef','provider','model','routeVersion'])result[key]=checkedText(value[key],key,512);return Object.freeze(result);}
 export class RouteUnavailable extends Error{constructor(){super('Approved route unavailable or changed');this.preDispatch=true;}}
 export class ProviderResponseError extends Error{constructor(){super('Provider returned a completed but invalid response');}}
 /** The only external boundary. Task3 supplies a bridge to Harness's registered Provider service. */
 export function createControlledProvider({resolveRoute,invoke}={}){
  if(typeof resolveRoute!=='function'||typeof invoke!=='function')throw new Error('Approved Provider bridge required');
- function bind(routeRef,purpose){if(!PURPOSES.includes(purpose))throw new Error('Unsupported model purpose');const value=resolveRoute(checkedText(routeRef,'route reference',512));if(!value||typeof value.then==='function')throw new RouteUnavailable();const bound=descriptor(value);if(bound.routeRef!==routeRef)throw new RouteUnavailable();return bound;}
+ function bind(routeRef,purpose){if(!MODEL_PURPOSES.includes(purpose))throw new Error('Unsupported model purpose');const value=resolveRoute(checkedText(routeRef,'route reference',512));if(!value||typeof value.then==='function')throw new RouteUnavailable();const bound=descriptor(value);if(bound.routeRef!==routeRef)throw new RouteUnavailable();return bound;}
  function approved(bound,purpose){try{return fingerprint(bind(bound.routeRef,purpose))===fingerprint(bound);}catch{return false;}}
  return Object.freeze({bind,approved,async execute(bound,{purpose,input,requestId,maxTokens,signal,assertExecution}){
   if(!approved(bound,purpose))throw new RouteUnavailable();integer(maxTokens,1,2048,'maximum output tokens');checkedText(input,'model input',8000);

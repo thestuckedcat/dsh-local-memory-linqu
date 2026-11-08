@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-09",
+  "scope": "Phase D consolidation provider purpose + runJob/candidate persistence (not wired to Host profile; no publish/versions/UI)",
+  "suite": {
+    "tests": 366,
+    "pass": 366,
+    "fail": 0,
+    "command": ".\\runtime\\node.exe --test tests/*.test.mjs"
+  },
+  "newTests": [
+    "tests/harness-provider.test.mjs memory_consolidate (+1)",
+    "tests/consolidation-queue.test.mjs runJob/candidate (+2)"
+  ],
+  "behavior": [
+    "provider allowlist now has separate historical PURPOSES (3) and MODEL_PURPOSES including memory_consolidate; old queue still rejects consolidation purpose",
+    "harness-provider has a fixed memory_consolidate prompt and prompt+input length accounting; no tools/network/paths",
+    "runJob requires a controlled provider and trusted synchronous authorizeExecution; no authorization = MC_EXECUTION_UNAVAILABLE before dispatch",
+    "runJob rechecks manifest/permission before dispatch and after model output; validates mc-output-v1 against InputSnapshot",
+    "valid output persists candidate body (content), candidate entry/root sources/dependencies (authority), moves job ready and clears input; store.revision is not advanced",
+    "invalid model output becomes stale and writes no candidate; input is cleared",
+    "candidate ID is deterministic mc-candidate:<jobId>; foreign/terminal run tokens cannot overwrite"
+  ],
+  "limitations": [
+    "No publish/version head/CAS/search/version retrieval, no candidate UI or management API; candidate is storage-only.",
+    "No Host scheduler/profile dispatch broker/budget reservation wiring; runJob is exercised with a synthetic provider and a temporary store.",
+    "No real model/Provider call; no real profile queue. Excerpt mode remains unsupported.",
+    "No automatic idle dispatch; the idle gate does not yet call this queue.",
+    "No cross-restart provider-unknown reconciliation beyond job state/input clearing; publish path is still required."
+  ]
+}

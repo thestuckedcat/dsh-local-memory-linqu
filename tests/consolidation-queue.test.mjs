@@ -7,6 +7,8 @@ import {openStore} from '../src/backend.mjs';
 import {createConsolidationInputs} from '../src/consolidation-inputs.mjs';
 import {createConsolidationQueue} from '../src/consolidation-queue.mjs';
 import {contextOf} from '../src/store-internals.mjs';
+import {createControlledProvider} from '../src/provider.mjs';
+import {routeA} from './helpers.mjs';
 
 function fixture(t) {
   const root = mkdtempSync(join(tmpdir(), 'memory-consolidation-queue-'));
@@ -76,6 +78,63 @@ test('stale expected versions and unsupported selections are refused before any 
   assert.throws(() => f.queue.enqueue({requestId: 'stale-3', selection: selection([first.id, second.id]), route: route(), ...base, expectedHeadRevision: 1}), (error) => error.code === 'MC_HEAD_CHANGED');
   assert.throws(() => f.queue.enqueue({requestId: 'excerpts', selection: {memoryIds: [first.id, second.id], excerptIds: ['f0'], mode: 'with_excerpts'}, route: route(), ...base}), (error) => error.code === 'MC_EXCERPTS_NOT_READY');
   assert.equal(f.queue.list().items.length, 0);
+});
+
+test('runJob validates model output, persists a candidate without advancing the scope revision', async (t) => {
+  const f = fixture(t);
+  const first = memory(f.store, 'memory-1');
+  const second = memory(f.store, 'memory-2', 'Ownership barrier precedes reclamation.');
+  const provider = createControlledProvider({
+    resolveRoute: () => routeA,
+    invoke: async () => ({
+      text: JSON.stringify({
+        schema_version: 1,
+        groups: [{
+          key: 'g0', type: 'related', memoryRefs: ['m0', 'm1'],
+          statement: 'Reclamation and ownership barriers are related constraints.',
+          status: 'unverified',
+          support: [{memoryRef: 'm0', excerptRefs: []}, {memoryRef: 'm1', excerptRefs: []}],
+          applicability: 'same_scope_only',
+          freshness: {status: 'unknown', reason: 'no explicit time evidence'},
+        }],
+        untouched: [],
+      }),
+      finishReason: 'stop',
+      usage: {inputTokens: 12, outputTokens: 8},
+    }),
+  });
+  const {createConsolidationQueue} = await import('../src/consolidation-queue.mjs');
+  const queue = createConsolidationQueue(f.store, {inputs: f.inputs, provider, authorizeExecution: () => ({authorizationVersion: 'grant-v1:test:1'})});
+  const job = queue.enqueue({requestId: 'run-1', selection: selection([first.id, second.id]), route: routeA, ...expected(f.store)});
+  const revision = f.store.revision();
+  const result = await queue.runJob(job.jobId);
+  assert.equal(result.state, 'ready');
+  assert.match(result.candidateId, /^mc-candidate:/);
+  assert.equal(f.store.revision(), revision, 'candidate persistence must not advance the scope revision');
+  assert.equal(f.store.list({limit: 10}).length, 2);
+  const body = contextOf(f.store).db.prepare('SELECT * FROM consolidation_bodies WHERE id=?').get(result.candidateId);
+  assert.ok(body);
+  assert.equal(JSON.parse(body.payload).manifestDigest, job.manifestDigest);
+  const entry = contextOf(f.store).db.prepare("SELECT * FROM ledger.entries WHERE scope_ref='A' AND collection='consolidation_candidates' AND id=?").get(result.candidateId);
+  assert.equal(entry.state, 'active');
+  const dependencies = contextOf(f.store).db.prepare("SELECT count(*) AS n FROM ledger.consolidation_dependencies WHERE scope_ref='A' AND owner_kind='candidate' AND owner_id=?").get(result.candidateId).n;
+  assert.equal(dependencies, 2);
+  assert.equal(contextOf(f.store).db.prepare('SELECT count(*) AS n FROM consolidation_inputs WHERE job_id=?').get(job.jobId).n, 0);
+});
+
+test('runJob rejects invalid model output and clears the input without a candidate', async (t) => {
+  const f = fixture(t);
+  const first = memory(f.store, 'memory-1');
+  const second = memory(f.store, 'memory-2');
+  const provider = createControlledProvider({resolveRoute: () => routeA, invoke: async () => ({text: '{not json', finishReason: 'stop', usage: {inputTokens: 1, outputTokens: 1}})});
+  const {createConsolidationQueue} = await import('../src/consolidation-queue.mjs');
+  const queue = createConsolidationQueue(f.store, {inputs: f.inputs, provider, authorizeExecution: () => ({authorizationVersion: 'grant-v1:test:1'})});
+  const job = queue.enqueue({requestId: 'invalid-1', selection: selection([first.id, second.id]), route: routeA, ...expected(f.store)});
+  const result = await queue.runJob(job.jobId);
+  assert.equal(result.state, 'stale');
+  assert.equal(result.candidateId, undefined);
+  assert.equal(contextOf(f.store).db.prepare('SELECT count(*) AS n FROM ledger.consolidation_jobs WHERE scope_ref=? AND candidate_id IS NOT NULL').get('A').n, 0);
+  assert.equal(contextOf(f.store).db.prepare('SELECT count(*) AS n FROM consolidation_inputs WHERE job_id=?').get(job.jobId).n, 0);
 });
 
 test('pending capacity, cancel idempotency, and recovery of running jobs', (t) => {

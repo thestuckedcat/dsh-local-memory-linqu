@@ -176,3 +176,13 @@ test('a source invalidated during prepare cannot reach a later prepared stream',
  const running=queue.runJob(saved.jobId);await prepared.promise;store.put({id:'invalidator',sourceRef:'session-A/turn-1',sourceVersion:'version-A',text:'Completion boundary.',kind:'lesson'});store.forget({id:'invalidator',expectedGeneration:store.generation()});resume.resolve();
  assert.equal((await running).state,'outcome_unknown');assert.equal(streams,0);assert.deepEqual(store.list(),[]);
 });
+
+test('memory_consolidate has its own fixed prompt and bounded accounting',async t=>{
+ const {provider,seen}=await bridge(t),bound=provider.bind('registered-A','memory_consolidate');
+ await provider.execute(bound,{purpose:'memory_consolidate',input:'{"schema_version":1}',requestId:randomUUID(),maxTokens:64});
+ assert.equal(seen.stream.length,1);
+ assert.ok(seen.stream[0].messages[0].content[0].text.includes('Consolidate only'));
+ assert.ok(seen.stream[0].messages[0].content[0].text.includes('untouched'));
+ assert.notEqual(provider.measureInput({purpose:'memory_consolidate',input:'x'}),provider.measureInput({purpose:'memory_extract',input:'x'}));
+ assert.throws(()=>provider.bind('registered-A','memory_consolidate_v2'),/Unsupported/);
+});
