@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "date": "2026-11-09",
-  "startedAtUtc": "2026-11-08T16:56:02.881Z",
-  "durationMs": 36849.4937,
+  "startedAtUtc": "2026-11-08T16:58:48.126Z",
+  "durationMs": 38261.5135,
   "purpose": "v0.4.0 experience/background delivery evidence: reading-first UI, attribution, excerpts, consolidation manifest/validator/queue/runJob/candidate/publish/derived views, correction suspension, M3 layout/journal skeleton; local full suite plus the real installed-library final-gate regression probe and live install observation",
   "runtime": {
     "node": "26.13.0",
@@ -16,8 +16,8 @@
   "suite": {
     "tap": "evidence/v0.4.0-node26.tap",
     "exitCode": 0,
-    "tests": 390,
-    "pass": 390,
+    "tests": 391,
+    "pass": 391,
     "fail": 0,
     "cancelled": 0,
     "skipped": 0,
@@ -48,7 +48,7 @@
           "state": "running",
           "running": 0,
           "pendingScopes": [],
-          "lastTickAt": "2026-11-08T16:56:39.449Z",
+          "lastTickAt": "2026-11-08T16:59:25.988Z",
           "lastError": null
         },
         "grants": {
@@ -58,7 +58,7 @@
           "recoveryConfirmations": 0,
           "manualConfirmations": 0,
           "revoked": false,
-          "authorizationVersion": "grant-v1:ab8ff62f-39ec-4291-8a61-5c36fd2fbabf:1"
+          "authorizationVersion": "grant-v1:ef10af2f-0c61-4577-a0a4-fdd984f21558:1"
         },
         "provider": "active",
         "config": {
@@ -114,7 +114,7 @@
           "running": 0,
           "pendingScopes": 0,
           "automaticDisabled": false,
-          "updatedAt": "2026-11-08T16:56:39.657Z"
+          "updatedAt": "2026-11-08T16:59:26.317Z"
         },
         "attribution": {
           "turns": 0,
@@ -138,20 +138,19 @@
         "background": {
           "state": "unknown",
           "running": 0,
-          "unknown": 7,
+          "unknown": 8,
           "idle": 0,
-          "agents": 7,
-          "quietForMs": 103226,
+          "agents": 8,
+          "quietForMs": 53676,
           "quietMs": 30000,
-          "at": "2026-11-08T16:56:39.658Z"
+          "at": "2026-11-08T16:59:26.317Z"
         },
         "consolidation": {
           "pending": 0,
           "running": false,
           "enqueued": 0,
           "published": 0,
-          "failed": 0,
-          "lastError": "[unavailable]"
+          "failed": 0
         }
       }
     },
@@ -227,7 +226,7 @@
     },
     {
       "path": "plugin/index.mjs",
-      "sha256": "23af01e4ac270015ed35f89bcad60b4606971809e4b9e56d53e76d21c3a7e834"
+      "sha256": "49241672950ab6a85a7b1c94ec4ebd64a19ce08918e6d368a426e0c6aead2793"
     },
     {
       "path": "plugin/attribution.mjs",
@@ -247,7 +246,7 @@
     },
     {
       "path": "plugin/consolidation-operations.mjs",
-      "sha256": "21db6f8b21b56e8769fbdae733b4da6a796a6a31a9d1943639f28b46db81d952"
+      "sha256": "e1cf2e58e10373f2393ad43dd11af184fb74fb8f0d83b4c67af78afbccbbbfae"
     },
     {
       "path": "plugin/harness-provider.mjs",
@@ -303,7 +302,7 @@
     },
     {
       "path": "tests/consolidation-operations.test.mjs",
-      "sha256": "e56b34a0eb587820418cc8c0a104081aced8c037ed46389fe0783f0f283f15b5"
+      "sha256": "533f115ef2538a44a000288957d2b921455e1ab63ed689c648ea6e2bdaef87ee"
     },
     {
       "path": "tests/excerpt-lifecycle.test.mjs",
@@ -331,19 +330,19 @@
     },
     {
       "path": "README.md",
-      "sha256": "e7966b42657f58c863b49b52147a493d40dd5dff9d968bc439c1c4d26aa78e7e"
+      "sha256": "e86de58c53e7d6681adbb006031975bc80af153c03c09a003ca1599b2691639e"
     },
     {
       "path": "TODO.md",
-      "sha256": "8b13b8acf383dc0414ed931a3136c8ffec58dc140c7348565589db34af8006bd"
+      "sha256": "866bb9feb73b7b6a7257e0df5c452354c9ef091876b540c8d5920991cbb7dbfa"
     },
     {
       "path": "docs/mechanisms.md",
-      "sha256": "cc5256e2b753c006997190c2e84b1b22313054e565166546f25cf3e27a4bb3e3"
+      "sha256": "a7c6c44cf8535c48d0234097e2f95fc5b2215107cf8acc1d4341f8ba24e5dc73"
     },
     {
       "path": "docs/implementation-route.md",
-      "sha256": "586f77de337b292d64a1bed4f18cd30483234dd376a5e99924573f0262f55118"
+      "sha256": "cf738e5693c8012d596f520a6c7c5ade27ca74bbff724e0be7227fb036172875"
     },
     {
       "path": "docs/experience-implementation-plan.md",
@@ -351,9 +350,9 @@
     }
   ],
   "artifactsHashBasis": "SHA256 computed from the clean HEAD tree before this evidence file was written; compare with git show <git.head>:<path>",
-  "tapSha256": "7c8c9f86726344bd368b5b6409c32ab0d088fc83b68c01ef9f29814014e8da06",
+  "tapSha256": "94846f1e79f175596cabf100c94d36291c9ca33a0021c4cdc32e2081662c0bc3",
   "git": {
-    "head": "fc549a25b86f500a9181359864e3050436e3a8c8",
+    "head": "95f4560141fe952fcc39870d85d8343a9308f026",
     "cleanAtStart": true,
     "cleanAtEnd": true
   },

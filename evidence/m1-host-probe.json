@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "date": "2026-11-07",
-  "startedAtUtc": "2026-11-08T16:56:39.281Z",
-  "durationMs": 331.1361,
+  "startedAtUtc": "2026-11-08T16:59:25.930Z",
+  "durationMs": 339.84770000000003,
   "purpose": "isolated real installed-library audit of the M1 final recall projection gate (llm/stream waterfall); not a full Host activation",
   "executable": "E:/dsh/DeepSeek Harness.exe",
   "archive": "E:/dsh/resources/app.asar",
@@ -91,5 +91,5 @@
   "declarationBasis": "The probe mounts the installed Cordis/LlmRuntime and a synthetic TextAdapter; the false flags follow the inspected call path, not OS-level monitoring.",
   "networkGuard": "tools/host-api/deny-network.cjs; covered Node API sinks only; not an OS policy",
   "scope": "Proves the llm/stream waterfall exists in the pinned Host, that a listener can pass or short-circuit dispatch, and that the final projection blocks a recalled message after the record is deleted. Does not certify the full Web profile, the real Provider, or the client bundle.",
-  "tapSha256": "b930cd923d8ea24ddebf1f876957ae4f4d8d1e07828c3585fb34eb973c997faf"
+  "tapSha256": "bae3888e9e1c86727d989cd7d5ce61f4ad82bf3f6f8015b30d6a95b5dcb3ca11"
 }
