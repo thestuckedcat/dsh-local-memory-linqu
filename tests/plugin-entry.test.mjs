@@ -143,6 +143,14 @@ test('/memory register binds the current working directory as a new project', as
     return found.ok && found.value.items.length >= 1 ? candidate : undefined;
   }, {timeoutMs: 10000, label: 'second project memory'});
   assert.equal(project.state, 'active');
+  // The /memory remember command is also a product write path and must mark the abstract dirty.
+  const before = await api(host, 'abstract.list', {projectId: project.projectId});
+  assert.ok(before.ok && before.value.revision >= 1, JSON.stringify(before));
+  const remembered = await command.handler({commandId: 'c2', agent, rawInput: 'remember CLI dirty lesson', attachments: [], signal: new AbortController().signal});
+  assert.equal(remembered.kind, 'success', JSON.stringify(remembered));
+  const after = await api(host, 'abstract.list', {projectId: project.projectId});
+  assert.ok(after.ok, JSON.stringify(after));
+  assert.ok(after.value.dirtyCount >= before.value.dirtyCount + 1, JSON.stringify(after.value));
 });
 
 test('activation-owned listeners, routes and tools are released on dispose and can be reinstalled', async (t) => {
@@ -233,4 +241,81 @@ test('a static config conflict disables automatic memory instead of silently usi
   const tasks = await api(host, 'task.list', {projectId: project});
   assert.equal(tasks.ok, true);
   assert.equal(tasks.value.items.length, 0);
+});
+
+test('M2: abstracts are discoverable, user-granted sharing follows latest, revoke/delete cut off', async (t) => {
+  const {host, repo, root} = fixture(t);
+  const secondRepo = join(root, 'second-repo');
+  mkdirSync(join(secondRepo, 'src'), {recursive: true});
+  const registered = await api(host, 'project.register', {
+    name: 'second',
+    repositories: [{repoId: 'main', canonicalRoot: secondRepo, worktreeRoot: secondRepo, revision: 'workspace', buildVariant: 'test'}],
+  });
+  assert.equal(registered.ok, true, JSON.stringify(registered));
+  const secondId = registered.value.project.projectId;
+  const listed = await api(host, 'project.list');
+  const demoId = listed.value.projects.find((entry) => entry.name === 'demo').projectId;
+
+  const {agent: agentA} = host.addSession({id: 'session-m2-a', cwd: repo});
+  const {agent: agentB} = host.addSession({id: 'session-m2-b', cwd: secondRepo});
+  const signal = new AbortController().signal;
+  assert.equal((await host.tool('memory_remember').execute({text: 'Project A lesson: descriptor reclamation waits for completion.', kind: 'lesson'}, {agent: agentA, signal})).ok, true);
+  assert.equal((await host.tool('memory_remember').execute({text: 'Project B unrelated note.', kind: 'lesson'}, {agent: agentB, signal})).ok, true);
+
+  const refreshed = await api(host, 'abstract.refresh', {projectId: demoId});
+  assert.equal(refreshed.ok, true, JSON.stringify(refreshed));
+  assert.ok(refreshed.value.revision >= 1);
+  assert.ok(refreshed.value.basis.some((entry) => /reclamation/i.test(entry.summary)), JSON.stringify(refreshed.value.basis));
+
+  // A normal memory write (not a management mutation) must mark the abstract dirty so the
+  // coalescing thresholds/maintenance actually apply to the primary path.
+  assert.equal((await host.tool('memory_remember').execute({text: 'Project A follow-up lesson: owner handoff needs a barrier.', kind: 'lesson'}, {agent: agentA, signal})).ok, true);
+  const staleAbstract = await api(host, 'abstract.list', {projectId: demoId});
+  assert.equal(staleAbstract.ok, true, JSON.stringify(staleAbstract));
+  assert.ok(staleAbstract.value.dirtyCount >= 1, JSON.stringify(staleAbstract.value));
+  assert.equal(staleAbstract.value.stale, true);
+
+  // B discovers A's abstract summary but cannot read A's memory details before the user grants.
+  const abstracts = await host.tool('memory_abstracts').execute({}, {agent: agentB, signal});
+  assert.equal(abstracts.ok, true, JSON.stringify(abstracts));
+  const source = abstracts.value.discoverable.find((entry) => entry.sourceProjectId === demoId);
+  assert.ok(source, JSON.stringify(abstracts.value.discoverable));
+  const denied = await host.tool('memory_shared_search').execute({sourceProjectId: demoId, query: 'reclamation'}, {agent: agentB, signal});
+  assert.equal(denied.ok, false);
+  assert.equal(denied.error.code, 'SHARE_DENIED');
+
+  const grant = await api(host, 'share.grant', {
+    sourceProjectId: demoId,
+    targetProjectId: secondId,
+    abstractRevision: source.abstractRevision,
+    decisionBasis: 'm2 integration test: B needs A reclamation lesson',
+  });
+  assert.equal(grant.ok, true, JSON.stringify(grant));
+  assert.equal(grant.value.state, 'active');
+  assert.match(grant.value.permissionRef, /^local-user-grant-v1:/);
+  const relationId = grant.value.relationId;
+
+  const shared = await host.tool('memory_shared_search').execute({sourceProjectId: demoId, query: 'reclamation'}, {agent: agentB, signal});
+  assert.equal(shared.ok, true, JSON.stringify(shared));
+  assert.ok(shared.value.items.length >= 1);
+  const item = shared.value.items[0];
+  assert.match(item.text, /reclamation/i);
+  assert.equal(item.verification, 'unverified');
+  assert.ok(item.sourceRef);
+  assert.equal(item.projectId, demoId);
+
+  // Deleting the shared record must immediately remove it from cross-project reads.
+  const memory = await api(host, 'memory.search', {projectId: demoId, query: 'reclamation'});
+  const target = memory.value.items.find((entry) => entry.id === item.id) ?? memory.value.items[0];
+  const deleted = await api(host, 'memory.delete', {projectId: demoId, id: target.id, expectedGeneration: target.expectedGeneration});
+  assert.equal(deleted.ok, true, JSON.stringify(deleted));
+  const afterDelete = await host.tool('memory_shared_search').execute({sourceProjectId: demoId, query: 'reclamation'}, {agent: agentB, signal});
+  assert.equal(afterDelete.ok, true, JSON.stringify(afterDelete));
+  assert.equal(afterDelete.value.items.length, 0);
+
+  const revoked = await api(host, 'share.revoke', {relationId});
+  assert.equal(revoked.ok, true, JSON.stringify(revoked));
+  const afterRevoke = await host.tool('memory_shared_search').execute({sourceProjectId: demoId, query: 'reclamation'}, {agent: agentB, signal});
+  assert.equal(afterRevoke.ok, false);
+  assert.equal(afterRevoke.error.code, 'SHARE_DENIED');
 });

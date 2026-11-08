@@ -9,7 +9,7 @@
 3. **MEM-04：原生插件。** 一个writer，接Harness事件和批准Provider，提供召回与本地管理入口，注册和卸载幂等；年度工作记录具备缺证对话提醒和本地带引用导出。作业执行许可见[当前评审](task3-execution-review.md)及[机制](task3-execution-mechanisms.md)：queue内默认deny、同lease撤权、提炼prepare/stream及提交前后复核，直接复用原事务/预算/桥接，自行实现授权合同，不新增上游代码。**2026-11-07已完成M1集成**：项目目录/多仓scope绑定、真实Host准入与执行授权映射、轮询调度/重启恢复、`llm/stream`最终请求门、同源管理API、`/memory`命令、模型工具、客户端记忆中心；详见下文“2026-11-07 M1插件实施记录”。
 4. **验收与安装。** 本地行为、隔离真实宿主、负向出口和独立评审通过后，沿用已有授权安装并以已注册API做合成测试。高级向量、多Agent MCP及额外UI后置。2026-11-07已在本机desktop profile安装linked bundle并核对插件行/状态API/客户端slot；真实业务Provider调用和OS级出口证明仍留后续。
 
-首个可验交付是MEM-01后端，不声称它本身是可安装记忆plugin。v0.2.0已把前三任务接成可安装首版（M1闭环），但M2/M3与完整M4/M5仍未交付。
+首个可验交付是MEM-01后端，不声称它本身是可安装记忆plugin。v0.2.0已把前三任务接成可安装首版（M1闭环）；v0.3.0补齐M2的abstract/用户授权共享/退休适用性（MEM-201/202/203），M3、MEM-204与完整M4/M5仍未交付。
 
 ## 2026-11-07 M1插件实施记录
 
@@ -30,7 +30,26 @@
 - `.\runtime\node.exe --test tests/*.test.mjs` → 258/258通过（Node 26.13，TAP与摘要见`evidence/m1-node26.tap`、`evidence/m1-verification.json`）。
 - `.\runtime\node.exe tools\test-m1-host.mjs` → 真实安装库Cordis/LlmRuntime探针3/3：`llm/stream` waterfall存在、监听器可放行/短路dispatch、最终门删除后阻断零派发（`evidence/m1-host-probe.json`）。
 - 安装：desktop profile linked bundle `dsh-local-memory-linqu@0.2.0`，插件行`include:dsh-local-memory-linqu` fiber active；`POST /dsh-local-memory/api` 返回`state:ready`；客户端`settings.section`注册项`local-memory` active（见`evidence/m1-install-verification.json`）。
-- 未证明：真实业务Provider调用、完整GUI视觉走查、OS级出口/子进程/DNS证明；M2 abstract共享与M3冷档未实现；证据正文读取的异步用户确认接缝未接（README已知限制）。
+- 未证明：真实业务Provider调用、完整GUI视觉走查、OS级出口/子进程/DNS证明；M3冷档未实现；证据正文读取的异步用户确认接缝未接（README已知限制）。
+
+## 2026-11-08 M2实施记录（v0.3.0增量）
+
+本轮同样**没有采纳新的上游来源**：abstract、共享、适用性、catalog v1→v2迁移、管理操作与客户端第4 tab均为本项目实现；复用已有受审组件（catalog/registry/store、management dispatcher、FakeHost测试基座），不复制上游代码。M2不新增模型调用；abstract为本地确定性抽取式，不是模型语义压缩。
+
+| 本轮新增 | 机制/边界 |
+|---|---|
+| `src/projects.mjs`（v2迁移） | 打开已有catalog时先校验v1完整schema签名，再在单事务内新增abstract/share/capability预留表并提升`user_version=2`；签名不符/未知版本拒绝且保持v1；identity锚继续按MEM-CAT-01校验 |
+| `src/abstracts.mjs` | abstract basis绑定记录id/generation/source/summary；删除/纠正/归档引用记录→读取时立即重建；新增变动按`dirty_count≥10`或24h合并；active自动/退休仅手动；本地抽取式，无模型调用 |
+| `src/sharing.mjs` | `share_relations`记录source/target、用户决策依据、permissionRef、abstractRevision与时间戳；grant要求source当前revision；resolve自动跟随最新有效revision并二次核active关系/原scope/记录状态/适用性；撤权/删除即时`SHARE_DENIED`/消失；明细不复制 |
+| `plugin/project-registry.mjs` | `applicabilityForProject/ForScope`：active且源码根存在=`current`，退休或根不可用=`historical_unknown`，未登记=`unavailable`；仅stat，不扫描源码 |
+| `plugin/m2-management.mjs`、`plugin/management.mjs`、`plugin/index.mjs` | 7个M2操作（abstract.list/refresh、share.discover/list/grant/revoke、shared.search）；用户动作只能由HTTP/用户手势触发；模型工具`memory_abstracts`/`memory_shared_search`；10分钟abstract维护timer；状态投影含abstracts/sharing |
+| `client.js`、`locale/*.json` | 记忆中心第4个tab「项目摘要与共享」：abstract查看/手动刷新、发现、建立/撤销共享、共享明细检索；文案走locale，仅`--dsw-alias-*`，无Harness客户端包导入 |
+
+验证（2026-11-08，命令均在05目录）：
+- `.\runtime\node.exe --test tests/*.test.mjs` → **318/318通过**（Node 26.13；TAP与摘要见`evidence/m2-node26.tap`、`evidence/m2-verification.json`）。
+- `.\runtime\node.exe tools\test-m1-host.mjs` → 真实安装库最终门回归3/3（M2未改坏`llm/stream`控制点）。
+- 安装：desktop profile linked bundle `dsh-local-memory-linqu@0.3.0`，真实数据根catalog迁移为`user_version=2`且M2表存在，插件行fiber active，`POST /dsh-local-memory/api` 返回`state:ready`（含abstracts/sharing计数），新模型工具已加载，客户端`settings.section`占用者`local-memory` active（见`evidence/m2-install-verification.json`）。
+- 未证明：真实业务Provider调用、真实profile内M2写入旅程、第4 tab浏览器视觉、OS级出口；`MEM-204`能力事件、M3冷档、年度维度模板未实现。
 
 ## 来源与具体机制
 
@@ -54,6 +73,6 @@ RestRegular、Hindsight、Mneme、OpenViking等保留为调查对照，当前没
 
 ## 首个验收与证据边界
 
-当前验收命令：在05目录执行`.\runtime\node.exe --test tests/*.test.mjs`（258/258），`.\runtime\node.exe tools\test-m1-host.mjs`（真实安装库`llm/stream`/最终门探针3/3），旧执行授权runner仍保留历史证据身份。测试只用临时合成资源、FakeHost与假adapter；真实安装库探针挂真实Cordis/LlmRuntime但adapter为合成。业务模型请求、完整GUI视觉走查、OS出口、M2共享、M3冷档尚未验收。历史阶段报告/runner为历史快照，当前验收以`evidence/m1-*`与本轮评审为准。
+当前验收命令：在05目录执行`.\runtime\node.exe --test tests/*.test.mjs`（318/318），`.\runtime\node.exe tools\test-m1-host.mjs`（真实安装库`llm/stream`/最终门探针3/3），`.\runtime\node.exe tools\verify-m2.mjs`（生成`evidence/m2-*`证据）；旧执行授权runner仍保留历史证据身份。测试只用临时合成资源、FakeHost与假adapter；真实安装库探针挂真实Cordis/LlmRuntime但adapter为合成。业务模型请求、完整GUI视觉走查、OS出口、真实profile M2写入旅程尚未验收；M3冷档、MEM-204未实现。历史阶段报告/runner为历史快照，当前验收以`evidence/m2-*`与M2评审为准。
 
 新增年度工作维度的来源是用户要求，不是新合入的框架；模板仍待用户提供。完整项目交付时按[机制说明合同](shared/mechanism-document-contract.md)编写[完整机制](mechanisms.md)，重点为后续skill改进说明触发、判断规则、提醒、工具/证据与硬边界。

@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-08",
+  "purpose": "Installed-bundle observation for dsh-local-memory-linqu v0.3.0 (M2 increment) in the DSH desktop profile. Recorded by the Lead from plugin_manager, the same-origin management route, read-only SQLite inspection and client slot inspection; not a screenshot or a live M2 write journey.",
+  "profile": {
+    "name": "desktop",
+    "dir": "C:\\Users\\admin\\.dsh\\profiles\\desktop",
+    "bundleDependency": "dsh-local-memory-linqu: link:E:/dsh/plugin/05-local-memory",
+    "bundleListContains": "dsh-local-memory-linqu",
+    "packageVersion": "0.3.0"
+  },
+  "installation": {
+    "tool": "plugin_manager set_plugin disable/enable (linked local bundle reload; twice, final reload after version bump to 0.3.0)",
+    "result": {"stage": "enable", "enabled": true, "changed": true, "application": "applied", "warnings": []},
+    "pluginEntry": {
+      "observedVia": "plugin_manager action=list_plugins",
+      "entryId": "include:dsh-local-memory-linqu",
+      "moduleName": "dsh-local-memory-linqu",
+      "patchId": "dsh-local-memory-linqu",
+      "enabled": true,
+      "fiberPhase": "active"
+    }
+  },
+  "host": {
+    "baseline": "0.2.1-rc.5",
+    "embeddedNode": "24.21.0",
+    "executableSha256": "7ae939b5a82b220fbd8ad04dfbafaaedb5a49ab43dc884a5db6381f678dd0cc4",
+    "appAsarSha256": "e1b6f25fa937da98086c3e77af77aa14791105963c4d337a1c42179d232c6915",
+    "guiOriginAtObservation": "http://127.0.0.1:8656"
+  },
+  "checks": {
+    "catalogMigration": {
+      "observedVia": "read-only node:sqlite query against E:/dsh-data/05-local-memory/default/catalog.sqlite",
+      "userVersion": 2,
+      "tables": ["abstract_revisions", "abstract_state", "capability_cursors", "share_relations"],
+      "conclusion": "The previously installed v1 catalog was migrated in place to catalog v2; M2 tables exist and the plugin reports ready."
+    },
+    "statusRoute": {
+      "observedVia": "POST /dsh-local-memory/api operation=status (user route)",
+      "httpStatus": 200,
+      "responseSummary": {
+        "ok": true,
+        "plugin": "dsh-local-memory-linqu",
+        "state": "ready",
+        "registryState": "ready",
+        "schedulerState": "running",
+        "provider": "active",
+        "recallIntegration": "llm-stream-gate",
+        "grantsRevoked": false,
+        "projects": 1,
+        "abstracts": {"projectsWithAbstracts": 0, "totalRevisions": 0, "dirtyProjects": 0},
+        "sharing": {"activeRelations": 0, "revokedRelations": 0, "targets": 0},
+        "cold": {"status": "not_configured"}
+      }
+    },
+    "newModelTools": {
+      "observedVia": "Host pushed updated Tool Schemas to the running session after the plugin reload",
+      "tools": ["memory_abstracts", "memory_shared_search"],
+      "conclusion": "M2 Host half and its model-facing tools are loaded in the live process."
+    },
+    "clientSlot": {
+      "observedVia": "cordis_inspect_query platform=client provider=Slots method=listSubTree root=settings.section",
+      "slot": "settings.section",
+      "occupant": {"id": "local-memory", "order": 10, "active": true},
+      "clientBundleSha256": "5afd6dd796a461e2e564f50bd9e51612ec35ac2df20e2e5760ba62ab39dfcb6e",
+      "conclusion": "The Memory Center page is registered in the live Web client; the fourth M2 tab requires the page to reload the updated client bundle before it can be seen."
+    },
+    "materialHashes": {
+      "src/abstracts.mjs": "01f979c4cd2057fa0ee2729348978762255ac17ac0b3f4daf01979dce16ab093",
+      "src/sharing.mjs": "a3fef953995a33adf27682736b54b1a6231c71e36f4c7fc30f74fdf6d6762b91",
+      "plugin/m2-management.mjs": "03e3df3ea9325aa6aacbd3a46ac81e5d239a37624008c6136989a8d8628603ac",
+      "plugin/index.mjs": "ae91464dc9322a2a2b834bddf935011fac03811d7f0cdfd37952845fb5a49a47",
+      "plugin/project-registry.mjs": "a01e203360abb476e7394b8fc28e62956dd80b24fe59edf04328b117844276f8",
+      "plugin/scheduler.mjs": "b288595558ee0c484452c43ae67daa0c6e9769b8792825f75a1c72bb1b5d7e54",
+      "plugin/configuration.mjs": "ce21bbca16603afae6f5f48f0d3dbedd2078c621fa2f8e1a7ae09fd60fb28ee1",
+      "src/projects.mjs": "928f7150c29ccf9610deb7876e149b83b2ebe96b96f5b54b830f6ef53b0ab0c4",
+      "locale/en.json": "b9f4f98ceb65510b310233ded21d8c50fa0e552eb0815d91d643d29003bd503a",
+      "locale/zh.json": "fa3a1fb353044e87da1d228cc2144de6ef2471235e35a9ed3f9d8c2015f6c6e3"
+    }
+  },
+  "limitations": [
+    "No live M2 write journey was run against the real data root (no project registration, memory write, abstract refresh, share grant or shared read in the user's profile); M2 behavior is proven by the 318-test suite and the FakeHost integration case instead.",
+    "No browser screenshot or visual walkthrough of the fourth Memory Center tab; the client slot registration and static/render-smoke checks are the available evidence, and the page must reload the updated client bundle.",
+    "The installed Host process may retain an earlier ESM module generation until an app restart; a reload was requested and the new tools appeared, but the definitive generation check is a restart."
+  ]
+}

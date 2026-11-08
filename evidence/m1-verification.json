@@ -233,5 +233,8 @@
     "The probe mounts the real installed Cordis/LlmRuntime with a synthetic text adapter; it does not boot the Web profile, read credentials or reach a Provider.",
     "Installation evidence in evidence/m1-install-verification.json was observed through plugin_manager, the same-origin status route and client slot inspection; no visual screenshot was taken.",
     "M2 abstract sharing, M3 cold tier, MEM-405 dimension mapping and the async proof-read approval seam are not part of this evidence."
-  ]
+  ],
+  "historicalSnapshot": true,
+  "supersededBy": "evidence/m2-verification.json",
+  "historicalNote": "This file is the frozen v0.2.0/M1 delivery snapshot. v0.3.0 (M2) changed test counts and several source hashes; the current delivery evidence is evidence/m2-verification.json. Measured values below are not rewritten."
 }

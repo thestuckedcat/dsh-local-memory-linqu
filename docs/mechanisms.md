@@ -1,15 +1,15 @@
 # 05 本地长期记忆插件完整机制说明
 
-版本 `MEM-MECH-1`，日期 2026-11-07。对象：`dsh-local-memory-linqu` 0.2.0（本机已安装的桌面 profile bundle），Host 基线 DeepSeek Harness 0.2.1-rc.5，build `d4db512a969fccf0c5cc7ec8fe38e9c1d27af916`。
+版本 `MEM-MECH-4`，日期 2026-11-08。对象：`dsh-local-memory-linqu` 0.3.0（本机已安装的桌面 profile bundle；M1为0.2.0基线，M2为0.3.0增量），Host 基线 DeepSeek Harness 0.2.1-rc.5，build `d4db512a969fccf0c5cc7ec8fe38e9c1d27af916`。
 
-本文是[机制说明合同](../../docs/mechanism-document-contract.md)要求的完成交付物，用途是**后续改进 skill 的依据**：说明实际触发、判断规则、工具/状态变化、证据、失败恢复，以及哪些是 skill 可调策略、哪些是 plugin/Host 必须执行的硬边界。历史阶段说明（[Task 2](task2-mechanisms.md)、[Task 3 hooks](task3-hooks-mechanisms.md)、[Task 3 execution](task3-execution-mechanisms.md)、[流接口修复](stream-contract-fix.md)）保留原编号与结论，本文只汇总、补充 M1 新增部分，不改写历史证据。
+本文是[机制说明合同](../../docs/mechanism-document-contract.md)要求的完成交付物，用途是**后续改进 skill 的依据**：说明实际触发、判断规则、工具/状态变化、证据、失败恢复，以及哪些是 skill 可调策略、哪些是 plugin/Host 必须执行的硬边界。历史阶段说明（[Task 2](task2-mechanisms.md)、[Task 3 hooks](task3-hooks-mechanisms.md)、[Task 3 execution](task3-execution-mechanisms.md)、[流接口修复](stream-contract-fix.md)）保留原编号与结论，本文汇总 M1 基线并补充 M2（v0.3.0）增量，不改写历史证据。
 
 ## 0. 阅读约定
 
 - **编号**：`MEM-*` 只用于文档关联，不新增后台服务或配置项。历史编号沿用其首次定义含义（`MEM-QUEUE-01..04`、`MEM-LIFE-01..02`、`MEM-WORK-01..05`、`MEM-ADMIT-01..03`、`MEM-RECALL-01..02`、`MEM-HOOK-LIFE-01`、`MEM-HOOK-WINDOW-01`、`MEM-EXEC-01..05`、`MEM-STREAM-01`）。M1 新增编号为 `MEM-SCOPE-01`、`MEM-PROJ-01..03`、`MEM-GRANT-01..02`、`MEM-SCHED-01..03`、`MEM-BRIDGE-01..02`、`MEM-FINAL-01..03`、`MEM-CORPUS-01`、`MEM-REMIND-01`、`MEM-REPORT-01`、`MEM-MGMT-01..02`、`MEM-CAT-01`、`MEM-DATA-01`、`MEM-UI-01`、`MEM-INSTALL-01`。
 - **实现状态标记**：【已实现】代码存在且有运行证据；【已实现·弱证据】代码存在但只有组件或夹具级证据；【设计未实现】设计合同或待办要求、代码不存在；【未验证】代码存在但没有运行证据。
 - **路径**：除特别注明外均相对 `E:\dsh\plugin\05-local-memory`。行号引用是写作时的位置，不随代码演进保证。
-- **不声称**：本文不声称完整 05 产品验收。M2（abstract 共享）、M3（非 C 冷档）、`MEM-405`（年终维度模板）、M5 的更新/迁移与完整卸载旅程均为**设计未实现**。
+- **不声称**：本文不声称完整 05 产品验收。M2 已交付 abstract/共享/适用性子集（v0.3.0），但 **MEM-204（能力事件代次消费）仍未实现**；M3（非 C 冷档）、`MEM-405`（年终维度模板）、M5 的更新/迁移与完整卸载旅程仍为**设计未实现**；真实业务 Provider、完整 GUI 视觉与 OS 级出口仍未验证。
 
 ---
 
@@ -48,7 +48,7 @@
   <root>/reports/<reportId>/         本地报告导出（或配置的 exportRootRef）
   ```
 
-  `cold/`、`staging/` 在本版**不创建**，`catalog.sqlite` 也不建这两类目录（设计合同曾写 `cold.status='not_configured'`，实现里没有该状态字段，见 §7）。
+  `cold/`、`staging/` 在本版**不创建**，`catalog.sqlite` 也不建这两类目录；`status.cold` 显式返回 `{status:'not_configured'}`（实现与设计差异见 §7）。
 - **生命周期归 Cordis fiber**：所有监听器、定时器、路由、工具、命令都用 `ctx.effect` 绑定；`ctx.root` 上的 `WeakMap` owner 阻止同一 Host root 重复安装；`dispose()` 幂等，按 hooks → reminders → projection → scheduler → grants → provider → registry 顺序清理。**数据不随停用/卸载删除**：代码中不存在删除 `dataRoot` 的路径（`MEM-INSTALL-01`）。
 
 ### 1.4 两个记忆分区：经验记忆与年度工作记录
@@ -255,8 +255,20 @@ flowchart TD
 | MEM-MGMT-02 | 同源 HTTP `POST /dsh-local-memory/api` | `Content-Type: application/json`、`Origin` 等于 `ctx.webServer.getOrigin()` 或缺省、body ≤64KiB、`schemaVersion:1`、`operationId` 匹配 `^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$` | 传输层错误映射 405/415/403/413/400；变更类操作按 `operationId` 幂等（catalog `operations` 表；只读操作不落表），相同 id 不同 payload → `OPERATION_CONFLICT`；响应脱敏：不含绝对路径、超 200 字符截断、秘密样式替换 | `operations` 表 + 内存 fallback（≤256） | 200 + 业务 envelope | 错误只回码与固定文案 | 可建议刷新后重试、解释 `STALE_REVISION` | 只允许本机同源；body 上限不可由客户端放大；`tests/management.test.mjs`（HTTP 与脱敏用例） |
 | MEM-CAT-01 | 每次开 catalog / 写操作 | `catalog.sqlite` + `catalog.identity.json` + `PRAGMA user_version` | 文件与身份锚必须同时存在且 identity 一致；schema 版本必须已知；每次写前 `assertOpen` 重读锚文件；缺失/不匹配 → `CATALOG_IDENTITY_MISMATCH`/`CATALOG_SCHEMA_MISMATCH`；**拒绝自动导入旧备份** | 单 `DatabaseSync`，`journal_mode=DELETE`、`synchronous=FULL`、`secure_delete=ON`、`busy_timeout=5000`；`BEGIN IMMEDIATE` 单 writer | 项目/偏好/提醒/报告/操作表 | registry.initialize 失败 → `activation_failed` 降级面 | 可建议检查数据根与备份；不能要求"自动迁移" | 无自动迁移、无静默重建；`tests/projects.test.mjs`、`tests/plugin-entry.test.mjs` |
 | MEM-DATA-01 | 解析数据根与任何本地路径 | `dataRoot`、`profile`、`workSummary.evidenceRoots`、`reports.exportRootRef` | `checkedPath`：Windows 绝对盘符、盘符 ∈ {C:,E:,H:}（本机固定卷快照）、拒绝 UNC/符号链接组件；`profile` 必须匹配安全目录名；实际根 = `dataRoot/profile` | `mkdirSync(mode 0700)`；每 scope 一个 `hot/scopes/<digest>/` | 目录布局；`status` 不回显绝对路径 | 非法路径 → `INVALID_INPUT`/`invalid_config`；不探测未知盘 | 可建议改用已批准卷；不能关闭 `security.rejectNonLocalPaths` | 路径准入、卷白名单、无链接是硬边界；`tests/configuration.test.mjs`（12 项）、`tests/projects.test.mjs` 路径与 scope 用例 |
-| MEM-UI-01 | 用户打开"设置 → 记忆中心" | `settings.section` 槽位、locale 字典 | 注册 `id:'local-memory'`、`order:10`、`label` 走 locale；三标签（经验记忆/年度工作记录/处理任务）；列表+详情，窄屏上下布局；只在页面可见时每 5 秒轮询；错误只显示 reasonCode 文案 | `ctx.slots.inject('settings.section', ...)`；`ctx.locale.register`；`fetch` 同源 | 页面与操作按钮；删除需二次确认（"即清除，不可恢复"） | 网络/协议错误映射为本地文案，不显示内部异常 | 不能改页面结构与硬动作语义；文案可改 | 只用 `--dsw-alias-*`；卸载清理轮询定时器；`tests/management.test.mjs` 客户端用例 |
+| MEM-UI-01 | 用户打开"设置 → 记忆中心" | `settings.section` 槽位、locale 字典 | 注册 `id:'local-memory'`、`order:10`、`label` 走 locale；四标签（经验记忆/年度工作记录/处理任务/项目摘要与共享，M2 新增第 4 个）；列表+详情，窄屏上下布局；经验/任务页只在可见时每 5 秒轮询，M2 页手动刷新；错误只显示 reasonCode 文案 | `ctx.slots.inject('settings.section', ...)`；`ctx.locale.register`；`fetch` 同源 | 页面与操作按钮；删除需二次确认（"即清除，不可恢复"）；共享 grant/revoke 只在用户点击后调用 | 网络/协议错误映射为本地文案，不显示内部异常 | 不能改页面结构与硬动作语义；文案可改 | 只用 `--dsw-alias-*`；卸载清理轮询定时器；M2 tab 只列 target 侧关系；`tests/management.test.mjs` 客户端用例 |
 | MEM-INSTALL-01 | 安装/停用/重装 | profile bundle 与 `cordis.patch.yml`；`apply` 的 owner 表 | 同一 root 只允许一个实例；停用按序撤销 lease、停调度、撤监听器、关 store 与 catalog；**不删除数据根、catalog、store、导出报告**；重装后重新登记配置项目 | owner WeakMap；`ctx.effect` 清理链 | `status.state`：starting/ready/degraded/disposed | 重复安装抛错（Host 显示插件失败）；配置非法只留状态工具与错误路由 | 可指导用户停用/重装/检查配置 | 无"删除数据"入口；无更新/迁移路径（`MEM-502` 未实现）；`tests/plugin-entry.test.mjs` |
+
+### 3.6 M2：项目 abstract、跨项目共享与适用性（v0.3.0）
+
+| 机制编号 | 场景/触发 | 输入与前置条件 | 判断及理由 | 工具/状态变化 | 输出/证据 | 异常/用户提醒 | 可由skill改什么 | 硬边界及验证 |
+|---|---|---|---|---|---|---|---|---|
+| MEM-ABS-01 | 项目 abstract 生成/刷新（首次读取、手动刷新、自动维护、dirty阈值） | 已登记项目的 enabled repo scopes 与 `memories`（不含年度/证明）；`abstract_state` | 逐 scope `store.list(≤200)` 后对每条 `store.get` 复核 live，按 generation 降序取前 60；生成 `memory-abstract-v1`、`generationRoute:'local-extractive-v1'`、basis（id/generation/kind/sourceRef/sourceVersion/summary≤240）、counts、revisionSummary；digest=fingerprint(payload)；新 revision 追加，旧 revision 保留 | `catalog.write` 插 `abstract_revisions`、upsert `abstract_state`；自动维护 timer 仅 active 项目 | abstract 视图（冻结、无绝对路径） | 项目未知→`PROJECT_NOT_FOUND`；retired 自动/强制重建→`PROJECT_RETIRED`/`STALE_ABSTRACT`（仅 manual 可重建）；失败只诊断 | 可改刷新阈值/摘要截断/工具提示；不能改 basis 版本绑定 | 抽取式而非模型语义压缩；摘要为原文前缀，路径式文本只在 API 边界脱敏；`tests/abstracts.test.mjs`（17 项）、`tests/plugin-entry.test.mjs` M2 用例 |
+| MEM-ABS-02 | 读取已生成 abstract / 引用记录被删除/纠正/归档 | abstract payload 的 basis 与当前 `store.get` | 每条 basis 必须仍 live 且 scope/source/generation 全等；任一失效 → **立即重建**（删除即时生效、不复活）；仅 revisionSummary 变化 → stale；dirty 由 noteChange 累计，`dirty_count≥10` 或 `first_dirty_at` 超 24h 或 forceRefresh → 重建（read 与 shouldRefresh 一致） | read 内部刷新；`noteChange` 累计 dirty | stale/dirtyCount 字段 | 重建失败保持旧 revision 且不当作 fresh；删除后旧正文不可再从 abstract/共享读回复 | 可改阈值；不能跳过 basis 校验 | 删除/纠正即时断开是硬边界；`tests/abstracts.test.mjs` deletion/correction 用例 |
+| MEM-SHARE-01 | Agent 在当前项目发现其他项目 abstract | 当前会话绑定 target project；其他 active 项目的 current abstract | 仅返回摘要级字段（source project/state/revision/digest/generatedAt/counts/applicability），**不含明细正文**；target 必须 active；retired source 只有在已有 active 关系时才列出并标 `historical_unknown` | `sharing.discover` | 可发现的 abstract 摘要数组 | 未知/退休 target → `PROJECT_NOT_FOUND`/`PROJECT_RETIRED`；无 abstract → revision 0 | 可改展示/措辞；不能越过发现→授权边界 | 发现不是授权；模型工具只读；`tests/sharing.test.mjs` discover 用例 |
+| MEM-SHARE-02 | 用户建立/撤销共享 | `sourceProjectId,targetProjectId,abstractRevision,decisionBasis,permissionRef`；仅 `actor:'user'` | 两项目均登记且 active、source≠target；`abstractRevision` 必须等于 source 当前 abstract revision（旧摘要→`STALE_ABSTRACT`）；关系按 `(source,target)` upsert，active 时清 revoked_at，保留首次 created_at；`permissionRef` 缺省由 Host 生成 `local-user-grant-v1:<uuid>`；撤销幂等并保留首次 revoked_at | `catalog.write` upsert `share_relations` | relation 视图（含 audit 字段） | 非 user→`USER_ACTION_REQUIRED`；旧 revision→`STALE_ABSTRACT`；无效关系→`INVALID_SHARE`；不存在→`RELATION_NOT_FOUND` | skill 可解释为何需用户确认、建议选择哪条 abstract；**不能代替用户授权** | 授权入口只有用户/HTTP；模型工具无 grant/revoke；`tests/sharing.test.mjs`、`tests/m2-management.test.mjs` |
+| MEM-SHARE-03 | 在已有共享内检索 source 明细 | active relation、target project、query；source abstract 当前 revision | 关系必须 active（否则`SHARE_DENIED`）；source abstract 重新读取（自动跟随最新有效 revision，`resolve` 仅更新 relation 的 abstract_revision，audit 字段不变）；source 逐 scope `search` 后逐条 `get` 复核 live；明细**不复制**为 target 新事实；每条带 sourceRef/sourceVersion/verification:'unverified'/applicability | `sharing.resolve`；`upToDate` 在下次 resolve 后变 true | `{relation,abstractRevision,items}` | source 无 abstract→`ABSTRACT_UNAVAILABLE`；source/store 不可读→fail closed，不返回部分结果 | 可改相关性与展示；不能把未核验明细升级为事实 | 读取时二次核许可/来源/状态是硬边界；`tests/sharing.test.mjs` resolve 用例、`tests/plugin-entry.test.mjs` M2 用例 |
+| MEM-APPL-01 | 读取/展示记忆、abstract 或共享明细时的适用性 | 登记项目、repo `canonicalRoot`（stat 只读） | active 且源码根目录存在 → `current`；项目 retired 或源码根不可用 → `historical_unknown`；未登记/无启用仓库 → `unavailable`；只做 stat/realpath 边界检查，不扫描源码、不读 revision | registry 方法（无持久写） | `{applicability,projectState,sourceAvailable,checkedAt}` | 文件系统错误→不可用/历史，不当 current | 可改提示；不能把历史来源称 current | 退休/源码缺失不得冒充当前事实；`tests/project-registry.test.mjs` applicability 用例、`tests/sharing.test.mjs` retired 用例 |
+| MEM-CAT-02 | 打开 catalog（v1→v2） | 已有 `catalog.sqlite` + identity 锚 + `PRAGMA user_version` | version=1 时先校验 v1 完整 schema 签名，再在单事务内执行**仅新增表**的 v2 迁移并提升 user_version=2；签名不符/版本未知→`CATALOG_SCHEMA_MISMATCH` 且保持 v1 不动；已 v2 时校验 v2 签名；identity/锚仍按 MEM-CAT-01 校验 | 单 writer 事务；新增 abstract/share/capability 预留表 | `catalog.version=2`；旧项目/偏好/报告数据保留 | 迁移失败回滚并拒绝打开，不写半迁移库 | 不能要求"自动迁移或重建" | 迁移是显式、校验后、事务性的；`tests/projects.test.mjs` 迁移/漂移用例 |
 
 ---
 
@@ -290,6 +302,9 @@ flowchart TD
 | `reminders.maxItems` | 3 | 1..3 | 单次提醒最多记录数 |
 | `reports.maxItems` | 200 | 1..500 | 报告条数上限（超出 `REPORT_TOO_LARGE`） |
 | `reports.exportRootRef` | `null` → `<dataRoot>/reports` | 已批准本地路径 | 导出根；导出时请求值必须等于它 |
+| `abstracts.pollMs` | 600000 | 60000..3600000 | 后台 abstract 维护 tick；只对 active 项目调用 `read`（内部再按阈值决定是否重建） |
+| `abstracts.dirtyCountThreshold` | 10 | 1..100 | 达到该累计变动数后 `read` 自动重建 abstract |
+| `abstracts.ageHours` | 24 | 1..168 | 首条未刷新变动超过该小时数后 `read` 自动重建 |
 | `projects` | `[]` | ≤64 项目、每项 ≤16 仓库 | 安装时静态登记（`origin:'config'`），冲突只降级 |
 | `security.rejectNonLocalPaths` | `true` | 只能为 `true` | 不允许关闭路径安全检查 |
 
@@ -364,10 +379,13 @@ flowchart TD
 | Host 配置目录 | `cordis_inspect_query`（host/Config） | 唯一一项 `id=include:dsh-local-memory-linqu`、`patchId=dsh-local-memory-linqu`、`status=absent` | loader 中有该行；**没有**投影出的 Config schema（插件用 `apply(ctx, rawConfig)` 自行校验） | 不是"插件未安装"的证据；也不证明客户端槽位已占 |
 | 安装后插件行/状态路由/客户端槽位 | [evidence/m1-install-verification.json](../evidence/m1-install-verification.json)：`plugin_manager list_plugins` 中 `include:dsh-local-memory-linqu` fiber active；`POST /dsh-local-memory/api`（operation=status）返回 `state:ready`；client/Slots `settings.section` 占用者 `local-memory` order 10 active；另有 `project.register→retire→list` 真实往返 | 安装后的 Host 行、管理路由、管理变更与客户端入口在实际进程可用；retire 返回 `memoryRetained:true` | `MEM-102/MEM-501` 的入口与管理 API 部分在实际 profile 生效 | 仍不是完整 GUI 视觉/交互验收，也不是真实业务模型旅程 |
 | 流接口回归与现场复验 | [流接口修复记录](stream-contract-fix.md)、[evidence/stream-contract-before.tap](../evidence/stream-contract-before.tap)、[.host24-final.tap](../evidence/stream-contract-host24-final.tap)；桌面 Harness 重启后普通流式对话恢复正常 | `llm/stream` 监听器必须同步返回 `AsyncIterable`；修复后实际安装库 34/34、现场普通聊天可用 | `MEM-STREAM-01` 的硬合同缺陷已修复并有回归 | 未借此验证真实 Provider 下的召回放行/阻断旅程 |
+| M2 组件全回归 318/318 通过 | [evidence/m2-node26.tap](../evidence/m2-node26.tap)、[evidence/m2-verification.json](../evidence/m2-verification.json) | 24 个测试文件、318 项（新增 `abstracts` 17、`sharing` 8、`m2-management` 26；既有用例扩展见 §6.2），Node 26.13.0；同一次运行含真实安装库最终门回归探针 3/3；物料摘要零漂移（项数见该证据文件的 artifacts） | catalog v1→v2、abstract 生成/失效、共享授权/自动跟随/撤权/删除断开、适用性、管理 API 用户动作、客户端静态与渲染冒烟、M1 最终门未回归 | 真实业务 Provider、真实 profile 内 M2 写入旅程、浏览器视觉、MEM-204 |
+| M2 安装观测 | [evidence/m2-install-verification.json](../evidence/m2-install-verification.json) | 桌面 profile 重载后插件行光纤 active；真实数据根 catalog `user_version=2` 且 M2 表存在；`status` 路由 `state:ready` 并含 abstracts/sharing 计数；新工具 `memory_abstracts`/`memory_shared_search` 已出现在运行会话；客户端槽位占用者 `local-memory` order 10 active | 安装态能打开旧 catalog 并完成迁移，Host 半与模型工具在真实进程加载，客户端入口仍注册 | 未在真实 profile 执行 grant/revoke/refresh 写入旅程；第四 tab 需页面重载后才能看到；不等于视觉验收 |
+| M2 独立评审 | [docs/m2-independent-review.md](m2-independent-review.md) | 对 v0.3.0 增量代码、边界、证据与声明做独立复核；结论与遗留项以该文件为准 | 交付声明经过非作者复核 | 评审不能替代真实 Provider/GUI/运行时长验证 |
 
 ### 6.2 测试覆盖（按文件，便于回归定位）
 
-`tests/` 共 21 个测试文件、258 项：`backend` 17、`configuration` 12、`execution-authorization` 13、`final-projection` 22、`harness-provider` 26、`harness-sdk` 4、`host-grants` 16、`jobs` 14、`lifecycle` 11、`management` 14、`migration` 2、`plugin-entry` 10（闭环：提炼→召回→失效阻断、未绑定、模型越权、`/memory register`、dispose/reinstall、年度草稿+缺证提醒）、`project-registry` 7、`projects` 10、`proof-reminders` 8、`reports` 10、`scheduler` 9、`session-hooks` 25、`source-lock` 5、`work-management` 11、`work-summary` 12。
+`tests/` 共 24 个测试文件、318 项（v0.3.0）：`abstracts` 17（abstract 生成/版本/basis 失效/阈值/退休/持久化/60 条上限/适用性/配置阈值）、`backend` 17、`configuration` 12、`execution-authorization` 13、`final-projection` 22、`harness-provider` 26、`harness-sdk` 4、`host-grants` 16、`jobs` 14、`lifecycle` 11、`m2-management` 26（7 个 M2 操作信封/用户动作/项目解析/模型 target 越权/脱敏/真实模块集成）、`management` 16、`migration` 2、`plugin-entry` 11（含 M2 端到端：发现→授权→自动跟随→删除→撤权）、`project-registry` 9（含 applicability 与多仓有效期）、`projects` 13（含 v1→v2 迁移与漂移拒绝）、`proof-reminders` 8、`reports` 10、`scheduler` 10、`session-hooks` 25、`sharing` 8、`source-lock` 5、`work-management` 11、`work-summary` 12。
 
 ### 6.3 证据不能证明什么（明确边界）
 
@@ -376,6 +394,10 @@ flowchart TD
 3. **不是 OS 级出口证明**：`tools/host-api/deny-network.cjs` 只覆盖指定 Node 网络 API 的调用计数；不覆盖 Chromium、原生模块、子进程、DNS/代理。
 4. **不是完整 Host 激活**：探针只挂 `LlmRuntime` 与仓库组件，未加载用户 profile、未使用真实凭据、未走完整 AgentLoop。
 5. **不含记忆质量**：没有 precision/recall benchmark；词法召回可能漏检长记忆或口语化表述。
+6. **M2 无真实 profile 写入旅程**：真实安装证据只覆盖 catalog 迁移、状态路由、工具加载与槽位注册；grant/revoke/refresh/共享检索只在 FakeHost/临时库测试中跑过，不在用户真实数据根创建测试项目或记忆。
+7. **M2 客户端第四 tab 未做浏览器视觉验收**：只有 `client.js` 语法/静态/字典/渲染冒烟与槽位注册；页面需重载更新后的 bundle 才能看到该 tab，布局与真实交互未截图验证。
+8. **abstract 不是模型语义压缩**：`local-extractive-v1` 按 generation 取最新 60 条并截取原文前缀，不做跨记录语义合并；其"摘要"可能含原文中的路径式字符串，只在管理 API/工具边界脱敏。
+9. **MEM-204 未实现**：共同合同 v1 能力事件的 producer generation/断档/restore 对账与暂停来源逻辑不在本版；catalog 仅预留表。
 
 ### 6.4 已知限制（实现现状）
 
@@ -397,25 +419,35 @@ flowchart TD
 16. **分页 cursor 绑定较弱**：`memory.search` 的 cursor 只含 `{revision,offset}`，未绑定 query/project/许可；换查询可用同一 offset。不跨 scope、不构成越权，但分页语义弱于合同（独立评审 F-11，Minor）。
 17. **`recovery.confirm` 是死操作**：管理 API 暴露的 `recovery.confirm` 只生成一次性 `confirmationRef` 而没有消费者；真正可用的用户确认路径是 `task.confirmRemoteQuiescence`（内部调用 `grants.noteUserConfirmation` 并把 ref 交给 `queue.confirmRemoteQuiescence`）。保留该操作仅为未来恢复接缝，不应当作可用工作流（独立评审 F-15，观察项）。
 18. **管理 `/status` 形状不一致（Minor）**：HTTP status 的 `value.plugin` 是字符串（插件名），`automaticDisabled`/`state`/`cold` 等在 `value` 顶层；management defaults 里的 `plugin` 则是对象。当前 `client.js` 只消费 `status.scheduler.state`，未发现受损消费者，但接口合同应统一（独立评审 R-02）。
+19. **abstract basis 不含逐条 scopeRef**：校验时按当前 enabled scope 逐个 `store.get` 匹配 id/generation/source/kind。若同一项目两个 scope 出现完全相同的记录标识，删除一个可能被另一个掩盖；生产 id 为随机 UUID，属合成测试风险，`read` 仍逐 scope 复核。
+20. **abstract 新增可见性依赖 `noteChange` 或手动刷新**：管理 mutation 会累计 dirty 并在 10 条/24h 后重建；普通外部写入若不经管理 API，最多到下一次维护 tick + 阈值才更新。删除/纠正不受此影响（basis 校验即时重建）。
+21. **共享 `upToDate` 语义**：`resolve` 自动跟随最新有效 abstract revision 时只更新 `share_relations.abstract_revision`，用户决策依据/permission/创建时间保持审计原值；因此列表在变更后、下一次 resolve 前会显示 `upToDate:false`。
+22. **共享界面只列 target 侧关系**：记忆中心列出"其他项目分享给本项目"的关系；本项目作为 source 主动授予其他项目的关系只能在 API/审计视角看到，当前 UI 未列。
+23. **MEM-204 能力事件未接线**：catalog v2 已建 `capability_cursors/capability_holds/capability_events`，但没有 producer generation 对账、断档暂停来源或 restore 复核消费者；不得把乱序事件安全当作已实现。
+24. **共享关系的审计历史不是 append-only**：`share_relations` 只保留当前状态；对同一 source→target 重新 grant 会覆盖 `decision_basis`/`permission_ref` 并清空 `revoked_at`（`created_at`/`relation_id` 保留）。这是"当前状态"模型，不记录每次授权/撤销历史；已在 README 限制中说明。
+25. **abstract/sharing manager 的模块级 view 保留原文文本**：basis 的 summary/sourceRef 是记忆原文前缀，可能包含路径式字符串；管理 API 与模型工具边界会脱敏为 `[redacted-path]`，但直接使用 manager 的内部调用者会看到原文。合同"view 无绝对路径"按"外部边界"解释，见 §6.3。
+26. **abstract dirty 依赖产品写入路径**：自动提炼 commit 经 scheduler 的 `onJobSettled`，`memory_remember` 工具与 `/memory remember` 命令成功后调用 `noteChange`；绕过这些路径直接 `store.put`（仅测试/内部）不会累计 dirty，但 basis 校验仍会让 read 在记录变化时返回 stale。
 
 ### 6.5 实施状态（已实现 / 设计未实现 / 未验证）
 
 **已实现且有运行证据（组件级）**
 - M1：`MEM-101` 范围与授权适配、`MEM-102` 可见入口与调度、`MEM-103` 最终请求复核、`MEM-104` 闭环（夹具闭环）。
-- 基础管理界面（`MEM-501` 的一部分）：三标签、搜索/详情/纠正/归档/恢复/删除、任务状态、项目登记/偏好/退休。
+- M2（v0.3.0 子集）：`MEM-201` 多仓映射、`MEM-202` abstract/共享（`MEM-ABS-01..02`、`MEM-SHARE-01..03`）、`MEM-203` 退休与适用性（`MEM-APPL-01`）、`MEM-CAT-02` catalog v1→v2；管理 API 7 个 M2 操作、模型工具 `memory_abstracts`/`memory_shared_search`、记忆中心第 4 个 tab（客户端静态/渲染冒烟）。`MEM-204` 仍未实现。
+- 基础管理界面（`MEM-501` 的一部分）：四标签（M2 新增"项目摘要与共享"）、搜索/详情/纠正/归档/恢复/删除、任务状态、项目登记/偏好/退休。
 - 年度子集（`MEM-401` 自动草稿、`MEM-402` 提醒与证明登记/核对、`MEM-403` 报告草稿与审定、`MEM-404` 本地 Markdown/JSON 导出、`MEM-405` 的 `pending_reference` 占位）。
 - 安装/停用（`MEM-502` 的安装与停用部分；更新/迁移未实现）。
 
 **设计未实现**
-- `MEM-201` 多仓映射的扩展语义（当前"一个项目多仓库"已支持，但跨项目共享未做）、`MEM-202` abstract 与共享索引（`src/abstracts.mjs`/`src/sharing.mjs` 不存在）、`MEM-203` 项目生命周期增强（`src/project-lifecycle.mjs` 不存在；当前只有 retire）、`MEM-204` 能力事件适配（`plugin/capability-events.mjs` 不存在；`consumeCapabilityEvent` 组件在 `src/lifecycle.mjs`，插件未接线）。
+- M2 剩余：`MEM-204` 能力事件适配（`plugin/capability-events.mjs` 不存在；`consumeCapabilityEvent` 组件在 `src/lifecycle.mjs`，插件未接线；catalog v2 仅预留表）。
 - M3 全部：`MEM-301` 独立数据根/冷档（无 `cold/`、无 `storage-layout.mjs`/`cold-archive.mjs`）、`MEM-302` 分层召回、`MEM-303` 可恢复归档的冷档传播、`MEM-304` 转冷 journal 与备份。
 - `MEM-405` 模板映射（等《年终总结维度.md》）。
-- M5：`MEM-502` 更新/迁移/schema 版本门禁与完整卸载流程、`MEM-503` 最终验证与独立评审、`MEM-504` 本文件之外没有其他"完成"声明。
+- M5：`MEM-502` 更新/迁移/schema 版本门禁与完整卸载流程、`MEM-503` 最终验证与独立评审（当前只有 M1/M2 增量评审）、`MEM-504` 本文件之外没有其他"完成"声明。
 - 设计合同里的"宿主缺 `llm/stream` 时降级为手动搜索"（无运行时探测，见 §6.4-9）。
 - 管理 API 的 `memory.search` 自动模式（`mode` 只允许 `manual`）；`MEM-API-RECALL` 的 `automatic` 由 hook 内部完成，不经管理 API。
+- 共享的 source 侧关系浏览 UI（当前只列 target 侧关系）与共享明细的向量/跨 scope 相关性合并。
 
 **未验证（代码存在但无运行证据或只有间接证据）**
-- 真实 Provider 下的提炼质量、费用与 `usage`；真实用户 profile 的完整旅程；真实 GUI 视觉与交互（**但客户端 slot 注册已用 inspect 复核为 active，见 §6.1**）；OS 级出口；断电/磁盘满/并发写冲突。
+- 真实 Provider 下的提炼质量、费用与 `usage`；真实用户 profile 的完整旅程（M2 未在真实数据根执行 grant/revoke/refresh 写入旅程）；真实 GUI 视觉与交互（**客户端 slot 注册已用 inspect 复核为 active；第 4 tab 需页面重载后视觉复核，见 §6.1/§6.3**）；OS 级出口；断电/磁盘满/并发写冲突；abstract 摘要质量与共享检索相关性。
 
 ---
 
@@ -470,6 +502,7 @@ flowchart TD
 | `MEM-MECH-1` | 2026-11-07 | 首次完整机制说明：分层、五条端到端旅程、46 个稳定编号规则、来源、skill 接口、证据与限制、设计差异、待验证假设 | 与 v0.2.0 代码、`evidence/m1-host-probe.*`、258 项组件回归一致 |
 | `MEM-MECH-2` | 2026-11-07 | 最终门加固：`MEM-FINAL-02` 未登记 own 召回消息改为 fail-closed 阻断；新增 `MEM-FINAL-03` 注入前必须成功登记投影；证据表补安装行/状态路由/客户端slot与管理API往返、流接口现场复验；限制补年度草稿聚合与停用不等收尾 | 与 `tests/final-projection.test.mjs`、`tests/plugin-entry.test.mjs`、`evidence/m1-verification.json` 一致 |
 | `MEM-MECH-3` | 2026-11-07 | 独立评审 F-01..F-16 响应：`registry.initialize()`改同步（消除unhandledRejection致命退出，F-01）；混合请求own消息fail-closed（F-02）；`memory_status`工具脱敏绝对路径（F-03）；配置冲突停用自动记忆（F-05）；`package.json`补`source-lock.json`（F-09）；偏好变更后重建binding缓存（F-12）；准入回执补`inputDigest`（F-13）；MEM-504待复核后再勾选（F-04）；其余Minor以限制条目记录 | 修复后本地258/258、真实安装库探针3/3；独立评审核复核结论见`docs/m1-independent-review.md` |
+| `MEM-MECH-4` | 2026-11-08 | M2/v0.3.0 增量：catalog v1→v2 显式迁移；`MEM-ABS-01..02` 本地抽取式 abstract（basis 版本绑定、删除即时重建、10条/24h合并、配置阈值生效）；`MEM-SHARE-01..03` 用户授权共享（用户动作、当前 revision、自动跟随、读取二次核、撤权/删除即时断开、不复制明细、模型/宿主显式 target 必须等于绑定）；`MEM-APPL-01` 适用性（current/historical_unknown/unavailable，多仓取最差）；四标签界面与 7 个 M2 管理操作/2 个模型工具；MEM-204 仍未实现；M2 独立评审发现的阈值/绑定/适用性问题已修复，最终结论见评审文件与最新证据 | 与 v0.3.0 代码、`evidence/m2-verification.json`（318/318 + 探针3/3）、`evidence/m2-install-verification.json`、`docs/m2-independent-review.md` 一致 |
 
 **历史关系**：[Task 2](task2-mechanisms.md)、[Task 3 hooks](task3-hooks-mechanisms.md)、[Task 3 execution](task3-execution-mechanisms.md)、[Provider 阶段](task3-provider-mechanisms.md)、[流接口修复](stream-contract-fix.md) 保留其阶段编号与结论，本文不修改其历史证据与措辞；`MEM-QUEUE-02` 的"全根并发 1"与 `MEM-WORK-05` 的"年度导出留 Task 3"两处按当前实现与 §7 说明理解。
 

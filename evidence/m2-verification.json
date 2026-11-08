@@ -1,0 +1,199 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-08",
+  "startedAtUtc": "2026-11-08T07:58:09.439Z",
+  "durationMs": 25913.2745,
+  "purpose": "M2 (v0.3.0) delivery evidence: catalog v1->v2, project abstracts, user-granted sharing, applicability, management API and client tab; local full suite plus the real installed-library final-gate regression probe",
+  "runtime": {
+    "node": "26.13.0",
+    "executable": "E:\\dsh\\plugin\\05-local-memory\\runtime\\node.exe"
+  },
+  "commands": {
+    "suite": "E:\\dsh\\plugin\\05-local-memory\\runtime\\node.exe --test --test-concurrency=1 --test-reporter=tap --test-reporter-destination=evidence/m2-node26.tap tests/abstracts.test.mjs tests/backend.test.mjs tests/configuration.test.mjs tests/execution-authorization.test.mjs tests/final-projection.test.mjs tests/harness-provider.test.mjs tests/harness-sdk.test.mjs tests/host-grants.test.mjs tests/jobs.test.mjs tests/lifecycle.test.mjs tests/m2-management.test.mjs tests/management.test.mjs tests/migration.test.mjs tests/plugin-entry.test.mjs tests/project-registry.test.mjs tests/projects.test.mjs tests/proof-reminders.test.mjs tests/reports.test.mjs tests/scheduler.test.mjs tests/session-hooks.test.mjs tests/sharing.test.mjs tests/source-lock.test.mjs tests/work-management.test.mjs tests/work-summary.test.mjs",
+    "probe": "E:\\dsh\\plugin\\05-local-memory\\runtime\\node.exe tools/test-m1-host.mjs"
+  },
+  "suite": {
+    "summary": {
+      "tests": 318,
+      "pass": 318,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "exitCode": 0,
+    "tapSha256": "03f9abd8480a2aa94d4fae5062b3f801e37c4d45a1ddbec7b32b342f59bb87b1"
+  },
+  "probe": {
+    "verified": true,
+    "summary": {
+      "tests": 3,
+      "pass": 3,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "exitCode": 0,
+    "tapSha256": "6df3fb32cc2aa44e0440ecadb7d01bcb43e9afb4ee315db3c17e2c218d622436"
+  },
+  "liveInstall": {
+    "ref": "evidence/m2-install-verification.json",
+    "catalogVersion": 2,
+    "pluginState": "ready",
+    "newModelTools": [
+      "memory_abstracts",
+      "memory_shared_search"
+    ],
+    "clientSlotOccupant": {
+      "id": "local-memory",
+      "order": 10,
+      "active": true
+    },
+    "verified": true
+  },
+  "artifacts": [
+    {
+      "path": "src/projects.mjs",
+      "sha256": "928f7150c29ccf9610deb7876e149b83b2ebe96b96f5b54b830f6ef53b0ab0c4"
+    },
+    {
+      "path": "src/abstracts.mjs",
+      "sha256": "01f979c4cd2057fa0ee2729348978762255ac17ac0b3f4daf01979dce16ab093"
+    },
+    {
+      "path": "src/sharing.mjs",
+      "sha256": "a3fef953995a33adf27682736b54b1a6231c71e36f4c7fc30f74fdf6d6762b91"
+    },
+    {
+      "path": "plugin/index.mjs",
+      "sha256": "ae91464dc9322a2a2b834bddf935011fac03811d7f0cdfd37952845fb5a49a47"
+    },
+    {
+      "path": "plugin/project-registry.mjs",
+      "sha256": "a01e203360abb476e7394b8fc28e62956dd80b24fe59edf04328b117844276f8"
+    },
+    {
+      "path": "plugin/management.mjs",
+      "sha256": "bbd77d5dcf3e4de4320268418d4f64566635b45d5f9aa2367c3620b3a08790b4"
+    },
+    {
+      "path": "plugin/m2-management.mjs",
+      "sha256": "03e3df3ea9325aa6aacbd3a46ac81e5d239a37624008c6136989a8d8628603ac"
+    },
+    {
+      "path": "plugin/configuration.mjs",
+      "sha256": "ce21bbca16603afae6f5f48f0d3dbedd2078c621fa2f8e1a7ae09fd60fb28ee1"
+    },
+    {
+      "path": "plugin/final-projection.mjs",
+      "sha256": "7ef9cfa45590c7305c3cacf6c62191f2a9132cd2cae7fd63a3826518b821f5b8"
+    },
+    {
+      "path": "plugin/session-hooks.mjs",
+      "sha256": "f8b10a15705708c507d764d99e326092ed0640ea1a2afe43ba1719886c5c645d"
+    },
+    {
+      "path": "plugin/host-grants.mjs",
+      "sha256": "dfb159df845351f30a45a8623207cdf1b9829dda290951187b0aefd91e46dc2f"
+    },
+    {
+      "path": "client.js",
+      "sha256": "5afd6dd796a461e2e564f50bd9e51612ec35ac2df20e2e5760ba62ab39dfcb6e"
+    },
+    {
+      "path": "package.json",
+      "sha256": "a0190c3061723814a801f90543db551e7689446c1f03bc70fae26ec55e42be3b"
+    },
+    {
+      "path": "cordis.patch.yml",
+      "sha256": "6e9e9cf0f2ffc520ae40486db3d992691983595ddafa0f4b42972d48267fffa9"
+    },
+    {
+      "path": "locale/en.json",
+      "sha256": "b9f4f98ceb65510b310233ded21d8c50fa0e552eb0815d91d643d29003bd503a"
+    },
+    {
+      "path": "locale/zh.json",
+      "sha256": "fa3a1fb353044e87da1d228cc2144de6ef2471235e35a9ed3f9d8c2015f6c6e3"
+    },
+    {
+      "path": "tests/projects.test.mjs",
+      "sha256": "06f88c86faaa2d9d79217dfc24b4fc538ed1461374631d9cb1496dd2f2453577"
+    },
+    {
+      "path": "tests/project-registry.test.mjs",
+      "sha256": "791f2f56202d3893139f7bd3ad3ff6a04f5c37dfebd3f1961617d5a342de3e3c"
+    },
+    {
+      "path": "tests/abstracts.test.mjs",
+      "sha256": "655d138e6bfcc88037556cf5071fc939498e49498b0e219905b47e8c8a782dbd"
+    },
+    {
+      "path": "tests/sharing.test.mjs",
+      "sha256": "5639f164394c53d7d72c6d48f9f9b0807153e8fb0c5c0a4f33f54ba355c0d5c1"
+    },
+    {
+      "path": "tests/m2-management.test.mjs",
+      "sha256": "c982ff36edba95f87397b9c366cdce5998e04d619e6262409ebedc4f46ef3d02"
+    },
+    {
+      "path": "tests/management.test.mjs",
+      "sha256": "3d39a70578b19e7fc85f2844e2463cbd1ddb31d810ee25714e57d82b59b3641b"
+    },
+    {
+      "path": "tests/configuration.test.mjs",
+      "sha256": "ac81fcf28dcd2ae826c382e4cbb08c8e4a73d24b52d574d4298207d52758906a"
+    },
+    {
+      "path": "tests/plugin-entry.test.mjs",
+      "sha256": "1f811eb29eef3602b4c3fa3f002144a58080aa4ceb23f56820df6a837f8360fe"
+    },
+    {
+      "path": "README.md",
+      "sha256": "78f4bdc3ec67a32cc367871d90575f8b3f54f8c43e7b0f674fc5c03184997f93"
+    },
+    {
+      "path": "TODO.md",
+      "sha256": "f0163b6d932cfb6dbccd617e015ce88f039cf3abaa7f8905d8a377d977451aa7"
+    },
+    {
+      "path": "docs/m1-plugin-design.md",
+      "sha256": "0b5d0184a4449f1773a6d2939bb96f493cb728f94fed5fb2c78d512804d01bc3"
+    },
+    {
+      "path": "docs/m2-design.md",
+      "sha256": "eeac1a2834c5815ad3d969e858c5ac34235431f9609b74cd18bdb7fa706c6580"
+    },
+    {
+      "path": "docs/mechanisms.md",
+      "sha256": "fe1cc076d136903bd22b59ee012537b2f9f4ff5761b5efae69c3a9758697d193"
+    },
+    {
+      "path": "docs/implementation-route.md",
+      "sha256": "a924d53923e4af233c731f4955eb0690a9cfa98d57bba20c2032b81cc33284bb"
+    },
+    {
+      "path": "docs/m2-independent-review.md",
+      "sha256": "029b474d16cf1df140a1555c61215ad5b464342b9d692565b1caceaef805b196"
+    },
+    {
+      "path": "docs/m1-independent-review.md",
+      "sha256": "d385b48070b7387f4b2576a4846ddc01a4cd30fb03452385e54e73d038b057d7"
+    },
+    {
+      "path": "evidence/m2-install-verification.json",
+      "sha256": "ea49d84f332fd28903c862084ae840a740dc7cb22752e43c444cc0bf61172104"
+    }
+  ],
+  "artifactsStable": true,
+  "artifactDrift": [],
+  "verified": true,
+  "boundaries": [
+    "The suite uses synthetic adapters/FakeHost and temporary real SQLite stores; it does not call a business model API.",
+    "The probe mounts the real installed Cordis/LlmRuntime with a synthetic adapter and exercises the M1 final-request gate as a regression; it is not an M2 load test.",
+    "No live M2 write journey was run against the real data root; the install evidence records the real catalog migration and route state only.",
+    "Client visual rendering of the fourth Memory Center tab remains unverified; the page must reload the updated client bundle.",
+    "MEM-204 capability-event consumption, M3 cold tier and MEM-405 dimension mapping are not part of this increment."
+  ]
+}

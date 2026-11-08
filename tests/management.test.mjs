@@ -95,7 +95,7 @@ async function fixture(t, {cancel = true} = {}) {
   return {root, repoRoot, worktree, secondRoot, config, registry, grants, confirmations, scheduler, provider, queues};
 }
 
-function createOperations(ctx, {extras, scheduler} = {}) {
+function createOperations(ctx, {extras, scheduler, onMemoryChange} = {}) {
   return createManagementOperations({
     config: ctx.config,
     registry: ctx.registry,
@@ -103,6 +103,7 @@ function createOperations(ctx, {extras, scheduler} = {}) {
     scheduler: scheduler ?? ctx.scheduler,
     provider: ctx.provider,
     extras,
+    onMemoryChange,
     now: () => new Date('2026-11-07T00:00:00.000Z'),
   });
 }
@@ -925,6 +926,37 @@ test('client half is a dependency-free classic plugin with locale-complete UI st
 
   for (const effect of effects) effect.disposer();
   assert.equal(dictionaries.size, 0);
+});
+
+test('M2 abstract and sharing operations are user-only even before extras exist', async (t) => {
+  const ctx = await fixture(t), operations = createOperations(ctx);
+  for (const operation of ['abstract.refresh', 'share.grant', 'share.revoke']) {
+    expectError(call(operations, operation, {}, {actor: 'model'}), 'USER_ACTION_REQUIRED');
+    expectError(call(operations, operation, {}, {actor: 'host'}), 'USER_ACTION_REQUIRED');
+  }
+  // Read-shaped M2 operations are not user-only; without extras they are simply unknown.
+  for (const operation of ['abstract.list', 'share.discover', 'share.list']) {
+    expectError(call(operations, operation, {}, {actor: 'model'}), 'UNKNOWN_OPERATION');
+  }
+});
+
+test('abstract-affecting memory mutations invoke the dirty hook after success', async (t) => {
+  const ctx = await fixture(t);
+  const changes = [];
+  const operations = createOperations(ctx, {onMemoryChange: (change) => changes.push(change)});
+  const created = registered(operations, 'hook-project', [repositoryInput(ctx.repoRoot)]);
+  const project = rawProject(ctx, created.project.projectId);
+  const record = seedMemory(ctx, project, {id: 'hook-memory', sourceRef: 'session-hook/turn-1', sourceVersion: 'v1', kind: 'lesson', text: 'Dirty hook memory text.', origin: 'user'});
+  const listed = expectOk(call(operations, 'memory.list', {projectId: project.projectId}));
+  const item = listed.items.find((entry) => entry.id === record.id);
+  assert.ok(item, JSON.stringify(listed.items));
+  expectOk(call(operations, 'memory.archive', {projectId: project.projectId, id: item.id, expectedGeneration: item.expectedGeneration}));
+  assert.equal(changes.length, 1);
+  assert.equal(changes[0].operation, 'memory.archive');
+  assert.equal(changes[0].projectId, project.projectId);
+  // Failed mutations must not produce a dirty notification.
+  expectError(call(operations, 'memory.delete', {projectId: project.projectId, id: 'missing', expectedGeneration: 0}), 'MEMORY_NOT_FOUND');
+  assert.equal(changes.length, 1);
 });
 
 

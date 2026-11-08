@@ -3,9 +3,10 @@
  *
  * A dependency-free classic script: the browser module loader calls this factory, React comes from
  * the host module table, and no Harness Client package is imported. The page is registered into
- * `settings.section` as "Memory Center" with three tabs: experiences, annual work records and jobs.
- * Every request goes to the same-origin `POST /dsh-local-memory/api` route; the client never sees a
- * scope string, a grant, a secret or an internal exception (only a reason code).
+ * `settings.section` as "Memory Center" with four tabs: experiences, annual work records, jobs and
+ * project abstracts & sharing (M2). Every request goes to the same-origin
+ * `POST /dsh-local-memory/api` route; the client never sees a scope string, a grant, a secret or an
+ * internal exception (only a reason code).
  */
 window.__ModuleLoader__.load({
   id: 'dsh-local-memory-linqu',
@@ -38,6 +39,7 @@ window.__ModuleLoader__.load({
         'tabs.memory': '经验记忆',
         'tabs.work': '年度工作记录',
         'tabs.tasks': '处理任务',
+        'tabs.sharing': '项目摘要与共享',
         'status.projects': '{n} 个项目',
         'status.scheduler.running': '调度运行中',
         'status.scheduler.idle': '调度空闲',
@@ -101,6 +103,16 @@ window.__ModuleLoader__.load({
         'errors.PROOF_UNREADABLE': '证明正文不可读。',
         'errors.PROOF_CHANGED': '证明文件版本已变化。',
         'errors.INTERNAL_ERROR': '内部错误，操作未完成。',
+        'errors.PROJECT_RETIRED': '项目已退休，不能执行该操作。',
+        'errors.INVALID_SHARE': '共享参数无效：来源与目标必须是不同项目，且来源仍有效。',
+        'errors.ABSTRACT_UNAVAILABLE': '这个项目还没有可用的摘要。',
+        'errors.STALE_ABSTRACT': '摘要修订已变化，请刷新后重试。',
+        'errors.SHARE_DENIED': '没有可用的共享授权，或该共享已被撤销。',
+        'errors.RELATION_NOT_FOUND': '找不到这条共享关系。',
+        'errors.M2_OPERATION_FAILED': '摘要或共享操作未完成，请稍后重试。',
+        'errors.REGISTRY_UNAVAILABLE': '项目登记服务暂不可用。',
+        'errors.CATALOG_UNAVAILABLE': '项目目录暂不可用。',
+        'errors.STORE_UNAVAILABLE': '记忆存储暂不可用。',
         'notice.saved': '已保存。',
         'project.title': '项目',
         'project.register': '登记项目',
@@ -268,6 +280,62 @@ window.__ModuleLoader__.load({
         'task.createdAt': '创建时间',
         'task.repo': '仓库',
         'task.capabilities': '可用动作',
+        'abstracts.title': '本项目摘要',
+        'abstracts.hint': '摘要只引用本项目有效经验记忆，不含年度记录与证明正文；刷新摘要属于你的手动动作。',
+        'abstracts.refresh': '刷新摘要',
+        'abstracts.refreshed': '摘要已刷新。',
+        'abstracts.empty': '还没有可显示的项目摘要。',
+        'abstracts.revision': '摘要修订',
+        'abstracts.revisionValue': '修订 {n}',
+        'abstracts.digest': '摘要指纹',
+        'abstracts.generatedAt': '生成时间',
+        'abstracts.stale': '已过期',
+        'abstracts.staleHint': '记忆已变化，当前显示的是旧摘要；刷新摘要才会使用最新记忆。',
+        'abstracts.dirty': '另有 {n} 项变更等待刷新。',
+        'abstracts.countsLabel': '记忆数量',
+        'abstracts.counts': '{n} 条记忆',
+        'abstracts.byKindLabel': '分类',
+        'abstracts.basisShow': '显示依据记忆（{n}）',
+        'abstracts.basisHide': '收起依据记忆（{n}）',
+        'abstracts.basisEmpty': '这份摘要没有引用记忆。',
+        'abstracts.applicability.current': '当前来源',
+        'abstracts.applicability.historical_unknown': '历史来源，不可当现状',
+        'abstracts.applicability.unavailable': '来源不可用',
+        'share.discoverTitle': '可发现的项目摘要',
+        'share.discoverHint': 'Agent 只能发现摘要；建立共享必须由你在这里确认，并使用下方显示的当前修订。',
+        'share.discoverEmpty': '没有其他项目的摘要可被发现。',
+        'share.retiredNoGrant': '项目已退休，不能建立新的共享。',
+        'share.retiredHasRelation': '该项目已退休；已有共享仍可读取，并标记为历史来源。',
+        'share.noAbstract': '这个项目还没有可共享的摘要。',
+        'share.relationExists': '已有共享',
+        'share.grant': '建立共享',
+        'share.decisionBasis': '决策依据',
+        'share.decisionBasisPlaceholder': '例如：需要参考该项目的经验来排查当前问题',
+        'share.decisionBasisHint': '决策依据会随共享关系保存；许可引用由本页以你的用户动作生成，无需填写。',
+        'share.grantRevision': '将使用摘要修订 {n}',
+        'share.confirmGrant': '确认建立共享',
+        'share.granted': '共享已建立。',
+        'share.listTitle': '共享关系',
+        'share.listHint': '共享自动跟随来源最新摘要；撤销立即生效，不需要等待摘要刷新。',
+        'share.listEmpty': '还没有共享关系。',
+        'share.state.active': '有效',
+        'share.state.revoked': '已撤销',
+        'share.relationAbstract': '摘要修订 {granted} → 当前 {current}',
+        'share.upToDate': '已跟随最新',
+        'share.behind': '待跟随最新',
+        'share.revoke': '撤销',
+        'share.revokeConfirm': '撤销后，本项目的 Agent 将立即无法通过该共享检索来源明细。',
+        'share.revokeConfirmAction': '确认撤销',
+        'share.revoked': '共享已撤销。',
+        'share.revokedAt': '撤销时间',
+        'shared.title': '共享明细检索',
+        'shared.hint': '结果不会复制成当前项目的事实，只带来源返回，并全部标记未核验。',
+        'shared.noSource': '没有可检索的有效共享。',
+        'shared.source': '来源项目',
+        'shared.queryPlaceholder': '在共享来源中检索…',
+        'shared.empty': '没有匹配的共享明细。',
+        'shared.resultRevision': '来源摘要修订 {n}',
+        'shared.noCopy': '不提供复制动作；未核验内容不能当作事实。',
         'footer.hint': '状态未知的任务不会自动重试；删除经验记忆不可恢复，归档可恢复。',
       },
       en: {
@@ -283,6 +351,7 @@ window.__ModuleLoader__.load({
         'tabs.memory': 'Experiences',
         'tabs.work': 'Annual work records',
         'tabs.tasks': 'Processing jobs',
+        'tabs.sharing': 'Abstracts & Sharing',
         'status.projects': '{n} projects',
         'status.scheduler.running': 'Scheduler running',
         'status.scheduler.idle': 'Scheduler idle',
@@ -346,6 +415,16 @@ window.__ModuleLoader__.load({
         'errors.PROOF_UNREADABLE': 'The proof content is unreadable.',
         'errors.PROOF_CHANGED': 'The proof file version changed.',
         'errors.INTERNAL_ERROR': 'An internal error prevented the operation.',
+        'errors.PROJECT_RETIRED': 'The project is retired; this action is not allowed.',
+        'errors.INVALID_SHARE': 'Invalid share: source and target must differ and the source must stay active.',
+        'errors.ABSTRACT_UNAVAILABLE': 'This project has no available abstract yet.',
+        'errors.STALE_ABSTRACT': 'The abstract revision changed; refresh and try again.',
+        'errors.SHARE_DENIED': 'No active share grants access, or it was revoked.',
+        'errors.RELATION_NOT_FOUND': 'This share relation was not found.',
+        'errors.M2_OPERATION_FAILED': 'The abstract or sharing operation did not complete. Please try again.',
+        'errors.REGISTRY_UNAVAILABLE': 'The project registry is unavailable.',
+        'errors.CATALOG_UNAVAILABLE': 'The project catalog is unavailable.',
+        'errors.STORE_UNAVAILABLE': 'The memory store is unavailable.',
         'notice.saved': 'Saved.',
         'project.title': 'Projects',
         'project.register': 'Register project',
@@ -513,6 +592,62 @@ window.__ModuleLoader__.load({
         'task.createdAt': 'Created',
         'task.repo': 'Repository',
         'task.capabilities': 'Available actions',
+        'abstracts.title': 'Project abstract',
+        'abstracts.hint': 'The abstract only references active experiences of this project, not annual records or proof content. Refreshing it is your manual action.',
+        'abstracts.refresh': 'Refresh abstract',
+        'abstracts.refreshed': 'Abstract refreshed.',
+        'abstracts.empty': 'No project abstract is available yet.',
+        'abstracts.revision': 'Abstract revision',
+        'abstracts.revisionValue': 'Revision {n}',
+        'abstracts.digest': 'Abstract digest',
+        'abstracts.generatedAt': 'Generated',
+        'abstracts.stale': 'Stale',
+        'abstracts.staleHint': 'Memories changed and this is the previous abstract; refresh it to use the latest memories.',
+        'abstracts.dirty': '{n} more changes are waiting for a refresh.',
+        'abstracts.countsLabel': 'Memories',
+        'abstracts.counts': '{n} memories',
+        'abstracts.byKindLabel': 'By kind',
+        'abstracts.basisShow': 'Show basis memories ({n})',
+        'abstracts.basisHide': 'Hide basis memories ({n})',
+        'abstracts.basisEmpty': 'This abstract references no memories.',
+        'abstracts.applicability.current': 'Current source',
+        'abstracts.applicability.historical_unknown': 'Historical source; not current state',
+        'abstracts.applicability.unavailable': 'Source unavailable',
+        'share.discoverTitle': 'Discoverable abstracts',
+        'share.discoverHint': 'Agents can only discover abstracts; creating a share needs your confirmation here, using the current revision shown below.',
+        'share.discoverEmpty': 'No other project abstract is discoverable.',
+        'share.retiredNoGrant': 'Retired projects cannot start a new share.',
+        'share.retiredHasRelation': 'This project is retired; an existing share stays readable and is marked historical.',
+        'share.noAbstract': 'This project has no shareable abstract yet.',
+        'share.relationExists': 'Share exists',
+        'share.grant': 'Create share',
+        'share.decisionBasis': 'Decision basis',
+        'share.decisionBasisPlaceholder': "e.g. reference this project's experiences for the current investigation",
+        'share.decisionBasisHint': 'The decision basis is stored with the relation; the permission reference is generated by this page as your user action and needs no input.',
+        'share.grantRevision': 'Uses abstract revision {n}',
+        'share.confirmGrant': 'Confirm share',
+        'share.granted': 'Share created.',
+        'share.listTitle': 'Share relations',
+        'share.listHint': 'Shares follow the source latest abstract automatically; revocation takes effect immediately, without waiting for a refresh.',
+        'share.listEmpty': 'No share relation yet.',
+        'share.state.active': 'Active',
+        'share.state.revoked': 'Revoked',
+        'share.relationAbstract': 'Abstract revision {granted} → current {current}',
+        'share.upToDate': 'Up to date',
+        'share.behind': 'Behind latest',
+        'share.revoke': 'Revoke',
+        'share.revokeConfirm': 'After revocation, this project agents can no longer retrieve source details through this share.',
+        'share.revokeConfirmAction': 'Confirm revoke',
+        'share.revoked': 'Share revoked.',
+        'share.revokedAt': 'Revoked',
+        'shared.title': 'Shared detail search',
+        'shared.hint': 'Results are not copied into this project as facts; they carry their source and stay unverified.',
+        'shared.noSource': 'No active share is available to search.',
+        'shared.source': 'Source project',
+        'shared.queryPlaceholder': 'Search shared sources…',
+        'shared.empty': 'No shared detail matches.',
+        'shared.resultRevision': 'Source abstract revision {n}',
+        'shared.noCopy': 'No copy action; unverified content is not a fact.',
         'footer.hint': 'Unknown-outcome jobs are never retried automatically; deleting an experience is irreversible while archiving is reversible.',
       },
     });
@@ -1498,6 +1633,439 @@ window.__ModuleLoader__.load({
     }
 
     /* ------------------------------------------------------------------ */
+    /* Project abstracts & sharing tab (M2)                               */
+    /* ------------------------------------------------------------------ */
+
+    function listOf(value, key) {
+      if (Array.isArray(value)) return value;
+      if (!value || typeof value !== 'object') return [];
+      if (Array.isArray(value[key])) return value[key];
+      if (Array.isArray(value.items)) return value.items;
+      return [];
+    }
+    function abstractOf(value) {
+      if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+      if (Number.isSafeInteger(value.revision)) return value;
+      const nested = value.abstract;
+      return nested && typeof nested === 'object' && !Array.isArray(nested) ? nested : null;
+    }
+    function integerOrUndefined(value) {
+      return Number.isSafeInteger(value) ? value : undefined;
+    }
+    function revisionNumber(value) {
+      const n = integerOrUndefined(value);
+      return n === undefined ? '–' : String(n);
+    }
+    function projectStateText(t, state) {
+      const key = `project.state.${state}`;
+      return lookup(DICTIONARIES.en, key) !== undefined ? t(key) : t('common.unknown');
+    }
+    function applicabilityText(t, applicability) {
+      const key = `abstracts.applicability.${applicability}`;
+      return lookup(DICTIONARIES.en, key) !== undefined ? t(key) : t('common.unknown');
+    }
+    function kindText(t, kind) {
+      const key = `memory.kind.${kind}`;
+      return lookup(DICTIONARIES.en, key) !== undefined ? t(key) : (text(kind) || t('common.unknown'));
+    }
+    function memoryCountText(counts) {
+      return counts && Number.isSafeInteger(counts.memories) && counts.memories >= 0 ? String(counts.memories) : '0';
+    }
+    function byKindText(t, counts) {
+      const byKind = counts && typeof counts.byKind === 'object' && counts.byKind !== null ? counts.byKind : null;
+      if (!byKind) return '';
+      const parts = [];
+      for (const [kind, count] of Object.entries(byKind)) {
+        if (!Number.isSafeInteger(count) || count <= 0) continue;
+        parts.push(`${kindText(t, kind)} ${count}`);
+      }
+      return parts.join(' · ');
+    }
+    function ApplicabilityBadge(props) {
+      if (!props.applicability) return null;
+      const tone = props.applicability === 'current' ? 'success' : props.applicability === 'historical_unknown' ? 'warn' : 'danger';
+      return h(Badge, {tone}, applicabilityText(props.t, props.applicability));
+    }
+
+    function SharingTab(props) {
+      const {t, projectId, projects, call, onError, onNotice, refreshSignal} = props;
+      const mounted = useMounted();
+      const [abstractView, setAbstractView] = React.useState(null);
+      const [discover, setDiscover] = React.useState([]);
+      const [relations, setRelations] = React.useState([]);
+      const [errors, setErrors] = React.useState({});
+      const [loading, setLoading] = React.useState(false);
+      const [busy, setBusy] = React.useState(false);
+      const [basisOpen, setBasisOpen] = React.useState(false);
+      const [grantFor, setGrantFor] = React.useState(null);
+      const [decisionBasis, setDecisionBasis] = React.useState('');
+      const [revokeFor, setRevokeFor] = React.useState(null);
+      const [searchSource, setSearchSource] = React.useState('');
+      const [searchQuery, setSearchQuery] = React.useState('');
+      const [searchResult, setSearchResult] = React.useState(null);
+      const [searchError, setSearchError] = React.useState(null);
+
+      const reportError = code => { if (typeof onError === 'function') onError(code); };
+      const reportNotice = message => { if (typeof onNotice === 'function') onNotice(message); };
+      const projectNameOf = id => {
+        const found = asArray(projects).find(project => project.projectId === id);
+        return found && typeof found.name === 'string' && found.name ? found.name : (text(id) || t('common.unknown'));
+      };
+
+      /* Lists are loaded on mount / project change / root refresh; M2 is deliberately manual-refresh
+         only (no interval), so this tab adds no timer of its own. */
+      const loadAbstract = React.useCallback(async (options) => {
+        const settings = options || {};
+        if (!projectId) { setAbstractView(null); return; }
+        try {
+          const value = await call('abstract.list', {projectId});
+          if (!mounted.current) return;
+          setAbstractView(abstractOf(value));
+          setErrors(current => ({...current, abstract: null}));
+        } catch (error) {
+          if (!mounted.current) return;
+          const code = reasonOf(error);
+          setErrors(current => ({...current, abstract: code}));
+          if (!settings.silent) reportError(code);
+        }
+      }, [projectId]);
+      const loadDiscover = React.useCallback(async (options) => {
+        const settings = options || {};
+        if (!projectId) { setDiscover([]); return; }
+        try {
+          const value = await call('share.discover', {targetProjectId: projectId});
+          if (!mounted.current) return;
+          setDiscover(listOf(value, 'sources'));
+          setErrors(current => ({...current, discover: null}));
+        } catch (error) {
+          if (!mounted.current) return;
+          const code = reasonOf(error);
+          setErrors(current => ({...current, discover: code}));
+          if (!settings.silent) reportError(code);
+        }
+      }, [projectId]);
+      const loadRelations = React.useCallback(async (options) => {
+        const settings = options || {};
+        if (!projectId) { setRelations([]); return; }
+        try {
+          const value = await call('share.list', {targetProjectId: projectId});
+          if (!mounted.current) return;
+          setRelations(listOf(value, 'relations'));
+          setErrors(current => ({...current, relations: null}));
+        } catch (error) {
+          if (!mounted.current) return;
+          const code = reasonOf(error);
+          setErrors(current => ({...current, relations: code}));
+          if (!settings.silent) reportError(code);
+        }
+      }, [projectId]);
+
+      React.useEffect(() => {
+        setAbstractView(null); setDiscover([]); setRelations([]); setErrors({});
+        setBasisOpen(false); setGrantFor(null); setDecisionBasis(''); setRevokeFor(null);
+        setSearchResult(null); setSearchError(null); setSearchSource(''); setSearchQuery('');
+        if (!projectId) { setLoading(false); return; }
+        setLoading(true);
+        Promise.all([
+          loadAbstract({silent: true}),
+          loadDiscover({silent: true}),
+          loadRelations({silent: true}),
+        ]).then(() => { if (mounted.current) setLoading(false); });
+      }, [projectId, refreshSignal, loadAbstract, loadDiscover, loadRelations]);
+
+      const relationsList = asArray(relations);
+      const activeRelations = relationsList.filter(relation => relation && relation.state === 'active');
+      const activeSourceIds = new Set(activeRelations.map(relation => text(relation.sourceProjectId)).filter(Boolean));
+      const searchSources = [];
+      for (const relation of activeRelations) {
+        const sourceId = text(relation.sourceProjectId);
+        if (!sourceId || searchSources.some(source => source.projectId === sourceId)) continue;
+        searchSources.push({
+          projectId: sourceId,
+          name: text(relation.sourceProjectName) || projectNameOf(sourceId),
+          revision: integerOrUndefined(relation.currentAbstractRevision) ?? integerOrUndefined(relation.abstractRevision),
+        });
+      }
+      React.useEffect(() => {
+        const ids = searchSources.map(source => source.projectId);
+        setSearchSource(current => {
+          if (ids.length === 0) return current === '' ? current : '';
+          if (current && ids.includes(current)) return current;
+          return ids[0];
+        });
+      }, [relations]);
+      React.useEffect(() => {
+        setSearchResult(null);
+        setSearchError(null);
+      }, [searchSource]);
+
+      async function refreshAbstract() {
+        if (!projectId || busy) return;
+        setBusy(true);
+        try {
+          const value = await call('abstract.refresh', {projectId});
+          if (!mounted.current) return;
+          setAbstractView(abstractOf(value));
+          setErrors(current => ({...current, abstract: null}));
+          reportNotice(t('abstracts.refreshed'));
+          await Promise.all([loadDiscover({silent: true}), loadRelations({silent: true})]);
+        } catch (error) {
+          if (mounted.current) reportError(reasonOf(error));
+        } finally {
+          if (mounted.current) setBusy(false);
+        }
+      }
+      function openGrant(sourceId) {
+        setGrantFor(sourceId);
+        setDecisionBasis('');
+        setRevokeFor(null);
+      }
+      async function grantShare(entry) {
+        if (!projectId || busy) return;
+        const sourceId = text(entry.sourceProjectId);
+        const revision = integerOrUndefined(entry.abstractRevision);
+        const basis = decisionBasis.trim();
+        if (!sourceId || revision === undefined || revision < 1 || basis === '') return;
+        setBusy(true);
+        try {
+          // permissionRef is intentionally omitted: the Host generates the local user-grant ref.
+          await call('share.grant', {
+            sourceProjectId: sourceId,
+            targetProjectId: projectId,
+            abstractRevision: revision,
+            decisionBasis: basis,
+          });
+          if (!mounted.current) return;
+          setGrantFor(null);
+          setDecisionBasis('');
+          reportNotice(t('share.granted'));
+          await Promise.all([loadRelations({silent: true}), loadDiscover({silent: true})]);
+        } catch (error) {
+          if (mounted.current) reportError(reasonOf(error));
+        } finally {
+          if (mounted.current) setBusy(false);
+        }
+      }
+      async function revokeShare(relation) {
+        const relationId = text(relation.relationId);
+        if (!relationId || busy) return;
+        setBusy(true);
+        try {
+          await call('share.revoke', {relationId});
+          if (!mounted.current) return;
+          setRevokeFor(null);
+          reportNotice(t('share.revoked'));
+          await Promise.all([loadRelations({silent: true}), loadDiscover({silent: true})]);
+        } catch (error) {
+          if (mounted.current) reportError(reasonOf(error));
+        } finally {
+          if (mounted.current) setBusy(false);
+        }
+      }
+      async function runSharedSearch(event) {
+        if (event && typeof event.preventDefault === 'function') event.preventDefault();
+        const query = searchQuery.trim();
+        if (!projectId || !searchSource || query === '' || busy) return;
+        setBusy(true);
+        setSearchError(null);
+        try {
+          // targetProjectId is required here: the same-origin HTTP route has no session binding.
+          const value = await call('shared.search', {
+            targetProjectId: projectId,
+            sourceProjectId: searchSource,
+            query,
+            limit: 5,
+          });
+          if (!mounted.current) return;
+          setSearchResult({abstractRevision: integerOrUndefined(value && value.abstractRevision), items: listOf(value, 'items')});
+        } catch (error) {
+          if (!mounted.current) return;
+          setSearchResult(null);
+          setSearchError(reasonOf(error));
+        } finally {
+          if (mounted.current) setBusy(false);
+        }
+      }
+
+      function grantForm(entry, revision) {
+        return h('form', {
+          className: 'dshlm-form',
+          onSubmit: event => {
+            if (event && typeof event.preventDefault === 'function') event.preventDefault();
+            grantShare(entry);
+          },
+        },
+        h(Field, {label: t('share.decisionBasis'), hint: t('share.decisionBasisHint')},
+          h(TextInput, {value: decisionBasis, placeholder: t('share.decisionBasisPlaceholder'), onChange: setDecisionBasis})),
+        h('p', {className: 'dshlm-hint'}, t('share.grantRevision', {n: revisionNumber(revision)})),
+        h('div', {className: 'dshlm-row-line'},
+          h(Button, {variant: 'primary', type: 'submit', disabled: busy || decisionBasis.trim() === ''}, t('share.confirmGrant')),
+          h(Button, {variant: 'ghost', onClick: () => { setGrantFor(null); setDecisionBasis(''); }}, t('common.cancel'))));
+      }
+
+      const counts = abstractView && typeof abstractView.counts === 'object' && abstractView.counts !== null ? abstractView.counts : null;
+      const basis = abstractView ? asArray(abstractView.basis) : [];
+      const kindSummary = byKindText(t, counts);
+      const abstractError = errors.abstract || null;
+      const abstractMissing = abstractError === 'ABSTRACT_UNAVAILABLE';
+      // abstracts.read() returns an empty view (revision 0) when nothing is generated yet.
+      const hasAbstract = Boolean(abstractView) && Number.isSafeInteger(abstractView.revision) && abstractView.revision >= 1;
+
+      const abstractCard = h('section', {className: 'dshlm-card'},
+        h('div', {className: 'dshlm-card-header'},
+          h('h3', {className: 'dshlm-card-title'}, t('abstracts.title')),
+          h(Button, {variant: 'ghost', disabled: busy || loading || !projectId, onClick: refreshAbstract}, t('abstracts.refresh'))),
+        h('p', {className: 'dshlm-hint'}, t('abstracts.hint')),
+        !projectId ? h(Empty, null, t('page.noProject')) : null,
+        abstractError && !abstractMissing ? h(ErrorBanner, {
+          message: reasonCodeLabel(t, abstractError),
+          retryLabel: t('common.retry'),
+          onRetry: () => loadAbstract({silent: false}),
+        }) : null,
+        abstractMissing && !hasAbstract ? h(Empty, null, t('abstracts.empty')) : null,
+        projectId && !abstractError && !hasAbstract ? (loading ? h(Loading, null, t('page.loading')) : h(Empty, null, t('abstracts.empty'))) : null,
+        hasAbstract ? h('div', null,
+          h('div', {className: 'dshlm-row-line'},
+            h('span', {className: 'dshlm-strong'}, text(abstractView.projectName) || projectNameOf(projectId)),
+            h(StateBadge, {tone: abstractView.projectState === 'active' ? 'success' : 'neutral', label: projectStateText(t, abstractView.projectState)}),
+            h(ApplicabilityBadge, {t, applicability: abstractView.applicability}),
+            abstractView.stale === true ? h(Badge, {tone: 'warn'}, t('abstracts.stale')) : null),
+          h('dl', {className: 'dshlm-meta'},
+            h('div', null, h('dt', null, t('abstracts.revision')), h('dd', null, revisionNumber(abstractView.revision))),
+            h('div', null, h('dt', null, t('abstracts.digest')), h('dd', null, text(abstractView.digest) ? truncate(abstractView.digest, 28) : t('common.unknown'))),
+            h('div', null, h('dt', null, t('abstracts.generatedAt')), h('dd', null, text(abstractView.generatedAt) || t('common.unknown'))),
+            h('div', null, h('dt', null, t('abstracts.countsLabel')), h('dd', null, t('abstracts.counts', {n: memoryCountText(counts)}))),
+            kindSummary ? h('div', null, h('dt', null, t('abstracts.byKindLabel')), h('dd', null, kindSummary)) : null),
+          abstractView.stale === true ? h('p', {className: 'dshlm-hint'}, t('abstracts.staleHint')) : null,
+          integerOrUndefined(abstractView.dirtyCount) > 0 ? h('p', {className: 'dshlm-hint'}, t('abstracts.dirty', {n: revisionNumber(abstractView.dirtyCount)})) : null,
+          h('div', {className: 'dshlm-row-line'},
+            h(Button, {variant: 'ghost', onClick: () => setBasisOpen(open => !open)},
+              basisOpen ? t('abstracts.basisHide', {n: String(basis.length)}) : t('abstracts.basisShow', {n: String(basis.length)}))),
+          basisOpen ? (basis.length === 0 ? h('p', {className: 'dshlm-hint'}, t('abstracts.basisEmpty')) : h('ul', {className: 'dshlm-plain-list'},
+            basis.map((entry, index) => h('li', {key: `${text(entry.id) || 'basis'}-${index}`},
+              h('div', {className: 'dshlm-row-line'},
+                h(Badge, {tone: 'neutral'}, kindText(t, entry.kind)),
+                h('span', {className: 'dshlm-muted'}, text(entry.sourceRef) || t('common.unknown')),
+                h('span', {className: 'dshlm-muted'}, t('memory.generation', {n: revisionNumber(entry.recordGeneration)}))),
+              h('div', {className: 'dshlm-row-text dshlm-muted'}, truncate(entry.summary, 160)))))) : null) : null);
+
+      const discoverCard = h('section', {className: 'dshlm-card'},
+        h('div', {className: 'dshlm-card-header'},
+          h('h3', {className: 'dshlm-card-title'}, t('share.discoverTitle')),
+          h(Button, {variant: 'ghost', disabled: busy || loading || !projectId, onClick: () => loadDiscover({silent: false})}, t('common.refresh'))),
+        h('p', {className: 'dshlm-hint'}, t('share.discoverHint')),
+        !projectId ? h(Empty, null, t('page.noProject')) : null,
+        errors.discover ? h(ErrorBanner, {
+          message: reasonCodeLabel(t, errors.discover),
+          retryLabel: t('common.retry'),
+          onRetry: () => loadDiscover({silent: false}),
+        }) : null,
+        projectId && !errors.discover && !loading && discover.length === 0 ? h(Empty, null, t('share.discoverEmpty')) : null,
+        h('div', {className: 'dshlm-list'},
+          asArray(discover).map((entry, index) => {
+            const sourceId = text(entry.sourceProjectId);
+            const revision = integerOrUndefined(entry.abstractRevision);
+            const active = entry.sourceProjectState === 'active';
+            const hasRelation = activeSourceIds.has(sourceId);
+            // A retired source is discoverable only when a relation already exists (§3.2) and can
+            // never be the source of a new grant because sharing.grant requires an active source.
+            const canGrant = active && revision !== undefined && revision > 0;
+            const open = grantFor !== null && grantFor === sourceId;
+            return h('div', {key: sourceId || `source-${index}`, className: 'dshlm-project-row'},
+              h('div', {className: 'dshlm-row-line'},
+                h('span', {className: 'dshlm-strong'}, text(entry.sourceProjectName) || projectNameOf(sourceId)),
+                h(StateBadge, {tone: active ? 'success' : 'neutral', label: projectStateText(t, entry.sourceProjectState)}),
+                h(ApplicabilityBadge, {t, applicability: entry.applicability}),
+                hasRelation ? h(Badge, {tone: 'neutral'}, t('share.relationExists')) : null),
+              h('div', {className: 'dshlm-row-line dshlm-muted'},
+                h('span', null, t('abstracts.revisionValue', {n: revisionNumber(revision)})),
+                h('span', null, t('abstracts.counts', {n: memoryCountText(entry.counts)})),
+                h('span', null, text(entry.generatedAt) || t('common.unknown'))),
+              !active ? h('p', {className: 'dshlm-hint'}, hasRelation ? t('share.retiredHasRelation') : t('share.retiredNoGrant')) : null,
+              active && !canGrant ? h('p', {className: 'dshlm-hint'}, t('share.noAbstract')) : null,
+              canGrant ? (open ? grantForm(entry, revision) : h('div', {className: 'dshlm-row-line'},
+                h(Button, {variant: 'primary', disabled: busy, onClick: () => openGrant(sourceId)}, t('share.grant')))) : null);
+          })));
+
+      const relationsCard = h('section', {className: 'dshlm-card'},
+        h('div', {className: 'dshlm-card-header'},
+          h('h3', {className: 'dshlm-card-title'}, t('share.listTitle')),
+          h(Button, {variant: 'ghost', disabled: busy || loading || !projectId, onClick: () => loadRelations({silent: false})}, t('common.refresh'))),
+        h('p', {className: 'dshlm-hint'}, t('share.listHint')),
+        !projectId ? h(Empty, null, t('page.noProject')) : null,
+        errors.relations ? h(ErrorBanner, {
+          message: reasonCodeLabel(t, errors.relations),
+          retryLabel: t('common.retry'),
+          onRetry: () => loadRelations({silent: false}),
+        }) : null,
+        projectId && !errors.relations && !loading && relationsList.length === 0 ? h(Empty, null, t('share.listEmpty')) : null,
+        h('div', {className: 'dshlm-list'},
+          relationsList.map((relation, index) => {
+            const relationId = text(relation.relationId);
+            const active = relation.state === 'active';
+            const stateKey = active ? 'active' : 'revoked';
+            const grantedRevision = integerOrUndefined(relation.abstractRevision);
+            const currentRevision = integerOrUndefined(relation.currentAbstractRevision);
+            const upToDate = relation.upToDate === true;
+            return h('div', {key: relationId || `relation-${index}`, className: 'dshlm-project-row'},
+              h('div', {className: 'dshlm-row-line'},
+                h('span', {className: 'dshlm-strong'}, text(relation.sourceProjectName) || projectNameOf(relation.sourceProjectId)),
+                h('span', {className: 'dshlm-muted'}, '→'),
+                h('span', {className: 'dshlm-muted'}, text(relation.targetProjectName) || projectNameOf(relation.targetProjectId) || projectNameOf(projectId)),
+                h(StateBadge, {tone: active ? 'success' : 'neutral', label: t(`share.state.${stateKey}`)})),
+              h('div', {className: 'dshlm-row-line dshlm-muted'},
+                h('span', null, t('share.relationAbstract', {granted: revisionNumber(grantedRevision), current: revisionNumber(currentRevision)})),
+                active ? h(Badge, {tone: upToDate ? 'success' : 'warn'}, upToDate ? t('share.upToDate') : t('share.behind')) : null,
+                !active && text(relation.revokedAt) ? h('span', null, `${t('share.revokedAt')} ${relation.revokedAt}`) : null),
+              active ? (revokeFor === relationId ? h('div', {className: 'dshlm-danger-zone', role: 'alertdialog'},
+                h('p', {className: 'dshlm-hint'}, t('share.revokeConfirm')),
+                h('div', {className: 'dshlm-row-line'},
+                  h(Button, {variant: 'danger', disabled: busy, onClick: () => revokeShare(relation)}, t('share.revokeConfirmAction')),
+                  h(Button, {variant: 'ghost', onClick: () => setRevokeFor(null)}, t('common.cancel')))) :
+                h(Button, {variant: 'danger', disabled: busy, onClick: () => setRevokeFor(relationId)}, t('share.revoke'))) : null);
+          })));
+
+      const searchCard = h('section', {className: 'dshlm-card'},
+        h('h3', {className: 'dshlm-card-title'}, t('shared.title')),
+        h('p', {className: 'dshlm-hint'}, t('shared.hint')),
+        !projectId ? h(Empty, null, t('page.noProject')) : null,
+        projectId && loading && !errors.relations && searchSources.length === 0 ? h(Loading, null, t('page.loading')) : null,
+        projectId && !loading && !errors.relations && searchSources.length === 0 ? h(Empty, null, t('shared.noSource')) : null,
+        projectId && searchSources.length > 0 ? h('form', {className: 'dshlm-form', onSubmit: runSharedSearch},
+          h(Field, {label: t('shared.source')},
+            h('select', {
+              className: 'dshlm-select',
+              value: searchSource,
+              onChange: event => setSearchSource(event.target.value),
+            },
+            searchSources.map(source => h('option', {key: source.projectId, value: source.projectId},
+              `${source.name} · ${t('abstracts.revisionValue', {n: revisionNumber(source.revision)})}`)))),
+          h('div', {className: 'dshlm-search'},
+            h(TextInput, {value: searchQuery, placeholder: t('shared.queryPlaceholder'), onChange: setSearchQuery}),
+            h(Button, {variant: 'primary', type: 'submit', disabled: busy || searchQuery.trim() === ''}, t('common.search')))) : null,
+        searchError ? h(ErrorBanner, {
+          message: reasonCodeLabel(t, searchError),
+          retryLabel: t('common.retry'),
+          onRetry: () => runSharedSearch(),
+        }) : null,
+        searchResult ? h('div', null,
+          h('p', {className: 'dshlm-muted'}, t('shared.resultRevision', {n: revisionNumber(searchResult.abstractRevision)})),
+          searchResult.items.length === 0 ? h(Empty, null, t('shared.empty')) : h('ul', {className: 'dshlm-plain-list'},
+            searchResult.items.map((item, index) => h('li', {key: `${text(item.id) || 'item'}-${index}`},
+              h('div', {className: 'dshlm-row-line'},
+                h(Badge, {tone: 'neutral'}, kindText(t, item.kind)),
+                h(Badge, {tone: 'warn'}, t('memory.verification.unverified')),
+                h(ApplicabilityBadge, {t, applicability: item.applicability}),
+                h('span', {className: 'dshlm-muted'}, `${text(item.sourceRef) || t('common.unknown')} · ${text(item.sourceVersion) || t('common.unknown')}`)),
+              h('div', {className: 'dshlm-detail-text'}, truncate(item.text, 220)))))) : null,
+        h('p', {className: 'dshlm-hint'}, t('shared.noCopy')));
+
+      return h('div', {className: 'dshlm-layout'},
+        h('div', {className: 'dshlm-column'}, abstractCard, discoverCard),
+        h('div', {className: 'dshlm-column'}, relationsCard, searchCard));
+    }
+
+    /* ------------------------------------------------------------------ */
     /* Root page                                                           */
     /* ------------------------------------------------------------------ */
 
@@ -1569,11 +2137,12 @@ window.__ModuleLoader__.load({
       const schedulerState = status && status.scheduler && typeof status.scheduler.state === 'string' ? status.scheduler.state : 'unavailable';
       const schedulerKey = `status.scheduler.${schedulerState}`;
       const schedulerLabel = lookup(DICTIONARIES.en, schedulerKey) !== undefined ? t(schedulerKey) : t('status.scheduler.unavailable');
-      const sections = ['memory', 'work', 'tasks'];
+      const sections = ['memory', 'work', 'tasks', 'sharing'];
       const hasProject = projectId !== '';
       let body;
       if (section === 'work') body = h(WorkTab, {key: 'work', t, projectId, call, onError, onNotice, refreshSignal});
       else if (section === 'tasks') body = h(TasksTab, {key: 'tasks', t, projectId, call, onError, onNotice, refreshSignal});
+      else if (section === 'sharing') body = h(SharingTab, {key: 'sharing', t, projectId, projects, call, onError, onNotice, refreshSignal});
       else body = h(MemoryTab, {key: 'memory', t, projectId, call, onError, onNotice, onChanged, refreshSignal, projects});
 
       return h('div', {className: 'dshlm-root'},

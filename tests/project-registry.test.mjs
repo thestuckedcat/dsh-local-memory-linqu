@@ -180,3 +180,54 @@ test('closing the registry closes its stores and refuses later access', async (t
   assert.throws(() => store.get('memory-1'));
   assert.throws(() => registry.list(), (error) => error.code === 'REGISTRY_UNAVAILABLE');
 });
+
+test('applicability marks active projects current, retired or missing sources historical', async (t) => {
+  const f = fixture(t);
+  const {root, worktree, repo} = f;
+  const registry = createProjectRegistry({config: baseConfig(root, projectConfig(root))});
+  f.track(() => registry.close());
+  await registry.initialize();
+  const binding = registry.bindingForSession(session(worktree));
+  const project = registry.list()[0];
+  assert.equal(registry.applicabilityForScope(binding.scopeRef).applicability, 'current');
+  assert.equal(registry.applicabilityForProject(project.projectId).applicability, 'current');
+  // Retiring keeps the memory readable but must not present the source as current.
+  const retired = registry.retireProject({projectId: project.projectId, expectedRevision: project.revision, reason: 'done'});
+  assert.equal(retired.state, 'retired');
+  assert.equal(registry.applicabilityForScope(binding.scopeRef).applicability, 'historical_unknown');
+  assert.equal(registry.applicabilityForProject(project.projectId).applicability, 'historical_unknown');
+  assert.equal(registry.applicabilityForScope('workspace-v1:' + 'f'.repeat(64)).applicability, 'unavailable');
+  assert.equal(registry.applicabilityForProject('project-' + 'f'.repeat(64)).applicability, 'unavailable');
+  // An active project whose source root disappeared is also historical, never current.
+  rmSync(repo, {recursive: true, force: true, maxRetries: 10, retryDelay: 50});
+  assert.equal(registry.applicabilityForProject(project.projectId).sourceAvailable, false);
+});
+
+test('multi-repository applicability is current only while every enabled source root exists', async (t) => {
+  const f = fixture(t);
+  const {root, repo, other} = f;
+  const registry = createProjectRegistry({
+    config: baseConfig(root, {
+      dataRoot: join(root, 'data'),
+      projects: [{
+        name: 'multi',
+        repositories: [
+          {repoId: 'one', canonicalRoot: repo, worktreeRoot: join(repo, 'worktree'), revision: 'workspace', buildVariant: 'win-node24'},
+          {repoId: 'two', canonicalRoot: other, worktreeRoot: other, revision: 'workspace', buildVariant: 'win-node24'},
+        ],
+      }],
+    }),
+  });
+  f.track(() => registry.close());
+  await registry.initialize();
+  const project = registry.list()[0];
+  const scopes = registry.scopesForProject(project.projectId);
+  assert.equal(scopes.length, 2);
+  assert.equal(registry.applicabilityForProject(project.projectId).applicability, 'current');
+  rmSync(other, {recursive: true, force: true, maxRetries: 10, retryDelay: 50});
+  const after = registry.applicabilityForProject(project.projectId);
+  assert.equal(after.sourceAvailable, false);
+  assert.equal(after.applicability, 'historical_unknown');
+  // The surviving repository still reports its own scope as current.
+  assert.equal(registry.applicabilityForScope(scopes[0].scopeRef).applicability, 'current');
+});

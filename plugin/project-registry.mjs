@@ -11,6 +11,10 @@ function normalizeRoot(path) {
   if (!statSync(resolved).isDirectory()) throw new Error('Memory project root must be a directory');
   return process.platform === 'win32' ? resolved.toLowerCase() : resolved;
 }
+/** Source availability for applicability; never scans content and tolerates removal. */
+function directoryExists(path) {
+  try { return statSync(path).isDirectory(); } catch { return false; }
+}
 function boundPath(root, candidate) {
   return candidate === root || candidate.startsWith(root.endsWith('\\') ? root : `${root}\\`) || candidate.startsWith(root.endsWith('/') ? root : `${root}/`);
 }
@@ -196,6 +200,32 @@ export function createProjectRegistry({config, createQueue, onDiagnostic = () =>
     projectForScope(scopeRef) {
       const binding = registry.bindingForScope(scopeRef);
       return binding === undefined ? undefined : catalog.getProject(binding.projectId);
+    },
+    /** Applicability of one concrete scope's source material (MEM-203). Cheap stat only. */
+    applicabilityForScope(scopeRef) {
+      ensureReady();
+      const binding = registry.bindingForScope(scopeRef);
+      if (!binding) return Object.freeze({applicability: 'unavailable', projectState: undefined, sourceAvailable: false, checkedAt: new Date().toISOString()});
+      const project = catalog.getProject(binding.projectId);
+      const sourceAvailable = directoryExists(binding.canonicalRoot);
+      const applicability = project?.state === 'active' && sourceAvailable ? 'current' : 'historical_unknown';
+      return Object.freeze({applicability, projectState: project?.state, sourceAvailable, checkedAt: new Date().toISOString()});
+    },
+    applicabilityForProject(projectId) {
+      ensureReady();
+      const project = catalog.getProject(checkedText(projectId, 'project id', 128));
+      if (!project) return Object.freeze({applicability: 'unavailable', projectState: undefined, sourceAvailable: false, checkedAt: new Date().toISOString()});
+      const repositories = project.repositories.filter((repo) => repo.enabled);
+      if (repositories.length === 0) return Object.freeze({applicability: 'unavailable', projectState: project.state, sourceAvailable: false, checkedAt: new Date().toISOString()});
+      // Project-level applicability is the *worst* of its enabled repositories: one unavailable
+      // source root must not let the whole project claim "current".
+      let sourceAvailable = true;
+      for (const repository of repositories) {
+        const binding = scopes.get(repository.scopeRef);
+        if (!binding || !directoryExists(binding.canonicalRoot)) { sourceAvailable = false; break; }
+      }
+      const applicability = project.state === 'active' && sourceAvailable ? 'current' : 'historical_unknown';
+      return Object.freeze({applicability, projectState: project.state, sourceAvailable, checkedAt: new Date().toISOString()});
     },
     bindingForSession(session) {
       if (state !== 'ready') return undefined;

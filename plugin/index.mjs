@@ -1,6 +1,8 @@
 import {randomUUID} from 'node:crypto';
 import {createJobQueue} from '../src/jobs.mjs';
 import {createReportManager} from '../src/reports.mjs';
+import {createAbstractManager} from '../src/abstracts.mjs';
+import {createSharingManager} from '../src/sharing.mjs';
 import {checkedText, digest} from '../src/scope.mjs';
 import {fingerprint} from '../src/validation.mjs';
 import {createHarnessProviderBridge} from './harness-provider.mjs';
@@ -11,6 +13,7 @@ import {createScheduler} from './scheduler.mjs';
 import {createFinalProjection} from './final-projection.mjs';
 import {createManagementOperations, createManagementHttp} from './management.mjs';
 import {createWorkOperations} from './work-management.mjs';
+import {createM2Operations} from './m2-management.mjs';
 import {installProofReminders} from './proof-reminders.mjs';
 import {normalizeConfig, routeApproval, routeRefFor, configErrorReason} from './configuration.mjs';
 import {createUserMessage, createSystemMessage, BlockAssembler} from './harness-sdk.mjs';
@@ -51,7 +54,7 @@ export function apply(ctx, rawConfig = {}) {
     provider: 'unknown',
     scheduler: null,
     recallIntegration: 'pending',
-    cold: Object.freeze({status: 'not_configured', detail: 'M3 cold tier is not implemented in v0.2.0; all memory data stays local.'}),
+    cold: Object.freeze({status: 'not_configured', detail: 'M3 cold tier is not implemented; all memory data stays local.'}),
     degraded: [],
   };
   function diagnostic(code) {
@@ -110,6 +113,9 @@ export function apply(ctx, rawConfig = {}) {
   let hooks;
   let reminders;
   let reports;
+  let abstracts;
+  let sharing;
+  let m2Operations;
   let disposed = false;
   const schedulerFacade = {
     status: () => scheduler?.status() ?? Object.freeze({state: 'unavailable'}),
@@ -142,6 +148,11 @@ export function apply(ctx, rawConfig = {}) {
   function userOperation(operation, input, agent) {
     const session = agent ? ctx.sessions.get(agent.id) : undefined;
     return operations.dispatch({operation, operationId: randomUUID(), input, actor: 'user', agent, sessionId: session?.id});
+  }
+  /** Model dispatch with the exact documented input (no implicit projectId injection). */
+  function modelDispatch(operation, input, exec) {
+    const {agent, session} = callContext(exec);
+    return operations.dispatch({operation, operationId: randomUUID(), input, actor: 'model', agent, sessionId: session.id});
   }
   function registerTool(definition) {
     ctx.effect(() => ctx.tools.register(Object.freeze({
@@ -218,15 +229,36 @@ export function apply(ctx, rawConfig = {}) {
     status.provider = bridge.status().state;
     grants = createHostGrants({config, registry, sessions: ctx.sessions, agents: ctx.agents});
     reports = createReportManager({registry, config});
+    abstracts = createAbstractManager({
+      catalog: registry.catalog,
+      registry,
+      thresholds: {dirtyCountThreshold: config.abstracts.dirtyCountThreshold, ageHours: config.abstracts.ageHours},
+    });
+    sharing = createSharingManager({catalog: registry.catalog, registry, abstracts});
     const workOperations = createWorkOperations({registry, config, reports, approval: ctx.approval, sessions: ctx.sessions});
+    m2Operations = createM2Operations({registry, abstracts, sharing, sessions: ctx.sessions});
     operations = createManagementOperations({
       config,
       registry,
       grants,
       scheduler: schedulerFacade,
       provider: bridge.provider,
-      extras: workOperations,
-      status: () => ({...status, dataRoot: undefined, scheduler: schedulerFacade.status(), grants: grants.status()}),
+      extras: {...workOperations, ...m2Operations},
+      onMemoryChange: (change) => {
+        try {
+          if (typeof change.projectId === 'string' && change.projectId) abstracts.noteChange(change.projectId, {count: 1});
+        } catch {
+          noteDiagnostic('abstract_dirty_failed');
+        }
+      },
+      status: () => ({
+        ...status,
+        dataRoot: undefined,
+        scheduler: schedulerFacade.status(),
+        grants: grants.status(),
+        abstracts: abstracts.status(),
+        sharing: sharing.status(),
+      }),
     });
     http = createManagementHttp({operations, getOrigin: () => ctx.webServer.getOrigin()});
     projection = createFinalProjection({config, registry, grants, sessions: ctx.sessions, onDiagnostic: (entry) => noteDiagnostic(entry)});
@@ -238,6 +270,15 @@ export function apply(ctx, rawConfig = {}) {
       limits: config.limits,
       queueFor: (scopeRef) => registry.queueFor(scopeRef),
       onDiagnostic: (entry) => noteDiagnostic(entry),
+      onJobSettled: ({scopeRef, result}) => {
+        try {
+          if (result?.state !== 'completed' || result?.purpose !== 'memory_extract') return;
+          const ids = Array.isArray(result?.result?.ids) ? result.result.ids : [];
+          if (ids.length === 0) return;
+          const project = registry.projectForScope(scopeRef);
+          if (project?.projectId) abstracts.noteChange(project.projectId, {count: ids.length});
+        } catch { noteDiagnostic('abstract_dirty_failed'); }
+      },
     });
 
     hooks = installSessionHooks(ctx, {
@@ -292,6 +333,8 @@ export function apply(ctx, rawConfig = {}) {
           },
           scheduler: schedulerFacade.status(),
           grants: grants.status(),
+          abstracts: abstracts.status(),
+          sharing: sharing.status(),
         },
       };
     });
@@ -319,6 +362,7 @@ export function apply(ctx, rawConfig = {}) {
         text,
         origin: 'user',
       });
+      try { abstracts.noteChange(binding.projectId, {count: 1}); } catch { noteDiagnostic('abstract_dirty_failed'); }
       return {ok: true, value: {id: record.id, generation: record.generation, verification: record.verification, state: record.state}};
     });
     tool('memory_correct', 'Correct one memory record with a new source version. The old version becomes superseded.', {
@@ -334,6 +378,25 @@ export function apply(ctx, rawConfig = {}) {
     }, async (args, exec) => args.action === 'inspect' ? modelOperation('task.inspect', {jobId: args.jobId}, exec) : modelOperation('task.list', {limit: 20}, exec));
     tool('work_list', 'List annual work-record drafts of the current project. Drafts are unverified model or user notes.', {limit: {type: 'integer', minimum: 1, maximum: 50}}, async (args, exec) => modelOperation('work.list', {limit: args.limit}, exec));
     tool('work_get', 'Read one annual work record with claim confirmation and evidence state.', {id: {type: 'string'}}, async (args, exec) => modelOperation('work.get', {id: args.id}, exec));
+    tool('memory_abstracts', 'List the current project abstract and discoverable abstracts from other local projects. Only summaries/sources are returned; no cross-project memory body is copied.', {}, async (args, exec) => {
+      const {agent, session, binding} = callContext(exec);
+      if (!binding) return {ok: false, error: {code: 'UNBOUND', message: 'Register this project before using abstracts.'}};
+      const own = operations.dispatch({operation: 'abstract.list', operationId: randomUUID(), input: {projectId: binding.projectId}, actor: 'model', agent, sessionId: session.id});
+      const discover = operations.dispatch({operation: 'share.discover', operationId: randomUUID(), input: {targetProjectId: binding.projectId}, actor: 'model', agent, sessionId: session.id});
+      return {
+        ok: true,
+        value: {
+          own: own.ok ? own.value : null,
+          discoverable: discover.ok ? discover.value.sources : [],
+          ...(discover.ok ? {} : {discoverError: discover.error}),
+        },
+      };
+    });
+    tool('memory_shared_search', 'Search memory details of another local project only when the user has granted an active share to the current project. Results keep source references and are never copied.', {
+      sourceProjectId: {type: 'string', description: 'Registered source project id.'},
+      query: {type: 'string', description: 'Local lexical query.'},
+      limit: {type: 'integer', minimum: 1, maximum: 20},
+    }, async (args, exec) => modelDispatch('shared.search', {sourceProjectId: String(args.sourceProjectId ?? ''), query: String(args.query ?? ''), ...(args.limit === undefined ? {} : {limit: args.limit})}, exec));
 
 
     // Human command: one entry for the most common user actions; UI remains the full center.
@@ -363,6 +426,7 @@ export function apply(ctx, rawConfig = {}) {
             if (!binding) return {kind: 'error', text: 'Register this project first: /memory register <name>'};
             const text = checkedText(rest, 'memory text', 8000);
             const record = scopeOf(binding).store.put({id: `memory-${digest(`${binding.scopeRef}:${fingerprint({kind: 'lesson', text})}`)}`, sourceRef: `${session.id}/manual`, sourceVersion: `manual-${digest(text)}`, kind: 'lesson', text, origin: 'user'});
+            try { abstracts.noteChange(binding.projectId, {count: 1}); } catch { noteDiagnostic('abstract_dirty_failed'); }
             return {kind: 'success', text: `remembered ${record.id}`};
           }
           if (command === 'register') {
@@ -394,6 +458,25 @@ export function apply(ctx, rawConfig = {}) {
     ctx.effect(() => {
       scheduler.start();
       return () => scheduler.stop();
+    });
+    // Low-frequency local abstract maintenance. It never calls a model and never blocks chat;
+    // read-time basis validation still applies before any abstract is served or shared.
+    ctx.effect(() => {
+      let stopped = false;
+      const maintain = () => {
+        if (stopped) return;
+        let projects;
+        try { projects = registry.list(); } catch { noteDiagnostic('abstract_maintenance_failed'); return; }
+        for (const project of projects) {
+          if (project.state !== 'active') continue;
+          try { abstracts.read({projectId: project.projectId}); } catch { noteDiagnostic('abstract_maintenance_failed'); }
+        }
+      };
+      const timer = setInterval(maintain, config.abstracts.pollMs);
+      timer.unref?.();
+      const immediate = setTimeout(maintain, 1000);
+      immediate.unref?.();
+      return () => { stopped = true; clearInterval(timer); clearTimeout(immediate); };
     });
     reminders = installProofReminders(ctx, {
       registry,

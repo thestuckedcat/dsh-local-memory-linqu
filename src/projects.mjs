@@ -5,8 +5,8 @@ import {randomUUID} from 'node:crypto';
 import {checkedPath, checkedText, digest} from './scope.mjs';
 import {clean, fingerprint, integer, shape} from './validation.mjs';
 
-const SCHEMA_VERSION = 1;
-const CATALOG_SCHEMA = `
+const SCHEMA_VERSION = 2;
+const CATALOG_SCHEMA_V1 = `
 CREATE TABLE meta(key TEXT PRIMARY KEY,value TEXT NOT NULL);
 CREATE TABLE projects(
  project_id TEXT PRIMARY KEY,
@@ -60,7 +60,87 @@ CREATE TABLE report_revisions(
  PRIMARY KEY(report_id,revision)
 );
 CREATE TABLE operations(request_id TEXT PRIMARY KEY,fingerprint TEXT NOT NULL,result TEXT NOT NULL);
-PRAGMA user_version=${SCHEMA_VERSION};`;
+PRAGMA user_version=1;`;
+// M2 catalog migration (schema v2): project abstracts, user-granted cross-project
+// sharing relations, and capability-event consumption cursors/holds. Additive only;
+// no v1 table or row is rewritten.
+const CATALOG_MIGRATION_V2 = `
+CREATE TABLE abstract_revisions(
+ project_id TEXT NOT NULL,
+ revision INTEGER NOT NULL CHECK(revision>=1),
+ digest TEXT NOT NULL,
+ payload TEXT NOT NULL,
+ created_at TEXT NOT NULL,
+ PRIMARY KEY(project_id,revision)
+);
+CREATE INDEX abstract_revisions_project ON abstract_revisions(project_id,revision DESC);
+CREATE TABLE abstract_state(
+ project_id TEXT PRIMARY KEY,
+ current_revision INTEGER NOT NULL CHECK(current_revision>=0),
+ dirty_count INTEGER NOT NULL DEFAULT 0 CHECK(dirty_count>=0),
+ first_dirty_at TEXT,
+ last_change_at TEXT,
+ last_generated_at TEXT,
+ generation_route TEXT,
+ revision_summary TEXT
+);
+CREATE TABLE share_relations(
+ relation_id TEXT PRIMARY KEY,
+ source_project_id TEXT NOT NULL,
+ target_project_id TEXT NOT NULL,
+ state TEXT NOT NULL CHECK(state IN('active','revoked')),
+ decision_basis TEXT NOT NULL,
+ permission_ref TEXT NOT NULL,
+ abstract_revision INTEGER NOT NULL,
+ source_project_revision INTEGER NOT NULL,
+ created_at TEXT NOT NULL,
+ updated_at TEXT NOT NULL,
+ revoked_at TEXT,
+ UNIQUE(source_project_id,target_project_id)
+);
+CREATE INDEX share_relations_target ON share_relations(target_project_id,state);
+CREATE TABLE capability_cursors(
+ source_capability TEXT NOT NULL,
+ scope_ref TEXT NOT NULL,
+ last_generation INTEGER NOT NULL CHECK(last_generation>=0),
+ last_event_id TEXT,
+ last_outcome TEXT,
+ updated_at TEXT NOT NULL,
+ PRIMARY KEY(source_capability,scope_ref)
+);
+CREATE TABLE capability_holds(
+ source_capability TEXT NOT NULL,
+ scope_ref TEXT NOT NULL,
+ reason TEXT NOT NULL,
+ observed_generation INTEGER,
+ detail TEXT,
+ created_at TEXT NOT NULL,
+ updated_at TEXT NOT NULL,
+ PRIMARY KEY(source_capability,scope_ref,reason)
+);
+CREATE TABLE capability_events(
+ scope_ref TEXT NOT NULL,
+ event_id TEXT NOT NULL,
+ fingerprint TEXT NOT NULL,
+ applied INTEGER NOT NULL CHECK(applied IN(0,1)),
+ received_at TEXT NOT NULL,
+ PRIMARY KEY(scope_ref,event_id)
+);
+PRAGMA user_version=2;`;
+function schemaSignatureOf(db) {
+  return digest(JSON.stringify(db.prepare("SELECT type,name,tbl_name,sql FROM sqlite_schema WHERE sql IS NOT NULL ORDER BY type,name").all()));
+}
+function expectedSignature(sql) {
+  const probe = new DatabaseSync(':memory:');
+  try {
+    probe.exec(sql);
+    return schemaSignatureOf(probe);
+  } finally {
+    probe.close();
+  }
+}
+const CATALOG_V1_SIGNATURE = expectedSignature(CATALOG_SCHEMA_V1);
+const CATALOG_V2_SIGNATURE = expectedSignature(CATALOG_SCHEMA_V1 + CATALOG_MIGRATION_V2);
 
 export class CatalogError extends Error {
   constructor(code, message = code) {
@@ -136,17 +216,32 @@ export function openProjectCatalog(catalogPath, {identityPath} = {}) {
     db.exec('PRAGMA journal_mode=DELETE;PRAGMA synchronous=FULL;PRAGMA secure_delete=ON;PRAGMA busy_timeout=5000;');
     if (!existsSync(anchor)) {
       writeTransaction(db, () => {
-        db.exec(CATALOG_SCHEMA);
+        db.exec(CATALOG_SCHEMA_V1);
+        db.exec(CATALOG_MIGRATION_V2);
         const identity = randomUUID();
         db.prepare('INSERT INTO meta VALUES(?,?)').run('identity', identity);
         db.prepare('INSERT INTO meta VALUES(?,?)').run('schema_version', String(SCHEMA_VERSION));
         writeFileSync(anchor, JSON.stringify({schema_version: 1, identity}), {flag: 'wx', mode: 0o600});
       });
     }
-    if (db.prepare('PRAGMA user_version').get().user_version !== SCHEMA_VERSION) throw new CatalogError('CATALOG_SCHEMA_MISMATCH', 'unknown project catalog schema');
+    // Identity anchoring is a precondition of any schema change: a mismatched catalog must be
+    // refused while it is still untouched, not after a migration has already been committed.
     const identity = readIdentity(anchor);
     if (db.prepare("SELECT value FROM meta WHERE key='identity'").get()?.value !== identity) throw new CatalogError('CATALOG_IDENTITY_MISMATCH', 'project catalog identity changed');
-    const ctx = {db, path, anchor, identity, closed: false};
+    const version = db.prepare('PRAGMA user_version').get().user_version;
+    if (version === 1) {
+      // Explicit, additive v1 -> v2 migration. The old schema is validated byte-for-byte
+      // before any DDL runs, and both the migration and the version bump are transactional.
+      if (schemaSignatureOf(db) !== CATALOG_V1_SIGNATURE) throw new CatalogError('CATALOG_SCHEMA_MISMATCH', 'catalog v1 schema differs from the reviewed shape');
+      writeTransaction(db, () => {
+        db.exec(CATALOG_MIGRATION_V2);
+        db.prepare("UPDATE meta SET value=? WHERE key='schema_version'").run(String(SCHEMA_VERSION));
+      });
+    } else if (version !== SCHEMA_VERSION) {
+      throw new CatalogError('CATALOG_SCHEMA_MISMATCH', 'unknown project catalog schema');
+    }
+    if (schemaSignatureOf(db) !== CATALOG_V2_SIGNATURE) throw new CatalogError('CATALOG_SCHEMA_MISMATCH', 'project catalog schema differs from the reviewed shape');
+    const ctx = {db, path, anchor, identity, version: SCHEMA_VERSION, closed: false};
     return createCatalogApi(ctx);
   } catch (error) {
     try { db.close(); } catch { /* best effort */ }
@@ -212,6 +307,14 @@ export function openProjectCatalog(catalogPath, {identityPath} = {}) {
       catalogPath: path,
       identity: ctx.identity,
       db: ctx.db,
+      get version() { return ctx.version; },
+      read(fn) {
+        assertOpen();
+        if (typeof fn !== 'function') throw new CatalogError('INVALID_OPERATION', 'read callback required');
+        const result = fn();
+        if (result && typeof result.then === 'function') throw new CatalogError('INVALID_OPERATION', 'catalog read must be synchronous');
+        return result;
+      },
       write(fn) {
         assertOpen();
         if (typeof fn !== 'function') throw new CatalogError('INVALID_OPERATION', 'transaction callback required');
@@ -372,3 +475,8 @@ export function openProjectCatalog(catalogPath, {identityPath} = {}) {
     return Object.freeze(api);
   }
 }
+
+// Exported for the migration contract test only: the reviewed v1 DDL and the additive v2
+// migration must stay byte-stable so an installed catalog can be upgraded exactly once.
+export const CATALOG_SCHEMA_VERSION = SCHEMA_VERSION;
+export const CATALOG_V1_SCHEMA = CATALOG_SCHEMA_V1;

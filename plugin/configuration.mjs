@@ -28,6 +28,7 @@ export const DEFAULTS = Object.freeze({
   workSummary: Object.freeze({enabled: true, routeRef: '', evidenceRoots: Object.freeze([])}),
   reminders: Object.freeze({enabled: true, cooldownHours: 24, maxItems: 3}),
   reports: Object.freeze({exportRootRef: null, maxItems: 200}),
+  abstracts: Object.freeze({pollMs: 600000, dirtyCountThreshold: 10, ageHours: 24}),
   security: Object.freeze({rejectNonLocalPaths: true}),
 });
 
@@ -157,6 +158,8 @@ export function normalizeConfig(raw, {env = process.env} = {}) {
   keys(remindersRaw, Object.keys(DEFAULTS.reminders), 'reminders');
   const reportsRaw = input.reports === undefined ? DEFAULTS.reports : plain(input.reports, 'reports');
   keys(reportsRaw, Object.keys(DEFAULTS.reports), 'reports');
+  const abstractsRaw = input.abstracts === undefined ? DEFAULTS.abstracts : plain(input.abstracts, 'abstracts');
+  keys(abstractsRaw, Object.keys(DEFAULTS.abstracts), 'abstracts');
   const securityRaw = input.security === undefined ? DEFAULTS.security : plain(input.security, 'security');
   keys(securityRaw, Object.keys(DEFAULTS.security), 'security');
   if (securityRaw.rejectNonLocalPaths !== undefined && securityRaw.rejectNonLocalPaths !== true) throw new ConfigError('security.rejectNonLocalPaths cannot be disabled');
@@ -195,6 +198,11 @@ export function normalizeConfig(raw, {env = process.env} = {}) {
     reports: {
       exportRootRef: reportsRaw.exportRootRef === undefined || reportsRaw.exportRootRef === null ? null : localPath(reportsRaw.exportRootRef, 'reports.exportRootRef'),
       maxItems: integer(reportsRaw.maxItems, 1, 500, 'reports.maxItems', DEFAULTS.reports.maxItems),
+    },
+    abstracts: {
+      pollMs: integer(abstractsRaw.pollMs, 60000, 3600000, 'abstracts.pollMs', DEFAULTS.abstracts.pollMs),
+      dirtyCountThreshold: integer(abstractsRaw.dirtyCountThreshold, 1, 100, 'abstracts.dirtyCountThreshold', DEFAULTS.abstracts.dirtyCountThreshold),
+      ageHours: integer(abstractsRaw.ageHours, 1, 168, 'abstracts.ageHours', DEFAULTS.abstracts.ageHours),
     },
     security: {rejectNonLocalPaths: true},
   };

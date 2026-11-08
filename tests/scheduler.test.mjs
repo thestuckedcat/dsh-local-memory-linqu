@@ -169,3 +169,30 @@ test('queue pending/list views are read-only, bounded and oldest first',async t=
  assert.deepEqual({inputs:read(),budget:budget()},before);
  assert.equal(hooks.calls,0);
 });
+
+test('a settled memory_extract job notifies the dirty observer exactly once', async (t) => {
+ const seen = [];
+ const queue = {
+  pending: () => [{jobId: 'job-dirty', state: 'queued'}],
+  runJob: async () => ({jobId: 'job-dirty', state: 'completed', purpose: 'memory_extract', result: {ids: ['memory-a', 'memory-b']}}),
+  recoverInterrupted: () => 0,
+ };
+ const scheduler = createScheduler({
+  config: {scheduler: {pollMs: 1000, concurrency: 1, jobTimeoutMs: 1000, recoverOnStart: true}},
+  registry: {allScopes: () => ['scope-A'], activeScopes: () => ['scope-A']},
+  grants: {currentAuthorizationVersion: () => 'grant-v1:test:1'},
+  queueFor: () => queue,
+  onDiagnostic: () => {},
+  onJobSettled: (info) => seen.push(info),
+  now: () => new Date(),
+ });
+ t.after(async () => { await scheduler.stop(); });
+ scheduler.start();
+ await scheduler.tick();
+ await turn();
+ await scheduler.stop();
+ assert.equal(seen.length, 1);
+ assert.equal(seen[0].scopeRef, 'scope-A');
+ assert.equal(seen[0].result.purpose, 'memory_extract');
+ assert.deepEqual(seen[0].result.result.ids, ['memory-a', 'memory-b']);
+});

@@ -11,13 +11,14 @@ const errorCode=error=>error&&typeof error.code==='string'?error.code:'scheduler
  * re-selects a Provider route, never re-sends an unknown outcome and never retries a job
  * itself: the queue owns budgets, claims, authorization and terminal classification.
  */
-export function createScheduler({config,registry,grants,provider,limits,queueFor,onDiagnostic=()=>{},now=()=>new Date()}={}){
+export function createScheduler({config,registry,grants,provider,limits,queueFor,onDiagnostic=()=>{},onJobSettled,now=()=>new Date()}={}){
  if(!isPlain(config))throw new Error('Normalized memory configuration required');
  if(!registry||['allScopes','activeScopes'].every(key=>typeof registry[key]!=='function'))throw new Error('Trusted project registry required');
  if(!grants||typeof grants.currentAuthorizationVersion!=='function')throw new Error('Trusted execution grants required');
  if(provider!==undefined&&(provider===null||typeof provider!=='object'))throw new Error('Controlled Provider required');
  if(limits!==undefined&&(limits===null||typeof limits!=='object'))throw new Error('Trusted budget limits required');
  if(typeof queueFor!=='function'||typeof onDiagnostic!=='function'||typeof now!=='function')throw new Error('Trusted scheduler services required');
+ if(onJobSettled!==undefined&&typeof onJobSettled!=='function')throw new Error('Scheduler settled-job observer must be a function');
  const raw=config.scheduler===undefined?{}:config.scheduler;
  if(!isPlain(raw))throw new Error('Invalid scheduler configuration');
  const policy=Object.freeze({
@@ -47,7 +48,11 @@ export function createScheduler({config,registry,grants,provider,limits,queueFor
  }
  async function execute(entry,queue){
   try{
-   return await queue.runJob(entry.jobId,{timeoutMs:policy.jobTimeoutMs,signal:entry.controller.signal});
+   const result=await queue.runJob(entry.jobId,{timeoutMs:policy.jobTimeoutMs,signal:entry.controller.signal});
+   if(typeof onJobSettled==='function'){
+    try{onJobSettled(Object.freeze({scopeRef:entry.scopeRef,result}));}catch{/* observers never affect job classification */}
+   }
+   return result;
   }catch(error){
    lastError=errorCode(error);diagnostic('job_execution_failed');return undefined;
   }finally{

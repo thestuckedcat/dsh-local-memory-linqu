@@ -48,13 +48,17 @@ const USER_ONLY_OPERATIONS = new Set([
   'work.evidence.review', 'work.merge',
   'report.approve', 'report.export',
   'reminder.defer', 'reminder.disable',
+  'abstract.refresh', 'share.grant', 'share.revoke',
 ]);
 const USER_ONLY_PREFIXES = Object.freeze(['report.approve', 'reminder.']);
+// Memory mutations that can change a project abstract; entry may attach noteChange.
+const ABSTRACT_AFFECTING_OPERATIONS = new Set(['memory.correct', 'memory.archive', 'memory.restore', 'memory.delete']);
 // Read-only operations never duplicate a mutation, so they are not persisted into the catalog
 // idempotency table (the memory center polls them every few seconds).
 const READ_ONLY_OPERATIONS = new Set([
   'status', 'project.list', 'memory.search', 'memory.list', 'memory.get', 'task.list', 'task.inspect',
   'work.list', 'work.get', 'report.list', 'report.get',
+  'abstract.list', 'share.discover', 'share.list', 'shared.search',
 ]);
 const PASSTHROUGH_ERROR_CODES = new Set([
   'PROJECT_NOT_FOUND', 'STALE_REVISION', 'PROJECT_RETIRED', 'PROJECT_EXISTS', 'DUPLICATE_NAME',
@@ -377,7 +381,7 @@ function jobView(info, row, capabilities) {
  * @param {object} deps - {config, registry, grants, scheduler, provider, extras, now}
  * @returns {{dispatch(request: object): object}}
  */
-export function createManagementOperations({config, registry, grants, scheduler, provider, extras, status: statusProjection, now = () => new Date()} = {}) {
+export function createManagementOperations({config, registry, grants, scheduler, provider, extras, status: statusProjection, onMemoryChange, now = () => new Date()} = {}) {
   if (!config || typeof config !== 'object' || Array.isArray(config)) throw new Error('Normalized configuration required');
   if (!registry || typeof registry !== 'object' || typeof registry.getProject !== 'function' || typeof registry.list !== 'function' || typeof registry.storeFor !== 'function') throw new Error('Trusted project registry required');
   if (typeof now !== 'function') throw new Error('A clock function is required');
@@ -998,6 +1002,13 @@ export function createManagementOperations({config, registry, grants, scheduler,
       requireUser(normalized.operation, normalized.actor);
       const payloadFingerprint = fingerprintPayload(normalized);
       const envelope = replayOrRecord(normalized.operation, normalized.operationId, payloadFingerprint, () => envelopeFor(normalized.operation, normalized.input, normalized));
+      if (envelope.ok && typeof onMemoryChange === 'function' && ABSTRACT_AFFECTING_OPERATIONS.has(normalized.operation)) {
+        try {
+          onMemoryChange(Object.freeze({operation: normalized.operation, projectId: normalized.input.projectId, actor: normalized.actor, sessionId: normalized.sessionId}));
+        } catch {
+          /* Abstract dirty bookkeeping is best effort; read-time validation still detects invalid basis. */
+        }
+      }
       return envelope;
     } catch (error) {
       return {ok: false, error: mapError(error)};

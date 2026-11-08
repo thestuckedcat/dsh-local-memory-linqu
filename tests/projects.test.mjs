@@ -2,8 +2,9 @@ import assert from 'node:assert/strict';
 import {existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
+import {DatabaseSync} from 'node:sqlite';
 import test from 'node:test';
-import {openProjectCatalog} from '../src/projects.mjs';
+import {openProjectCatalog, CATALOG_SCHEMA_VERSION, CATALOG_V1_SCHEMA} from '../src/projects.mjs';
 
 function fixture(t) {
   const root = mkdtempSync(join(tmpdir(), 'memory-catalog-'));
@@ -177,4 +178,61 @@ test('catalog reports a stable schema version and rejects a foreign schema file'
   writeFileSync(path, 'not sqlite');
   assert.throws(() => openProjectCatalog(path, {identityPath: join(root, 'catalog.identity.json')}));
   assert.equal(existsSync(join(root, 'catalog.identity.json')), false);
+});
+
+const V1_IDENTITY = '11111111-1111-4111-8111-111111111111';
+function createV1Catalog(root) {
+  const path = join(root, 'catalog.sqlite'), anchor = join(root, 'catalog.identity.json');
+  const db = new DatabaseSync(path);
+  try {
+    db.exec(CATALOG_V1_SCHEMA);
+    db.prepare('INSERT INTO meta VALUES(?,?)').run('identity', V1_IDENTITY);
+    db.prepare('INSERT INTO meta VALUES(?,?)').run('schema_version', '1');
+    db.prepare('INSERT INTO projects VALUES(?,?,?,?,?,?,?,?)').run('project-' + 'a'.repeat(64), 'legacy', 'active', 1, 'user', '2026-01-01T00:00:00.000Z', '2026-01-01T00:00:00.000Z', null);
+  } finally { db.close(); }
+  writeFileSync(anchor, JSON.stringify({schema_version: 1, identity: V1_IDENTITY}));
+  return {path, anchor};
+}
+
+test('a reviewed v1 catalog migrates additively to v2 exactly once and keeps identity/data', (t) => {
+  const f = fixture(t);
+  const {path, anchor} = createV1Catalog(f.root);
+  const catalog = openProjectCatalog(path, {identityPath: anchor});
+  assert.equal(CATALOG_SCHEMA_VERSION, 2);
+  assert.equal(catalog.version, 2);
+  assert.equal(catalog.identity, V1_IDENTITY);
+  assert.deepEqual(catalog.listProjects().map((project) => project.name), ['legacy']);
+  assert.equal(catalog.db.prepare("SELECT value FROM meta WHERE key='schema_version'").get().value, '2');
+  assert.ok(catalog.db.prepare("SELECT name FROM sqlite_schema WHERE type='table' AND name='abstract_revisions'").get());
+  assert.ok(catalog.db.prepare("SELECT name FROM sqlite_schema WHERE type='table' AND name='share_relations'").get());
+  catalog.close();
+  const reopened = openProjectCatalog(path, {identityPath: anchor});
+  f.track(() => reopened.close());
+  assert.equal(reopened.version, 2);
+  assert.equal(reopened.listProjects().length, 1);
+});
+
+test('a v1-shaped catalog with drift is refused before migration and stays at v1', (t) => {
+  const f = fixture(t);
+  const {path, anchor} = createV1Catalog(f.root);
+  const db = new DatabaseSync(path);
+  try { db.exec('ALTER TABLE projects ADD COLUMN unexpected TEXT;'); } finally { db.close(); }
+  assert.throws(() => openProjectCatalog(path, {identityPath: anchor}), (error) => error?.code === 'CATALOG_SCHEMA_MISMATCH');
+  const probe = new DatabaseSync(path);
+  try {
+    assert.equal(probe.prepare('PRAGMA user_version').get().user_version, 1);
+    assert.equal(probe.prepare("SELECT name FROM sqlite_schema WHERE type='table' AND name='abstract_revisions'").get(), undefined);
+  } finally { probe.close(); }
+});
+
+test('identity mismatch is refused before a v1 catalog is migrated', (t) => {
+  const f = fixture(t);
+  const {path, anchor} = createV1Catalog(f.root);
+  writeFileSync(anchor, JSON.stringify({schema_version: 1, identity: '22222222-2222-4222-8222-222222222222'}));
+  assert.throws(() => openProjectCatalog(path, {identityPath: anchor}), (error) => error?.code === 'CATALOG_IDENTITY_MISMATCH');
+  const probe = new DatabaseSync(path);
+  try {
+    assert.equal(probe.prepare('PRAGMA user_version').get().user_version, 1, 'identity failure must not advance the schema');
+    assert.equal(probe.prepare("SELECT name FROM sqlite_schema WHERE type='table' AND name='abstract_revisions'").get(), undefined);
+  } finally { probe.close(); }
 });
