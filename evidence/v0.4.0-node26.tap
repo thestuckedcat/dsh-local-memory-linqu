@@ -2,2319 +2,2331 @@ TAP version 13
 # Subtest: refresh persists a canonical extractive basis with exact references and no paths
 ok 1 - refresh persists a canonical extractive basis with exact references and no paths
   ---
-  duration_ms: 141.7222
+  duration_ms: 145.8717
   type: 'test'
   ...
 # Subtest: a manual refresh appends a revision and keeps the previous revision
 ok 2 - a manual refresh appends a revision and keeps the previous revision
   ---
-  duration_ms: 111.0679
+  duration_ms: 113.0148
   type: 'test'
   ...
 # Subtest: read follows a correction of a cited memory immediately
 ok 3 - read follows a correction of a cited memory immediately
   ---
-  duration_ms: 114.9909
+  duration_ms: 116.7292
   type: 'test'
   ...
 # Subtest: read drops a deleted citation immediately and never resurrects it
 ok 4 - read drops a deleted citation immediately and never resurrects it
   ---
-  duration_ms: 123.5234
+  duration_ms: 130.4369
   type: 'test'
   ...
 # Subtest: read reports stale below the coalescing threshold and refreshes at ten noted changes
 ok 5 - read reports stale below the coalescing threshold and refreshes at ten noted changes
   ---
-  duration_ms: 144.3018
+  duration_ms: 151.4574
   type: 'test'
   ...
 # Subtest: configured coalescing thresholds are honored by a manager instance
 ok 6 - configured coalescing thresholds are honored by a manager instance
   ---
-  duration_ms: 117.8081
+  duration_ms: 122.0131
   type: 'test'
   ...
 # Subtest: read honors dirty thresholds even when the revision summary is unchanged
 ok 7 - read honors dirty thresholds even when the revision summary is unchanged
   ---
-  duration_ms: 122.2974
+  duration_ms: 125.2618
   type: 'test'
   ...
 # Subtest: read refreshes when the first noted change is twenty-four hours old
 ok 8 - read refreshes when the first noted change is twenty-four hours old
   ---
-  duration_ms: 124.8199
+  duration_ms: 122.5721
   type: 'test'
   ...
 # Subtest: noteChange counts changes, keeps the first dirty time and can run before any abstract
 ok 9 - noteChange counts changes, keeps the first dirty time and can run before any abstract
   ---
-  duration_ms: 36.3929
+  duration_ms: 35.8197
   type: 'test'
   ...
 # Subtest: a retired project keeps a historical view and refuses automatic refresh
 ok 10 - a retired project keeps a historical view and refuses automatic refresh
   ---
-  duration_ms: 102.4274
+  duration_ms: 107.6254
   type: 'test'
   ...
 # Subtest: a retired project without an abstract is readable only after a manual refresh
 ok 11 - a retired project without an abstract is readable only after a manual refresh
   ---
-  duration_ms: 57.5221
+  duration_ms: 63.8422
   type: 'test'
   ...
 # Subtest: list exposes active abstracts by default and retired abstracts on request
 ok 12 - list exposes active abstracts by default and retired abstracts on request
   ---
-  duration_ms: 150.8571
+  duration_ms: 154.4351
   type: 'test'
   ...
 # Subtest: status counts generated projects, retained revisions and dirty projects
 ok 13 - status counts generated projects, retained revisions and dirty projects
   ---
-  duration_ms: 157.9256
+  duration_ms: 154.5342
   type: 'test'
   ...
 # Subtest: a persisted abstract is read back after a catalog reopen without regeneration
 ok 14 - a persisted abstract is read back after a catalog reopen without regeneration
   ---
-  duration_ms: 111.854
+  duration_ms: 110.8319
   type: 'test'
   ...
 # Subtest: the basis keeps the sixty newest live records
 ok 15 - the basis keeps the sixty newest live records
   ---
-  duration_ms: 979.9361
+  duration_ms: 984.0852
   type: 'test'
   ...
 # Subtest: applicability prefers the registry probe and fails closed when the probe throws
 ok 16 - applicability prefers the registry probe and fails closed when the probe throws
   ---
-  duration_ms: 90.9772
+  duration_ms: 90.1541
   type: 'test'
   ...
 # Subtest: unknown projects, invalid reasons and invalid input fail closed
 ok 17 - unknown projects, invalid reasons and invalid input fail closed
   ---
-  duration_ms: 74.5936
+  duration_ms: 67.7759
   type: 'test'
   ...
 # Subtest: declared markers become a bounded, revalidated attribution mapping
 ok 18 - declared markers become a bounded, revalidated attribution mapping
   ---
-  duration_ms: 2.6711
+  duration_ms: 2.786
   type: 'test'
   ...
 # Subtest: no declared marker, unknown ref, or stale live record fails closed
 ok 19 - no declared marker, unknown ref, or stale live record fails closed
   ---
-  duration_ms: 0.2128
+  duration_ms: 0.2138
   type: 'test'
   ...
 # Subtest: duplicate markers collapse and an over-limit mapping is not truncated
 ok 20 - duplicate markers collapse and an over-limit mapping is not truncated
   ---
-  duration_ms: 0.745
+  duration_ms: 0.732
   type: 'test'
   ...
 # Subtest: attribution remains scoped to the current session binding
 ok 21 - attribution remains scoped to the current session binding
   ---
-  duration_ms: 0.1319
+  duration_ms: 0.1379
   type: 'test'
   ...
 # Subtest: CJK recall and management export stay inside explicit project/worktree/version scopes
 ok 22 - CJK recall and management export stay inside explicit project/worktree/version scopes
   ---
-  duration_ms: 109.1452
+  duration_ms: 132.8432
   type: 'test'
   ...
 # Subtest: records survive reopen without a model or network dependency
 ok 23 - records survive reopen without a model or network dependency
   ---
-  duration_ms: 37.5803
+  duration_ms: 47.4549
   type: 'test'
   ...
 # Subtest: missing scope, caller scope override, and source identity overwrite fail closed
 ok 24 - missing scope, caller scope override, and source identity overwrite fail closed
   ---
-  duration_ms: 29.4231
+  duration_ms: 34.0134
   type: 'test'
   ...
 # Subtest: same source/version/content yields one evidence record across reopen
 ok 25 - same source/version/content yields one evidence record across reopen
   ---
-  duration_ms: 40.8007
+  duration_ms: 47.984
   type: 'test'
   ...
 # Subtest: FTS operators do not widen recall and empty query never lists all records
 ok 26 - FTS operators do not widen recall and empty query never lists all records
   ---
-  duration_ms: 35.063
+  duration_ms: 41.9086
   type: 'test'
   ...
 # Subtest: secret-like material and model-assigned path fields cannot enter local records
 ok 27 - secret-like material and model-assigned path fields cannot enter local records
   ---
-  duration_ms: 17.7295
+  duration_ms: 19.5175
   type: 'test'
   ...
 # Subtest: unknown future schema and damaged FTS do not silently fall back to raw LIKE
 ok 28 - unknown future schema and damaged FTS do not silently fall back to raw LIKE
   ---
-  duration_ms: 35.2467
+  duration_ms: 40.9653
   type: 'test'
   ...
 # Subtest: scope identity is deterministic and keeps worktree/revision/build distinctions
 ok 29 - scope identity is deterministic and keeps worktree/revision/build distinctions
   ---
-  duration_ms: 3.2934
+  duration_ms: 3.3345
   type: 'test'
   ...
 # Subtest: quoted credential labels in JSON snippets are rejected before persistence
 ok 30 - quoted credential labels in JSON snippets are rejected before persistence
   ---
-  duration_ms: 17.7986
+  duration_ms: 19.2474
   type: 'test'
   ...
 # Subtest: a bounded snapshot rejects overflow rather than silently dropping saved records
 ok 31 - a bounded snapshot rejects overflow rather than silently dropping saved records
   ---
-  duration_ms: 5070.4157
+  duration_ms: 5855.2073
   type: 'test'
   ...
 # Subtest: missing or rewritten index triggers and changed FTS definition are refused before writing
 ok 32 - missing or rewritten index triggers and changed FTS definition are refused before writing
   ---
-  duration_ms: 110.1132
+  duration_ms: 117.2504
   type: 'test'
   ...
 # Subtest: common prefixed and camelCase credential labels never reach storage or export
 ok 33 - common prefixed and camelCase credential labels never reach storage or export
   ---
-  duration_ms: 20.9552
+  duration_ms: 20.9739
   type: 'test'
   ...
 # Subtest: ordinary assignments cannot hide a later credential assignment
 ok 34 - ordinary assignments cannot hide a later credential assignment
   ---
-  duration_ms: 20.846
+  duration_ms: 20.6806
   type: 'test'
   ...
 # Subtest: a quoted value cannot hide its own credential assignment from input filtering
 ok 35 - a quoted value cannot hide its own credential assignment from input filtering
   ---
-  duration_ms: 17.8649
+  duration_ms: 18.0651
   type: 'test'
   ...
 # Subtest: single CJK character recall is preserved
 ok 36 - single CJK character recall is preserved
   ---
-  duration_ms: 29.7209
+  duration_ms: 31.1996
   type: 'test'
   ...
 # Subtest: UNC, device, relative and unapproved drives fail before filesystem access
 ok 37 - UNC, device, relative and unapproved drives fail before filesystem access
   ---
-  duration_ms: 0.6381
+  duration_ms: 0.5279
   type: 'test'
   ...
 # Subtest: ancestor reparse metadata is rejected before any access below it
 ok 38 - ancestor reparse metadata is rejected before any access below it
   ---
-  duration_ms: 3.1266
+  duration_ms: 3.2288
   type: 'test'
   ...
 # Subtest: capability events require a trusted baseline before applying sequentially
 ok 39 - capability events require a trusted baseline before applying sequentially
   ---
-  duration_ms: 71.5783
+  duration_ms: 77.8583
   type: 'test'
   ...
 # Subtest: a generation gap, late event or non-completed outcome is held and never applied
 ok 40 - a generation gap, late event or non-completed outcome is held and never applied
   ---
-  duration_ms: 51.6895
+  duration_ms: 51.363
   type: 'test'
   ...
 # Subtest: a held unregistered scope and invalid events fail closed visibly
 ok 41 - a held unregistered scope and invalid events fail closed visibly
   ---
-  duration_ms: 34.2045
+  duration_ms: 33.7222
   type: 'test'
   ...
 # Subtest: an optional trusted getScopeState can refuse a producer-state mismatch
 ok 42 - an optional trusted getScopeState can refuse a producer-state mismatch
   ---
-  duration_ms: 33.4651
+  duration_ms: 33.8947
   type: 'test'
   ...
 # Subtest: defaults keep the configured approved provider and non-destructive limits
 ok 43 - defaults keep the configured approved provider and non-destructive limits
   ---
-  duration_ms: 2.3357
+  duration_ms: 2.419
   type: 'test'
   ...
 # Subtest: profile comes from the Host environment and cannot escape the data root
 ok 44 - profile comes from the Host environment and cannot escape the data root
   ---
-  duration_ms: 0.4085
+  duration_ms: 0.3885
   type: 'test'
   ...
 # Subtest: unknown fields, wrong route references and disabled path security are rejected
 ok 45 - unknown fields, wrong route references and disabled path security are rejected
   ---
-  duration_ms: 0.1634
+  duration_ms: 0.1597
   type: 'test'
   ...
 # Subtest: budget and recall bounds cannot be enlarged beyond the reviewed caps
 ok 46 - budget and recall bounds cannot be enlarged beyond the reviewed caps
   ---
-  duration_ms: 0.2182
+  duration_ms: 0.2385
   type: 'test'
   ...
 # Subtest: declared projects require unique names and local absolute repository roots
 ok 47 - declared projects require unique names and local absolute repository roots
   ---
-  duration_ms: 0.8809
+  duration_ms: 0.9029
   type: 'test'
   ...
 # Subtest: route approval is synchronous, frozen and changes when routing changes
 ok 48 - route approval is synchronous, frozen and changes when routing changes
   ---
-  duration_ms: 0.3307
+  duration_ms: 0.349
   type: 'test'
   ...
 # Subtest: purpose routes follow the configured work-summary route
 ok 49 - purpose routes follow the configured work-summary route
   ---
-  duration_ms: 0.1256
+  duration_ms: 0.1295
   type: 'test'
   ...
 # Subtest: config digest is stable across re-reads and independent of profile directory
 ok 50 - config digest is stable across re-reads and independent of profile directory
   ---
-  duration_ms: 0.2176
+  duration_ms: 0.2152
   type: 'test'
   ...
 # Subtest: work-summary evidence roots are bounded local paths
 ok 51 - work-summary evidence roots are bounded local paths
   ---
-  duration_ms: 0.2945
+  duration_ms: 0.3115
   type: 'test'
   ...
 # Subtest: reports export root can be configured locally but not as a bare relative path
 ok 52 - reports export root can be configured locally but not as a bare relative path
   ---
-  duration_ms: 0.2944
+  duration_ms: 0.3016
   type: 'test'
   ...
 # Subtest: the defaults object itself is frozen and never mutated by normalization
 ok 53 - the defaults object itself is frozen and never mutated by normalization
   ---
-  duration_ms: 0.1333
+  duration_ms: 0.1426
   type: 'test'
   ...
 # Subtest: temporary path helpers in the test directory are usable data roots
 ok 54 - temporary path helpers in the test directory are usable data roots
   ---
-  duration_ms: 3.8017
+  duration_ms: 3.7203
   type: 'test'
   ...
 # Subtest: memory-only snapshot pins 2..16 active memories and builds a bounded canonical input
 ok 55 - memory-only snapshot pins 2..16 active memories and builds a bounded canonical input
   ---
-  duration_ms: 61.8483
+  duration_ms: 66.9049
   type: 'test'
   ...
 # Subtest: selection, applicability and input-size failures happen before any permission exists
 ok 56 - selection, applicability and input-size failures happen before any permission exists
   ---
-  duration_ms: 102.9201
+  duration_ms: 95.1565
   type: 'test'
   ...
 # Subtest: batch permission is user-only, expires, and read-time recheck fails closed on change
 ok 57 - batch permission is user-only, expires, and read-time recheck fails closed on change
   ---
-  duration_ms: 74.6166
+  duration_ms: 68.1909
   type: 'test'
   ...
 # Subtest: memory mutation, binding drift and a tampered manifest fail the read-time recheck
 ok 58 - memory mutation, binding drift and a tampered manifest fail the read-time recheck
   ---
-  duration_ms: 133.2369
+  duration_ms: 125.265
   type: 'test'
   ...
 # Subtest: a complete verbatim duplicate group validates with local candidate metadata
 ok 59 - a complete verbatim duplicate group validates with local candidate metadata
   ---
-  duration_ms: 1.798
+  duration_ms: 1.7727
   type: 'test'
   ...
 # Subtest: coverage, unknown refs and duplicate refs fail closed
 ok 60 - coverage, unknown refs and duplicate refs fail closed
   ---
-  duration_ms: 0.8584
+  duration_ms: 0.8191
   type: 'test'
   ...
 # Subtest: support and excerpt references are bounded by the manifest
 ok 61 - support and excerpt references are bounded by the manifest
   ---
-  duration_ms: 0.2869
+  duration_ms: 0.2797
   type: 'test'
   ...
 # Subtest: duplicates require verbatim text and source_correction requires a permitted excerpt
 ok 62 - duplicates require verbatim text and source_correction requires a permitted excerpt
   ---
-  duration_ms: 0.2424
+  duration_ms: 0.2412
   type: 'test'
   ...
 # Subtest: capacity, schema, input digest and warning rules are enforced
 ok 63 - capacity, schema, input digest and warning rules are enforced
   ---
-  duration_ms: 0.3791
+  duration_ms: 0.3707
   type: 'test'
   ...
 # Subtest: enqueue persists a pinned queued job and replays the same request id
 ok 64 - enqueue persists a pinned queued job and replays the same request id
   ---
-  duration_ms: 84.315
+  duration_ms: 81.3464
   type: 'test'
   ...
 # Subtest: stale expected versions and unsupported selections are refused before any job row
 ok 65 - stale expected versions and unsupported selections are refused before any job row
   ---
-  duration_ms: 43.6905
+  duration_ms: 42.3666
   type: 'test'
   ...
 # Subtest: runJob validates model output, persists a candidate without advancing the scope revision
 ok 66 - runJob validates model output, persists a candidate without advancing the scope revision
   ---
-  duration_ms: 93.3985
+  duration_ms: 97.1239
   type: 'test'
   ...
 # Subtest: runJob rejects invalid model output and clears the input without a candidate
 ok 67 - runJob rejects invalid model output and clears the input without a candidate
   ---
-  duration_ms: 73.6882
+  duration_ms: 79.6591
   type: 'test'
   ...
 # Subtest: pending capacity, cancel idempotency, and recovery of running jobs
 ok 68 - pending capacity, cancel idempotency, and recovery of running jobs
   ---
-  duration_ms: 98.0896
+  duration_ms: 97.7127
   type: 'test'
   ...
 # Subtest: a queued job whose memory changed is settled stale and its input is cleared
 ok 69 - a queued job whose memory changed is settled stale and its input is cleared
   ---
-  duration_ms: 69.3205
+  duration_ms: 68.3641
   type: 'test'
   ...
 # Subtest: a running consolidation job cannot be reported as cancelled without a trusted abort
 ok 70 - a running consolidation job cannot be reported as cancelled without a trusted abort
   ---
-  duration_ms: 57.0011
+  duration_ms: 55.3622
   type: 'test'
   ...
 # Subtest: deleting a selected memory invalidates the queued job and erases its stored input
 ok 71 - deleting a selected memory invalidates the queued job and erases its stored input
   ---
-  duration_ms: 64.0272
+  duration_ms: 59.4175
+  type: 'test'
+  ...
+# Subtest: capability/restore invalidation clears queued consolidation inputs for the whole scope
+ok 72 - capability/restore invalidation clears queued consolidation inputs for the whole scope
+  ---
+  duration_ms: 60.6103
   type: 'test'
   ...
 # Subtest: a new root creates content v3 and authority v2 directly
-ok 72 - a new root creates content v3 and authority v2 directly
+ok 73 - a new root creates content v3 and authority v2 directly
   ---
-  duration_ms: 42.3789
+  duration_ms: 41.6759
   type: 'test'
   ...
 # Subtest: v3 content and v2 authority additions expose the exact design columns and constraints
-ok 73 - v3 content and v2 authority additions expose the exact design columns and constraints
+ok 74 - v3 content and v2 authority additions expose the exact design columns and constraints
   ---
-  duration_ms: 21.3645
+  duration_ms: 21.0126
   type: 'test'
   ...
 # Subtest: content v2 and authority v1 migrate transactionally while preserving data, identity and revision
-ok 74 - content v2 and authority v1 migrate transactionally while preserving data, identity and revision
+ok 75 - content v2 and authority v1 migrate transactionally while preserving data, identity and revision
   ---
-  duration_ms: 139.2138
+  duration_ms: 122.0292
   type: 'test'
   ...
 # Subtest: legacy content v1 passes through v1→v2→v3 only with the explicit legacy path
-ok 75 - legacy content v1 passes through v1→v2→v3 only with the explicit legacy path
+ok 76 - legacy content v1 passes through v1→v2→v3 only with the explicit legacy path
   ---
-  duration_ms: 54.0977
+  duration_ms: 48.0224
   type: 'test'
   ...
 # Subtest: a failure while applying either side rolls both databases back without partial schema or data loss
-ok 76 - a failure while applying either side rolls both databases back without partial schema or data loss
+ok 77 - a failure while applying either side rolls both databases back without partial schema or data loss
   ---
-  duration_ms: 109.3905
+  duration_ms: 104.8492
   type: 'test'
   ...
 # Subtest: unknown or modified schemas are refused before any write
-ok 77 - unknown or modified schemas are refused before any write
+ok 78 - unknown or modified schemas are refused before any write
   ---
-  duration_ms: 103.7904
+  duration_ms: 101.7969
   type: 'test'
   ...
 # Subtest: mixed already-migrated and legacy databases advance only through their verified signatures
-ok 78 - mixed already-migrated and legacy databases advance only through their verified signatures
+ok 79 - mixed already-migrated and legacy databases advance only through their verified signatures
   ---
-  duration_ms: 320.5586
+  duration_ms: 299.92
   type: 'test'
   ...
 # Subtest: evidence excerpts keep text in content and register every root plus the memory dependency in authority
-ok 79 - evidence excerpts keep text in content and register every root plus the memory dependency in authority
+ok 80 - evidence excerpts keep text in content and register every root plus the memory dependency in authority
   ---
-  duration_ms: 71.0631
+  duration_ms: 61.767
   type: 'test'
   ...
 # Subtest: forgetting a memory makes its excerpt unreadable, and forgetting the excerpt clears its body bytes
-ok 80 - forgetting a memory makes its excerpt unreadable, and forgetting the excerpt clears its body bytes
+ok 81 - forgetting a memory makes its excerpt unreadable, and forgetting the excerpt clears its body bytes
   ---
-  duration_ms: 72.1306
+  duration_ms: 63.1453
   type: 'test'
   ...
 # Subtest: tampered excerpt bodies fail closed instead of returning unverified text
-ok 81 - tampered excerpt bodies fail closed instead of returning unverified text
+ok 82 - tampered excerpt bodies fail closed instead of returning unverified text
   ---
-  duration_ms: 52.2956
+  duration_ms: 48.3758
   type: 'test'
   ...
 # Subtest: source blocks refuse new excerpts and make existing excerpts unreadable without deleting the memory
-ok 82 - source blocks refuse new excerpts and make existing excerpts unreadable without deleting the memory
+ok 83 - source blocks refuse new excerpts and make existing excerpts unreadable without deleting the memory
   ---
-  duration_ms: 62.4108
+  duration_ms: 51.0948
   type: 'test'
   ...
 # Subtest: v3 snapshots export live version metadata/source refs while v2 and v3 restores stay compatible
-ok 83 - v3 snapshots export live version metadata/source refs while v2 and v3 restores stay compatible
+ok 84 - v3 snapshots export live version metadata/source refs while v2 and v3 restores stay compatible
   ---
-  duration_ms: 118.9211
+  duration_ms: 108.46
   type: 'test'
   ...
 # Subtest: excerpt entries do not consume the bounded snapshot record budget
-ok 84 - excerpt entries do not consume the bounded snapshot record budget
+ok 85 - excerpt entries do not consume the bounded snapshot record budget
   ---
-  duration_ms: 6115.7889
+  duration_ms: 4684.6347
   type: 'test'
   ...
 # Subtest: candidate read and publish create an immutable version with a new head
-ok 85 - candidate read and publish create an immutable version with a new head
+ok 86 - candidate read and publish create an immutable version with a new head
   ---
-  duration_ms: 163.0018
+  duration_ms: 156.2854
   type: 'test'
   ...
 # Subtest: publish is idempotent and rejects stale digests, epochs or head revisions
-ok 86 - publish is idempotent and rejects stale digests, epochs or head revisions
+ok 87 - publish is idempotent and rejects stale digests, epochs or head revisions
   ---
-  duration_ms: 140.879
+  duration_ms: 137.1312
   type: 'test'
   ...
 # Subtest: a memory mutation before publish blocks the candidate and version read fails closed
-ok 87 - a memory mutation before publish blocks the candidate and version read fails closed
+ok 88 - a memory mutation before publish blocks the candidate and version read fails closed
   ---
-  duration_ms: 131.6707
+  duration_ms: 134.7195
   type: 'test'
   ...
 # Subtest: memory.derived exposes the published head with full original texts and unverified markers
-ok 88 - memory.derived exposes the published head with full original texts and unverified markers
+ok 89 - memory.derived exposes the published head with full original texts and unverified markers
   ---
-  duration_ms: 140.4328
+  duration_ms: 138.7563
   type: 'test'
   ...
 # Subtest: explicit memory deletion purges derived candidate/version bodies and clears the head
-ok 89 - explicit memory deletion purges derived candidate/version bodies and clears the head
+ok 90 - explicit memory deletion purges derived candidate/version bodies and clears the head
   ---
-  duration_ms: 139.3325
+  duration_ms: 140.8194
   type: 'test'
   ...
 # Subtest: correcting a memory also invalidates its derived views
-ok 90 - correcting a memory also invalidates its derived views
+ok 91 - correcting a memory also invalidates its derived views
   ---
-  duration_ms: 156.5508
+  duration_ms: 149.0606
   type: 'test'
   ...
 # Subtest: publish rechecks the batch permission and fails closed after revocation
-ok 91 - publish rechecks the batch permission and fails closed after revocation
+ok 92 - publish rechecks the batch permission and fails closed after revocation
   ---
-  duration_ms: 121.7136
+  duration_ms: 121.7382
   type: 'test'
   ...
 # Subtest: archiving a source memory invalidates the derived head but keeps its body
-ok 92 - archiving a source memory invalidates the derived head but keeps its body
+ok 93 - archiving a source memory invalidates the derived head but keeps its body
   ---
-  duration_ms: 137.1993
+  duration_ms: 138.9605
+  type: 'test'
+  ...
+# Subtest: publish fails closed when no publication verifier is attached
+ok 94 - publish fails closed when no publication verifier is attached
+  ---
+  duration_ms: 117.0096
   type: 'test'
   ...
 # Subtest: correction intent is narrow and does not fire on ordinary discussion
-ok 93 - correction intent is narrow and does not fire on ordinary discussion
+ok 95 - correction intent is narrow and does not fire on ordinary discussion
   ---
-  duration_ms: 0.9122
+  duration_ms: 0.8703
   type: 'test'
   ...
 # Subtest: an explicit correction suspends only the cited memory and purges its excerpt
-ok 94 - an explicit correction suspends only the cited memory and purges its excerpt
+ok 96 - an explicit correction suspends only the cited memory and purges its excerpt
   ---
-  duration_ms: 72.1531
+  duration_ms: 60.1687
   type: 'test'
   ...
 # Subtest: a correction without a cited memory or with another session is not applied
-ok 95 - a correction without a cited memory or with another session is not applied
+ok 97 - a correction without a cited memory or with another session is not applied
   ---
-  duration_ms: 28.878
+  duration_ms: 27.7817
   type: 'test'
   ...
 # Subtest: explicit memory deletion purges its excerpt body and leaves unrelated excerpts readable
-ok 96 - explicit memory deletion purges its excerpt body and leaves unrelated excerpts readable
+ok 98 - explicit memory deletion purges its excerpt body and leaves unrelated excerpts readable
   ---
-  duration_ms: 79.5075
+  duration_ms: 80.7611
   type: 'test'
   ...
 # Subtest: correcting a memory purges the superseded memory excerpt
-ok 97 - correcting a memory purges the superseded memory excerpt
+ok 99 - correcting a memory purges the superseded memory excerpt
   ---
-  duration_ms: 47.9761
+  duration_ms: 51.0647
   type: 'test'
   ...
 # Subtest: archiving keeps the excerpt dependent but unreadable until restore
-ok 98 - archiving keeps the excerpt dependent but unreadable until restore
+ok 100 - archiving keeps the excerpt dependent but unreadable until restore
   ---
-  duration_ms: 56.4173
+  duration_ms: 56.8661
   type: 'test'
   ...
 # Subtest: execution is denied by default even for an intact queued job and approved model route
-ok 99 - execution is denied by default even for an intact queued job and approved model route
+ok 101 - execution is denied by default even for an intact queued job and approved model route
   ---
-  duration_ms: 50.0059
+  duration_ms: 48.9621
   type: 'test'
   ...
 # Subtest: revoking a queued admission prevents dispatch and discards the durable input
-ok 100 - revoking a queued admission prevents dispatch and discards the durable input
+ok 102 - revoking a queued admission prevents dispatch and discards the durable input
   ---
-  duration_ms: 32.6691
+  duration_ms: 30.7864
   type: 'test'
   ...
 # Subtest: permission revoked in flight returns unknown, retains quarantine, and ignores late output
-ok 101 - permission revoked in flight returns unknown, retains quarantine, and ignores late output
+ok 103 - permission revoked in flight returns unknown, retains quarantine, and ignores late output
   ---
-  duration_ms: 67.3809
+  duration_ms: 69.3632
   type: 'test'
   ...
 # Subtest: a claim-to-dispatch denial is not dispatched and a replaced signal cannot reuse a lease
-ok 102 - a claim-to-dispatch denial is not dispatched and a replaced signal cannot reuse a lease
+ok 104 - a claim-to-dispatch denial is not dispatched and a replaced signal cannot reuse a lease
   ---
-  duration_ms: 84.933
+  duration_ms: 78.9496
   type: 'test'
   ...
 # Subtest: post-write authorization failure rolls back ordinary and annual records atomically
-ok 103 - post-write authorization failure rolls back ordinary and annual records atomically
+ok 105 - post-write authorization failure rolls back ordinary and annual records atomically
   ---
-  duration_ms: 111.8759
+  duration_ms: 99.5144
   type: 'test'
   ...
 # Subtest: annual merge may advance its own epoch but post-merge revocation rolls the whole change back
-ok 104 - annual merge may advance its own epoch but post-merge revocation rolls the whole change back
+ok 106 - annual merge may advance its own epoch but post-merge revocation rolls the whole change back
   ---
-  duration_ms: 125.178
+  duration_ms: 119.2595
   type: 'test'
   ...
 # Subtest: a synchronous Provider throw becomes a contained unknown outcome
-ok 105 - a synchronous Provider throw becomes a contained unknown outcome
+ok 107 - a synchronous Provider throw becomes a contained unknown outcome
   ---
-  duration_ms: 41.5156
+  duration_ms: 37.5802
   type: 'test'
   ...
 # Subtest: revocation winning the completion race keeps quarantine even if the Provider fulfills immediately
-ok 106 - revocation winning the completion race keeps quarantine even if the Provider fulfills immediately
+ok 108 - revocation winning the completion race keeps quarantine even if the Provider fulfills immediately
   ---
-  duration_ms: 49.2611
+  duration_ms: 51.2632
   type: 'test'
   ...
 # Subtest: caller cancellation between fulfilled response and queue commit never saves results
-ok 107 - caller cancellation between fulfilled response and queue commit never saves results
+ok 109 - caller cancellation between fulfilled response and queue commit never saves results
   ---
-  duration_ms: 189.1686
+  duration_ms: 178.523
   type: 'test'
   ...
 # Subtest: lifecycle or route changes inside final approval cannot overwrite current worker state
-ok 108 - lifecycle or route changes inside final approval cannot overwrite current worker state
+ok 110 - lifecycle or route changes inside final approval cannot overwrite current worker state
   ---
-  duration_ms: 100.664
+  duration_ms: 96.0469
   type: 'test'
   ...
 # Subtest: a changed approval after model completion cannot commit ordinary or annual output
-ok 109 - a changed approval after model completion cannot commit ordinary or annual output
+ok 111 - a changed approval after model completion cannot commit ordinary or annual output
   ---
-  duration_ms: 91.3612
+  duration_ms: 84.6326
   type: 'test'
   ...
 # Subtest: authorization callbacks receive immutable task identity without plaintext
-ok 110 - authorization callbacks receive immutable task identity without plaintext
+ok 112 - authorization callbacks receive immutable task identity without plaintext
   ---
-  duration_ms: 47.4251
+  duration_ms: 44.6835
   type: 'test'
   ...
 # Subtest: invalid, throwing or asynchronous execution authority is observed and fails closed
-ok 111 - invalid, throwing or asynchronous execution authority is observed and fails closed
+ok 113 - invalid, throwing or asynchronous execution authority is observed and fails closed
   ---
-  duration_ms: 107.0336
+  duration_ms: 98.7807
   type: 'test'
   ...
 # Subtest: memory.attribution resolves only within the caller session
-ok 112 - memory.attribution resolves only within the caller session
+ok 114 - memory.attribution resolves only within the caller session
   ---
-  duration_ms: 0.9555
+  duration_ms: 0.9545
   type: 'test'
   ...
 # Subtest: memory.attribution fails closed for missing sessions and invalid turns
-ok 113 - memory.attribution fails closed for missing sessions and invalid turns
+ok 115 - memory.attribution fails closed for missing sessions and invalid turns
   ---
-  duration_ms: 0.1197
+  duration_ms: 0.1133
   type: 'test'
   ...
 # Subtest: memory.excerpts lists metadata for an explicit project without returning bodies
-ok 114 - memory.excerpts lists metadata for an explicit project without returning bodies
+ok 116 - memory.excerpts lists metadata for an explicit project without returning bodies
   ---
-  duration_ms: 0.2709
+  duration_ms: 0.236
   type: 'test'
   ...
 # Subtest: the stream gate supports direct yield delegation for ordinary requests without changing the downstream stream
-ok 115 - the stream gate supports direct yield delegation for ordinary requests without changing the downstream stream
+ok 117 - the stream gate supports direct yield delegation for ordinary requests without changing the downstream stream
   ---
-  duration_ms: 42.1732
+  duration_ms: 36.8911
   type: 'test'
   ...
 # Subtest: record accepts the exact session-hooks payload shape, including an absent or undefined revision
-ok 116 - record accepts the exact session-hooks payload shape, including an absent or undefined revision
+ok 118 - record accepts the exact session-hooks payload shape, including an absent or undefined revision
   ---
-  duration_ms: 75.6747
+  duration_ms: 63.4216
   type: 'test'
   ...
 # Subtest: verify passes, the gate calls next once and the deep frozen request is untouched
-ok 117 - verify passes, the gate calls next once and the deep frozen request is untouched
+ok 119 - verify passes, the gate calls next once and the deep frozen request is untouched
   ---
-  duration_ms: 76.9426
+  duration_ms: 69.5632
   type: 'test'
   ...
 # Subtest: a deleted or archived recalled memory blocks dispatch and never calls next
-ok 118 - a deleted or archived recalled memory blocks dispatch and never calls next
+ok 120 - a deleted or archived recalled memory blocks dispatch and never calls next
   ---
-  duration_ms: 97.5494
+  duration_ms: 74.1312
   type: 'test'
   ...
 # Subtest: project retirement, recall disable, authorization, route and binding changes block dispatch
-ok 119 - project retirement, recall disable, authorization, route and binding changes block dispatch
+ok 121 - project retirement, recall disable, authorization, route and binding changes block dispatch
   ---
-  duration_ms: 208.7638
+  duration_ms: 179.8447
   type: 'test'
   ...
 # Subtest: replaced text for the same message identity blocks before any dispatch
-ok 120 - replaced text for the same message identity blocks before any dispatch
+ok 122 - replaced text for the same message identity blocks before any dispatch
   ---
-  duration_ms: 70.4822
+  duration_ms: 55.9089
   type: 'test'
   ...
 # Subtest: ordinary requests pass through, while an unregistered own recall message fails closed
-ok 121 - ordinary requests pass through, while an unregistered own recall message fails closed
+ok 123 - ordinary requests pass through, while an unregistered own recall message fails closed
   ---
-  duration_ms: 33.1833
+  duration_ms: 28.6649
   type: 'test'
   ...
 # Subtest: a request mixing a verified projection with an unregistered own recall message fails closed
-ok 122 - a request mixing a verified projection with an unregistered own recall message fails closed
+ok 124 - a request mixing a verified projection with an unregistered own recall message fails closed
   ---
-  duration_ms: 41.0244
+  duration_ms: 31.5735
   type: 'test'
   ...
 # Subtest: malformed requests never throw and never dispatch memory content
-ok 123 - malformed requests never throw and never dispatch memory content
+ok 125 - malformed requests never throw and never dispatch memory content
   ---
-  duration_ms: 32.29
+  duration_ms: 26.369
   type: 'test'
   ...
 # Subtest: commit and invalidate transitions are explicit and idempotent
-ok 124 - commit and invalidate transitions are explicit and idempotent
+ok 126 - commit and invalidate transitions are explicit and idempotent
   ---
-  duration_ms: 105.8213
+  duration_ms: 87.6492
   type: 'test'
   ...
 # Subtest: a missing session or unreadable store fails closed
-ok 125 - a missing session or unreadable store fails closed
+ok 127 - a missing session or unreadable store fails closed
   ---
-  duration_ms: 68.4005
+  duration_ms: 58.6598
   type: 'test'
   ...
 # Subtest: a passed projection is re-verified on every later request and cannot silently go stale
-ok 126 - a passed projection is re-verified on every later request and cannot silently go stale
+ok 128 - a passed projection is re-verified on every later request and cannot silently go stale
   ---
-  duration_ms: 51.7414
+  duration_ms: 42.7519
   type: 'test'
   ...
 # Subtest: a previously dispatched own message blocks the same request after deletion and other sessions pass
-ok 127 - a previously dispatched own message blocks the same request after deletion and other sessions pass
+ok 129 - a previously dispatched own message blocks the same request after deletion and other sessions pass
   ---
-  duration_ms: 51.0609
+  duration_ms: 41.092
   type: 'test'
   ...
 # Subtest: re-recording the same injected message re-arms a stale projection
-ok 128 - re-recording the same injected message re-arms a stale projection
+ok 130 - re-recording the same injected message re-arms a stale projection
   ---
-  duration_ms: 43.2626
+  duration_ms: 34.3788
   type: 'test'
   ...
 # Subtest: two recalled records are both re-read and a single removal blocks
-ok 129 - two recalled records are both re-read and a single removal blocks
+ok 131 - two recalled records are both re-read and a single removal blocks
   ---
-  duration_ms: 60.0012
+  duration_ms: 49.2605
   type: 'test'
   ...
 # Subtest: install returns a disposer that removes only its listener and dispose is idempotent
-ok 130 - install returns a disposer that removes only its listener and dispose is idempotent
+ok 132 - install returns a disposer that removes only its listener and dispose is idempotent
   ---
-  duration_ms: 35.6448
+  duration_ms: 27.2072
   type: 'test'
   ...
 # Subtest: onRecallMessage receives the exact projection envelope while injection proceeds
-ok 131 - onRecallMessage receives the exact projection envelope while injection proceeds
+ok 133 - onRecallMessage receives the exact projection envelope while injection proceeds
   ---
-  duration_ms: 51.2163
+  duration_ms: 41.8659
   type: 'test'
   ...
 # Subtest: a throwing or asynchronous onRecallMessage is contained and the recall message is not injected
-ok 132 - a throwing or asynchronous onRecallMessage is contained and the recall message is not injected
+ok 134 - a throwing or asynchronous onRecallMessage is contained and the recall message is not injected
   ---
-  duration_ms: 84.7246
+  duration_ms: 76.2965
   type: 'test'
   ...
 # Subtest: onRecallMessage returning false prevents the unprojected recall message from entering history
-ok 133 - onRecallMessage returning false prevents the unprojected recall message from entering history
+ok 135 - onRecallMessage returning false prevents the unprojected recall message from entering history
   ---
-  duration_ms: 40.7879
+  duration_ms: 36.0497
   type: 'test'
   ...
 # Subtest: onMessageAdmitted can enqueue the annual draft inside the memory write transaction
-ok 134 - onMessageAdmitted can enqueue the annual draft inside the memory write transaction
+ok 136 - onMessageAdmitted can enqueue the annual draft inside the memory write transaction
   ---
-  duration_ms: 47.2076
+  duration_ms: 40.9342
   type: 'test'
   ...
 # Subtest: a throwing or asynchronous onMessageAdmitted never rolls back the memory job
-ok 135 - a throwing or asynchronous onMessageAdmitted never rolls back the memory job
+ok 137 - a throwing or asynchronous onMessageAdmitted never rolls back the memory job
   ---
-  duration_ms: 63.2755
+  duration_ms: 55.4174
   type: 'test'
   ...
 # Subtest: hooks, projection recording and the final gate form one closed path
-ok 136 - hooks, projection recording and the final gate form one closed path
+ok 138 - hooks, projection recording and the final gate form one closed path
   ---
-  duration_ms: 114.9814
+  duration_ms: 90.608
   type: 'test'
   ...
 # Subtest: bridge sends only the bounded fragment and fixed purpose prompt through one prepared call
-ok 137 - bridge sends only the bounded fragment and fixed purpose prompt through one prepared call
+ok 139 - bridge sends only the bounded fragment and fixed purpose prompt through one prepared call
   ---
-  duration_ms: 6.3152
+  duration_ms: 6.1891
   type: 'test'
   ...
 # Subtest: each allowed purpose has a fixed schema prompt and unknown purposes cannot dispatch
-ok 138 - each allowed purpose has a fixed schema prompt and unknown purposes cannot dispatch
+ok 140 - each allowed purpose has a fixed schema prompt and unknown purposes cannot dispatch
   ---
-  duration_ms: 1.6523
+  duration_ms: 1.9573
   type: 'test'
   ...
 # Subtest: text followed by EOF without explicit finish is unknown
-ok 139 - text followed by EOF without explicit finish is unknown
+ok 141 - text followed by EOF without explicit finish is unknown
   ---
-  duration_ms: 0.9974
+  duration_ms: 1.0917
   type: 'test'
   ...
 # Subtest: synthesized error, aborted and truncation finishes do not become known completion
-ok 140 - synthesized error, aborted and truncation finishes do not become known completion
+ok 142 - synthesized error, aborted and truncation finishes do not become known completion
   ---
-  duration_ms: 1.339
+  duration_ms: 1.2333
   type: 'test'
   ...
 # Subtest: duplicate finish, text after stop, and an iterator throw after stop stay unknown
-ok 141 - duplicate finish, text after stop, and an iterator throw after stop stay unknown
+ok 143 - duplicate finish, text after stop, and an iterator throw after stop stay unknown
   ---
-  duration_ms: 1.5351
+  duration_ms: 1.5812
   type: 'test'
   ...
 # Subtest: once prepareCall was touched its failure is unknown even when stream never started
-ok 142 - once prepareCall was touched its failure is unknown even when stream never started
+ok 144 - once prepareCall was touched its failure is unknown even when stream never started
   ---
-  duration_ms: 0.3768
+  duration_ms: 0.4113
   type: 'test'
   ...
 # Subtest: changed approval before prepare is refused without dispatch and activation versions do not rebind
-ok 143 - changed approval before prepare is refused without dispatch and activation versions do not rebind
+ok 145 - changed approval before prepare is refused without dispatch and activation versions do not rebind
   ---
-  duration_ms: 0.7159
+  duration_ms: 0.6954
   type: 'test'
   ...
 # Subtest: all four host configuration events permanently invalidate an activation and remove listeners on dispose
-ok 144 - all four host configuration events permanently invalidate an activation and remove listeners on dispose
+ok 146 - all four host configuration events permanently invalidate an activation and remove listeners on dispose
   ---
-  duration_ms: 0.4589
+  duration_ms: 0.4401
   type: 'test'
   ...
 # Subtest: approval changes during preparation are unknown and never reach prepared.stream
-ok 145 - approval changes during preparation are unknown and never reach prepared.stream
+ok 147 - approval changes during preparation are unknown and never reach prepared.stream
   ---
-  duration_ms: 2.4498
+  duration_ms: 2.5751
   type: 'test'
   ...
 # Subtest: an invalidation between preparation and dispatch is rechecked before sending the fragment
-ok 146 - an invalidation between preparation and dispatch is rechecked before sending the fragment
+ok 148 - an invalidation between preparation and dispatch is rechecked before sending the fragment
   ---
-  duration_ms: 0.3694
+  duration_ms: 0.4204
   type: 'test'
   ...
 # Subtest: cancellation during a non-cooperative prepare returns unknown and observes its later rejection
-ok 147 - cancellation during a non-cooperative prepare returns unknown and observes its later rejection
+ok 149 - cancellation during a non-cooperative prepare returns unknown and observes its later rejection
   ---
-  duration_ms: 8.3999
+  duration_ms: 19.8745
   type: 'test'
   ...
 # Subtest: stop without EOF cannot complete and dispose waits only its cleanup budget
-ok 148 - stop without EOF cannot complete and dispose waits only its cleanup budget
+ok 150 - stop without EOF cannot complete and dispose waits only its cleanup budget
   ---
-  duration_ms: 15.3198
+  duration_ms: 15.4445
   type: 'test'
   ...
 # Subtest: late stop after queue timeout does not write memory or release the unknown root gate
-ok 149 - late stop after queue timeout does not write memory or release the unknown root gate
+ok 151 - late stop after queue timeout does not write memory or release the unknown root gate
   ---
-  duration_ms: 100.482
+  duration_ms: 101.7441
   type: 'test'
   ...
 # Subtest: a rejecting iterator return is observed without exposing details and is never retried
-ok 150 - a rejecting iterator return is observed without exposing details and is never retried
+ok 152 - a rejecting iterator return is observed without exposing details and is never retried
   ---
-  duration_ms: 0.9014
+  duration_ms: 0.8525
   type: 'test'
   ...
 # Subtest: old activation cancellation and late cleanup cannot disable a newly created activation
-ok 151 - old activation cancellation and late cleanup cannot disable a newly created activation
+ok 153 - old activation cancellation and late cleanup cannot disable a newly created activation
   ---
-  duration_ms: 1.0662
+  duration_ms: 1.0467
   type: 'test'
   ...
 # Subtest: EOF microtasks cannot return success after cancellation or activation invalidation
-ok 152 - EOF microtasks cannot return success after cancellation or activation invalidation
+ok 154 - EOF microtasks cannot return success after cancellation or activation invalidation
   ---
-  duration_ms: 0.8271
+  duration_ms: 0.8323
   type: 'test'
   ...
 # Subtest: async or malformed approved route readers are rejected without leaking their errors
-ok 153 - async or malformed approved route readers are rejected without leaking their errors
+ok 155 - async or malformed approved route readers are rejected without leaking their errors
   ---
-  duration_ms: 0.7486
+  duration_ms: 0.763
   type: 'test'
   ...
 # Subtest: oversized or tool-bearing protocol data is refused while known complete secret text is classified separately
-ok 154 - oversized or tool-bearing protocol data is refused while known complete secret text is classified separately
+ok 156 - oversized or tool-bearing protocol data is refused while known complete secret text is classified separately
   ---
-  duration_ms: 0.9819
+  duration_ms: 0.9459
   type: 'test'
   ...
 # Subtest: contradictory or repeated block frames cannot be silently accepted by a tolerant assembler
-ok 155 - contradictory or repeated block frames cannot be silently accepted by a tolerant assembler
+ok 157 - contradictory or repeated block frames cannot be silently accepted by a tolerant assembler
   ---
-  duration_ms: 1.0676
+  duration_ms: 1.0186
   type: 'test'
   ...
 # Subtest: system prompt plus fragment fits exactly 8000 UTF-16 units and excess is refused before SDK preparation
-ok 156 - system prompt plus fragment fits exactly 8000 UTF-16 units and excess is refused before SDK preparation
+ok 158 - system prompt plus fragment fits exactly 8000 UTF-16 units and excess is refused before SDK preparation
   ---
-  duration_ms: 0.8156
+  duration_ms: 0.8386
   type: 'test'
   ...
 # Subtest: input accounting includes whitespace that direct execution actually forwards to the SDK
-ok 157 - input accounting includes whitespace that direct execution actually forwards to the SDK
+ok 159 - input accounting includes whitespace that direct execution actually forwards to the SDK
   ---
-  duration_ms: 0.615
+  duration_ms: 0.6041
   type: 'test'
   ...
 # Subtest: durable queue includes fixed prompts in the daily input limit and replay reserves only once
-ok 158 - durable queue includes fixed prompts in the daily input limit and replay reserves only once
+ok 160 - durable queue includes fixed prompts in the daily input limit and replay reserves only once
   ---
-  duration_ms: 101.0889
+  duration_ms: 97.6524
   type: 'test'
   ...
 # Subtest: invalid or changing input meters never spend budget or silently update an existing reservation
-ok 159 - invalid or changing input meters never spend budget or silently update an existing reservation
+ok 161 - invalid or changing input meters never spend budget or silently update an existing reservation
   ---
-  duration_ms: 36.7189
+  duration_ms: 39.4128
   type: 'test'
   ...
 # Subtest: authenticated older queued payloads without frozen input accounting cannot resume
-ok 160 - authenticated older queued payloads without frozen input accounting cannot resume
+ok 162 - authenticated older queued payloads without frozen input accounting cannot resume
   ---
-  duration_ms: 38.9628
+  duration_ms: 35.5198
   type: 'test'
   ...
 # Subtest: execution authorization revoked during prepare prevents the prepared stream from starting
-ok 161 - execution authorization revoked during prepare prevents the prepared stream from starting
+ok 163 - execution authorization revoked during prepare prevents the prepared stream from starting
   ---
-  duration_ms: 54.1047
+  duration_ms: 51.5046
   type: 'test'
   ...
 # Subtest: a source invalidated during prepare cannot reach a later prepared stream
-ok 162 - a source invalidated during prepare cannot reach a later prepared stream
+ok 164 - a source invalidated during prepare cannot reach a later prepared stream
   ---
-  duration_ms: 70.9852
+  duration_ms: 67.5021
   type: 'test'
   ...
 # Subtest: memory_consolidate has its own fixed prompt and bounded accounting
-ok 163 - memory_consolidate has its own fixed prompt and bounded accounting
+ok 165 - memory_consolidate has its own fixed prompt and bounded accounting
   ---
-  duration_ms: 0.5162
+  duration_ms: 0.4922
   type: 'test'
   ...
 # Subtest: created messages are identified, frozen and shaped like the Host helpers
-ok 164 - created messages are identified, frozen and shaped like the Host helpers
+ok 166 - created messages are identified, frozen and shaped like the Host helpers
   ---
-  duration_ms: 3.1473
+  duration_ms: 3.0603
   type: 'test'
   ...
 # Subtest: deepFreeze detaches the value from its source and locks nested objects
-ok 165 - deepFreeze detaches the value from its source and locks nested objects
+ok 167 - deepFreeze detaches the value from its source and locks nested objects
   ---
-  duration_ms: 0.1763
+  duration_ms: 0.1183
   type: 'test'
   ...
 # Subtest: BlockAssembler joins deltas, honors block-end text and exposes usage/finish
-ok 166 - BlockAssembler joins deltas, honors block-end text and exposes usage/finish
+ok 168 - BlockAssembler joins deltas, honors block-end text and exposes usage/finish
   ---
-  duration_ms: 0.2243
+  duration_ms: 0.2484
   type: 'test'
   ...
 # Subtest: BlockAssembler assembles open text blocks and rejects unknown chunk types
-ok 167 - BlockAssembler assembles open text blocks and rejects unknown chunk types
+ok 169 - BlockAssembler assembles open text blocks and rejects unknown chunk types
   ---
-  duration_ms: 0.0927
+  duration_ms: 0.0977
   type: 'test'
   ...
 # Subtest: admission requires a live session, matching agent and active registered scope
-ok 168 - admission requires a live session, matching agent and active registered scope
+ok 170 - admission requires a live session, matching agent and active registered scope
   ---
-  duration_ms: 4.903
+  duration_ms: 4.4349
   type: 'test'
   ...
 # Subtest: admission honors project preferences and the global enable switch
-ok 169 - admission honors project preferences and the global enable switch
+ok 171 - admission honors project preferences and the global enable switch
   ---
-  duration_ms: 0.6732
+  duration_ms: 0.6454
   type: 'test'
   ...
 # Subtest: admission refuses an unapproved extraction route and non-canonical session references
-ok 170 - admission refuses an unapproved extraction route and non-canonical session references
+ok 172 - admission refuses an unapproved extraction route and non-canonical session references
   ---
-  duration_ms: 0.1806
+  duration_ms: 0.1886
   type: 'test'
   ...
 # Subtest: admission is idempotent for the same message and rotates on edited content
-ok 171 - admission is idempotent for the same message and rotates on edited content
+ok 173 - admission is idempotent for the same message and rotates on edited content
   ---
-  duration_ms: 0.264
+  duration_ms: 0.244
   type: 'test'
   ...
 # Subtest: authorizeExecution needs a receipt and returns one stable lease signal across phases
-ok 172 - authorizeExecution needs a receipt and returns one stable lease signal across phases
+ok 174 - authorizeExecution needs a receipt and returns one stable lease signal across phases
   ---
-  duration_ms: 0.7113
+  duration_ms: 0.6464
   type: 'test'
   ...
 # Subtest: a receipt cannot be rebound to another scope, session or source version
-ok 173 - a receipt cannot be rebound to another scope, session or source version
+ok 175 - a receipt cannot be rebound to another scope, session or source version
   ---
-  duration_ms: 0.3231
+  duration_ms: 0.3182
   type: 'test'
   ...
 # Subtest: a recorded input digest must equal the execution input digest
-ok 174 - a recorded input digest must equal the execution input digest
+ok 176 - a recorded input digest must equal the execution input digest
   ---
-  duration_ms: 0.2577
+  duration_ms: 0.2823
   type: 'test'
   ...
 # Subtest: a changed Provider route between admission and execution is refused
-ok 175 - a changed Provider route between admission and execution is refused
+ok 177 - a changed Provider route between admission and execution is refused
   ---
-  duration_ms: 0.3228
+  duration_ms: 0.2444
   type: 'test'
   ...
 # Subtest: revocation aborts the live lease and permanently denies new work
-ok 176 - revocation aborts the live lease and permanently denies new work
+ok 178 - revocation aborts the live lease and permanently denies new work
   ---
-  duration_ms: 0.4005
+  duration_ms: 0.3172
   type: 'test'
   ...
 # Subtest: one receipt authorizes one lease per purpose and never a second job identity
-ok 177 - one receipt authorizes one lease per purpose and never a second job identity
+ok 179 - one receipt authorizes one lease per purpose and never a second job identity
   ---
-  duration_ms: 0.3672
+  duration_ms: 0.3499
   type: 'test'
   ...
 # Subtest: annual merges require a live user confirmation for the selected item
-ok 178 - annual merges require a live user confirmation for the selected item
+ok 180 - annual merges require a live user confirmation for the selected item
   ---
-  duration_ms: 0.8022
+  duration_ms: 0.7311
   type: 'test'
   ...
 # Subtest: receipts expire after 24 hours and unknown purposes fail closed
-ok 179 - receipts expire after 24 hours and unknown purposes fail closed
+ok 181 - receipts expire after 24 hours and unknown purposes fail closed
   ---
-  duration_ms: 0.1952
+  duration_ms: 0.1718
   type: 'test'
   ...
 # Subtest: authorizeRecovery only accepts a recent user confirmation for the exact unknown job
-ok 180 - authorizeRecovery only accepts a recent user confirmation for the exact unknown job
+ok 182 - authorizeRecovery only accepts a recent user confirmation for the exact unknown job
   ---
-  duration_ms: 0.1855
+  duration_ms: 0.1937
   type: 'test'
   ...
 # Subtest: status is bounded metadata and callbacks cannot leak secret details
-ok 181 - status is bounded metadata and callbacks cannot leak secret details
+ok 183 - status is bounded metadata and callbacks cannot leak secret details
   ---
-  duration_ms: 2.7888
+  duration_ms: 2.8593
   type: 'test'
   ...
 # Subtest: end to end: an admitted current message completes one authorized extraction
-ok 182 - end to end: an admitted current message completes one authorized extraction
+ok 184 - end to end: an admitted current message completes one authorized extraction
   ---
-  duration_ms: 66.9195
+  duration_ms: 64.67
   type: 'test'
   ...
 # Subtest: queue integration: missing receipt, revocation, changed route and wrong source identity keep zero dispatch
-ok 183 - queue integration: missing receipt, revocation, changed route and wrong source identity keep zero dispatch
+ok 185 - queue integration: missing receipt, revocation, changed route and wrong source identity keep zero dispatch
   ---
-  duration_ms: 164.0921
+  duration_ms: 157.7362
   type: 'test'
   ...
 # Subtest: an empty foreground is idle, while a discovered unknown agent fails closed
-ok 184 - an empty foreground is idle, while a discovered unknown agent fails closed
+ok 186 - an empty foreground is idle, while a discovered unknown agent fails closed
   ---
-  duration_ms: 2.1915
+  duration_ms: 2.0269
   type: 'test'
   ...
 # Subtest: a running agent blocks, and an idle transition waits a full quiet window
-ok 185 - a running agent blocks, and an idle transition waits a full quiet window
+ok 187 - a running agent blocks, and an idle transition waits a full quiet window
   ---
-  duration_ms: 0.6095
+  duration_ms: 0.605
   type: 'test'
   ...
 # Subtest: new activity resets the quiet window and a new agent is unknown until it reports
-ok 186 - new activity resets the quiet window and a new agent is unknown until it reports
+ok 188 - new activity resets the quiet window and a new agent is unknown until it reports
   ---
-  duration_ms: 0.1229
+  duration_ms: 0.1246
   type: 'test'
   ...
 # Subtest: disposal removes an agent and the gate rejects an invalid quiet window
-ok 187 - disposal removes an agent and the gate rejects an invalid quiet window
+ok 189 - disposal removes an agent and the gate rejects an invalid quiet window
   ---
-  duration_ms: 0.2561
+  duration_ms: 0.2634
   type: 'test'
   ...
 # Subtest: an agents.list failure stays unknown instead of decaying to idle
-ok 188 - an agents.list failure stays unknown instead of decaying to idle
+ok 190 - an agents.list failure stays unknown instead of decaying to idle
   ---
-  duration_ms: 0.1228
+  duration_ms: 0.1266
   type: 'test'
   ...
 # Subtest: persistent queue binds original route and request identity despite active model switching
-ok 189 - persistent queue binds original route and request identity despite active model switching
+ok 191 - persistent queue binds original route and request identity despite active model switching
   ---
-  duration_ms: 100.8289
+  duration_ms: 94.8095
   type: 'test'
   ...
 # Subtest: revoked or changed route fails before dispatch with no fallback
-ok 190 - revoked or changed route fails before dispatch with no fallback
+ok 192 - revoked or changed route fails before dispatch with no fallback
   ---
-  duration_ms: 33.1898
+  duration_ms: 32.2623
   type: 'test'
   ...
 # Subtest: timeout becomes outcome_unknown and ignored late result never writes back
-ok 191 - timeout becomes outcome_unknown and ignored late result never writes back
+ok 193 - timeout becomes outcome_unknown and ignored late result never writes back
   ---
-  duration_ms: 70.1392
+  duration_ms: 82.1023
   type: 'test'
   ...
 # Subtest: an unknown timed-out dispatch keeps the root gate after settling until trusted confirmation
-ok 192 - an unknown timed-out dispatch keeps the root gate after settling until trusted confirmation
+ok 194 - an unknown timed-out dispatch keeps the root gate after settling until trusted confirmation
   ---
-  duration_ms: 127.3493
+  duration_ms: 106.7402
   type: 'test'
   ...
 # Subtest: foreign scopes cannot clear quarantine and a late old callback cannot clear the new owner lock
-ok 193 - foreign scopes cannot clear quarantine and a late old callback cannot clear the new owner lock
+ok 195 - foreign scopes cannot clear quarantine and a late old callback cannot clear the new owner lock
   ---
-  duration_ms: 138.9637
+  duration_ms: 146.9644
   type: 'test'
   ...
 # Subtest: forget during a model request rejects its late result under the old epoch
-ok 194 - forget during a model request rejects its late result under the old epoch
+ok 196 - forget during a model request rejects its late result under the old epoch
   ---
-  duration_ms: 60.0378
+  duration_ms: 60.9472
   type: 'test'
   ...
 # Subtest: ordinary and annual jobs share durable daily and session budgets
-ok 195 - ordinary and annual jobs share durable daily and session budgets
+ok 197 - ordinary and annual jobs share durable daily and session budgets
   ---
-  duration_ms: 28.1643
+  duration_ms: 27.4863
   type: 'test'
   ...
 # Subtest: global concurrency one leaves a second request queued instead of dispatching twice
-ok 196 - global concurrency one leaves a second request queued instead of dispatching twice
+ok 198 - global concurrency one leaves a second request queued instead of dispatching twice
   ---
-  duration_ms: 91.9585
+  duration_ms: 89.9136
   type: 'test'
   ...
 # Subtest: model scope/path overrides and secret output are rejected atomically
-ok 197 - model scope/path overrides and secret output are rejected atomically
+ok 199 - model scope/path overrides and secret output are rejected atomically
   ---
-  duration_ms: 69.4588
+  duration_ms: 66.1673
   type: 'test'
   ...
 # Subtest: worker death is recovered as unknown without replay
-ok 198 - worker death is recovered as unknown without replay
+ok 200 - worker death is recovered as unknown without replay
   ---
-  duration_ms: 262.3992
+  duration_ms: 235.5375
   type: 'test'
   ...
 # Subtest: restoring a pre-completion body database never dispatches the completed request again
-ok 199 - restoring a pre-completion body database never dispatches the completed request again
+ok 201 - restoring a pre-completion body database never dispatches the completed request again
   ---
-  duration_ms: 65.7239
+  duration_ms: 66.5097
   type: 'test'
   ...
 # Subtest: queued requests expire at the next Shanghai budget day instead of spending yesterday reservation
-ok 200 - queued requests expire at the next Shanghai budget day instead of spending yesterday reservation
+ok 202 - queued requests expire at the next Shanghai budget day instead of spending yesterday reservation
   ---
-  duration_ms: 31.5335
+  duration_ms: 30.4312
   type: 'test'
   ...
 # Subtest: cancellation of a dispatched request is unknown and provider errors cannot expose raw secrets
-ok 201 - cancellation of a dispatched request is unknown and provider errors cannot expose raw secrets
+ok 203 - cancellation of a dispatched request is unknown and provider errors cannot expose raw secrets
   ---
-  duration_ms: 52.3959
+  duration_ms: 55.9623
   type: 'test'
   ...
 # Subtest: work model output is an unverified draft in its own collection
-ok 202 - work model output is an unverified draft in its own collection
+ok 204 - work model output is an unverified draft in its own collection
   ---
-  duration_ms: 49.4462
+  duration_ms: 52.2274
   type: 'test'
   ...
 # Subtest: memory extract commit offers one bounded evidence capture
-ok 203 - memory extract commit offers one bounded evidence capture
+ok 205 - memory extract commit offers one bounded evidence capture
   ---
-  duration_ms: 53.6503
+  duration_ms: 47.976
   type: 'test'
   ...
 # Subtest: forget invalidates warm readers, late generations, snapshots and index reconstruction
-ok 204 - forget invalidates warm readers, late generations, snapshots and index reconstruction
+ok 206 - forget invalidates warm readers, late generations, snapshots and index reconstruction
   ---
-  duration_ms: 91.4678
+  duration_ms: 89.7624
   type: 'test'
   ...
 # Subtest: correction supersedes old body and archive is distinct from irreversible forget
-ok 205 - correction supersedes old body and archive is distinct from irreversible forget
+ok 207 - correction supersedes old body and archive is distinct from irreversible forget
   ---
-  duration_ms: 83.7007
+  duration_ms: 82.6342
   type: 'test'
   ...
 # Subtest: restoring an entire old body file cannot roll back the independent deletion authority
-ok 206 - restoring an entire old body file cannot roll back the independent deletion authority
+ok 208 - restoring an entire old body file cannot roll back the independent deletion authority
   ---
-  duration_ms: 58.8377
+  duration_ms: 57.1992
   type: 'test'
   ...
 # Subtest: missing or corrupt authority refuses opening and warm cache never becomes a fallback
-ok 207 - missing or corrupt authority refuses opening and warm cache never becomes a fallback
+ok 209 - missing or corrupt authority refuses opening and warm cache never becomes a fallback
   ---
-  duration_ms: 32.4853
+  duration_ms: 33.5509
   type: 'test'
   ...
 # Subtest: source invalidation is scoped, replay safe and closes warm recall
-ok 208 - source invalidation is scoped, replay safe and closes warm recall
+ok 210 - source invalidation is scoped, replay safe and closes warm recall
   ---
-  duration_ms: 65.3309
+  duration_ms: 59.7216
   type: 'test'
   ...
 # Subtest: DDL damage on an open content database cannot be hidden by a warm recall cache
-ok 209 - DDL damage on an open content database cannot be hidden by a warm recall cache
+ok 211 - DDL damage on an open content database cannot be hidden by a warm recall cache
   ---
-  duration_ms: 31.3964
+  duration_ms: 33.1818
   type: 'test'
   ...
 # Subtest: all lifecycle invalidation and an old body restore purge queued plaintext inputs
-ok 210 - all lifecycle invalidation and an old body restore purge queued plaintext inputs
+ok 212 - all lifecycle invalidation and an old body restore purge queued plaintext inputs
   ---
-  duration_ms: 70.5873
+  duration_ms: 69.401
   type: 'test'
   ...
 # Subtest: forget clears unique tokens from current FTS shadow blocks and current database bytes
-ok 211 - forget clears unique tokens from current FTS shadow blocks and current database bytes
+ok 213 - forget clears unique tokens from current FTS shadow blocks and current database bytes
   ---
-  duration_ms: 34.9677
+  duration_ms: 34.4033
   type: 'test'
   ...
 # Subtest: reopening an old insecure FTS index removes already deleted historical segments
-ok 212 - reopening an old insecure FTS index removes already deleted historical segments
+ok 214 - reopening an old insecure FTS index removes already deleted historical segments
   ---
-  duration_ms: 29.8887
+  duration_ms: 30.3924
   type: 'test'
   ...
 # Subtest: a disabled secure-delete policy is unavailable until a verified reopen rebuilds it
-ok 213 - a disabled secure-delete policy is unavailable until a verified reopen rebuilds it
+ok 215 - a disabled secure-delete policy is unavailable until a verified reopen rebuilds it
   ---
-  duration_ms: 39.353
+  duration_ms: 39.8388
   type: 'test'
   ...
 # Subtest: session removal always invalidates its registered session even with empty affected refs
-ok 214 - session removal always invalidates its registered session even with empty affected refs
+ok 216 - session removal always invalidates its registered session even with empty affected refs
   ---
-  duration_ms: 34.0336
+  duration_ms: 33.4897
   type: 'test'
   ...
 # Subtest: M2_OPERATIONS exports exactly the seven contract operations, frozen
-ok 215 - M2_OPERATIONS exports exactly the seven contract operations, frozen
+ok 217 - M2_OPERATIONS exports exactly the seven contract operations, frozen
   ---
-  duration_ms: 1.0541
+  duration_ms: 1.0138
   type: 'test'
   ...
 # Subtest: construction rejects missing managers or clock
-ok 216 - construction rejects missing managers or clock
+ok 218 - construction rejects missing managers or clock
   ---
-  duration_ms: 0.3144
+  duration_ms: 0.2981
   type: 'test'
   ...
 # Subtest: abstract.list honours an explicit projectId and returns a path-free view
-ok 217 - abstract.list honours an explicit projectId and returns a path-free view
+ok 219 - abstract.list honours an explicit projectId and returns a path-free view
   ---
-  duration_ms: 2.4066
+  duration_ms: 2.6714
   type: 'test'
   ...
 # Subtest: abstract.list resolves the project from the trusted session binding
-ok 218 - abstract.list resolves the project from the trusted session binding
+ok 220 - abstract.list resolves the project from the trusted session binding
   ---
-  duration_ms: 0.2481
+  duration_ms: 0.2844
   type: 'test'
   ...
 # Subtest: a model caller cannot name another project; the user HTTP path may name its target
-ok 219 - a model caller cannot name another project; the user HTTP path may name its target
+ok 221 - a model caller cannot name another project; the user HTTP path may name its target
   ---
-  duration_ms: 0.4182
+  duration_ms: 0.2668
   type: 'test'
   ...
 # Subtest: PROJECT_REQUIRED when neither an explicit project nor a binding resolves
-ok 220 - PROJECT_REQUIRED when neither an explicit project nor a binding resolves
+ok 222 - PROJECT_REQUIRED when neither an explicit project nor a binding resolves
   ---
-  duration_ms: 0.2177
+  duration_ms: 0.1644
   type: 'test'
   ...
 # Subtest: user-only operations reject model and host callers without touching the managers
-ok 221 - user-only operations reject model and host callers without touching the managers
+ok 223 - user-only operations reject model and host callers without touching the managers
   ---
-  duration_ms: 0.3166
+  duration_ms: 0.3021
   type: 'test'
   ...
 # Subtest: abstract.refresh is a user action that records reason=manual
-ok 222 - abstract.refresh is a user action that records reason=manual
+ok 224 - abstract.refresh is a user action that records reason=manual
   ---
-  duration_ms: 0.1364
+  duration_ms: 0.13
   type: 'test'
   ...
 # Subtest: abstract.refresh falls back to the session binding when projectId is omitted
-ok 223 - abstract.refresh falls back to the session binding when projectId is omitted
+ok 225 - abstract.refresh falls back to the session binding when projectId is omitted
   ---
-  duration_ms: 0.1243
+  duration_ms: 0.1193
   type: 'test'
   ...
 # Subtest: share.grant requires the user and forwards every contract field
-ok 224 - share.grant requires the user and forwards every contract field
+ok 226 - share.grant requires the user and forwards every contract field
   ---
-  duration_ms: 0.4612
+  duration_ms: 0.4797
   type: 'test'
   ...
 # Subtest: share.grant generates a local-user-grant-v1 permissionRef when absent
-ok 225 - share.grant generates a local-user-grant-v1 permissionRef when absent
+ok 227 - share.grant generates a local-user-grant-v1 permissionRef when absent
   ---
-  duration_ms: 2.0355
+  duration_ms: 2.1354
   type: 'test'
   ...
 # Subtest: share.revoke requires the user and returns the revoked relation
-ok 226 - share.revoke requires the user and returns the revoked relation
+ok 228 - share.revoke requires the user and returns the revoked relation
   ---
-  duration_ms: 0.1244
+  duration_ms: 0.1421
   type: 'test'
   ...
 # Subtest: share.discover resolves its target and reports applicability
-ok 227 - share.discover resolves its target and reports applicability
+ok 229 - share.discover resolves its target and reports applicability
   ---
-  duration_ms: 0.1824
+  duration_ms: 0.1932
   type: 'test'
   ...
 # Subtest: share.list forwards only the supplied filters and returns relations
-ok 228 - share.list forwards only the supplied filters and returns relations
+ok 230 - share.list forwards only the supplied filters and returns relations
   ---
-  duration_ms: 0.1674
+  duration_ms: 0.1718
   type: 'test'
   ...
 # Subtest: shared.search returns the exact envelope with source refs and applicability
-ok 229 - shared.search returns the exact envelope with source refs and applicability
+ok 231 - shared.search returns the exact envelope with source refs and applicability
   ---
-  duration_ms: 0.1628
+  duration_ms: 0.1757
   type: 'test'
   ...
 # Subtest: shared.search accepts an explicit target and a bounded limit
-ok 230 - shared.search accepts an explicit target and a bounded limit
+ok 232 - shared.search accepts an explicit target and a bounded limit
   ---
-  duration_ms: 0.0728
+  duration_ms: 0.087
   type: 'test'
   ...
 # Subtest: shared.search fails closed when a manager omits applicability or claims verification
-ok 231 - shared.search fails closed when a manager omits applicability or claims verification
+ok 233 - shared.search fails closed when a manager omits applicability or claims verification
   ---
-  duration_ms: 0.0985
+  duration_ms: 0.1035
   type: 'test'
   ...
 # Subtest: documented manager error codes pass through with a safe message
-ok 232 - documented manager error codes pass through with a safe message
+ok 234 - documented manager error codes pass through with a safe message
   ---
-  duration_ms: 0.1703
+  duration_ms: 0.2101
   type: 'test'
   ...
 # Subtest: unknown manager failures are sanitized to M2_OPERATION_FAILED
-ok 233 - unknown manager failures are sanitized to M2_OPERATION_FAILED
+ok 235 - unknown manager failures are sanitized to M2_OPERATION_FAILED
   ---
-  duration_ms: 0.3873
+  duration_ms: 0.3981
   type: 'test'
   ...
 # Subtest: a manager result that is not an object fails closed
-ok 234 - a manager result that is not an object fails closed
+ok 236 - a manager result that is not an object fails closed
   ---
-  duration_ms: 0.0581
+  duration_ms: 0.0655
   type: 'test'
   ...
 # Subtest: validation rejects empty query/basis, bad limits and unknown fields before calling managers
-ok 235 - validation rejects empty query/basis, bad limits and unknown fields before calling managers
+ok 237 - validation rejects empty query/basis, bad limits and unknown fields before calling managers
   ---
-  duration_ms: 0.3148
+  duration_ms: 0.3259
   type: 'test'
   ...
 # Subtest: handlers never throw, even for hostile input or context values
-ok 236 - handlers never throw, even for hostile input or context values
+ok 238 - handlers never throw, even for hostile input or context values
   ---
-  duration_ms: 1.5361
+  duration_ms: 1.5175
   type: 'test'
   ...
 # Subtest: no operation returns absolute paths or path-shaped keys
-ok 237 - no operation returns absolute paths or path-shaped keys
+ok 239 - no operation returns absolute paths or path-shaped keys
   ---
-  duration_ms: 0.4747
+  duration_ms: 0.487
   type: 'test'
   ...
 # Subtest: management dispatcher: model grant/refresh denied, model shared.search allowed
-ok 238 - management dispatcher: model grant/refresh denied, model shared.search allowed
+ok 240 - management dispatcher: model grant/refresh denied, model shared.search allowed
   ---
-  duration_ms: 1.2704
+  duration_ms: 1.2522
   type: 'test'
   ...
 # Subtest: real abstracts/sharing managers work through the operation table
-ok 239 - real abstracts/sharing managers work through the operation table
+ok 241 - real abstracts/sharing managers work through the operation table
   ---
-  duration_ms: 101.2692
+  duration_ms: 108.0875
   type: 'test'
   ...
 # Subtest: model/host callers may only name their bound project; explicit targets remain user-only
-ok 240 - model/host callers may only name their bound project; explicit targets remain user-only
+ok 242 - model/host callers may only name their bound project; explicit targets remain user-only
   ---
-  duration_ms: 0.2857
+  duration_ms: 0.2911
   type: 'test'
   ...
 # Subtest: user-only operations reject model and host actors
-ok 241 - user-only operations reject model and host actors
+ok 243 - user-only operations reject model and host actors
   ---
-  duration_ms: 63.3295
+  duration_ms: 62.0663
   type: 'test'
   ...
 # Subtest: unknown operations and unavailable extras return stable reason codes
-ok 242 - unknown operations and unavailable extras return stable reason codes
+ok 244 - unknown operations and unavailable extras return stable reason codes
   ---
-  duration_ms: 12.8393
+  duration_ms: 12.4601
   type: 'test'
   ...
 # Subtest: extras receive trusted actor context and their envelopes are validated
-ok 243 - extras receive trusted actor context and their envelopes are validated
+ok 245 - extras receive trusted actor context and their envelopes are validated
   ---
-  duration_ms: 13.4749
+  duration_ms: 12.6662
   type: 'test'
   ...
 # Subtest: request validation rejects malformed envelopes without throwing
-ok 244 - request validation rejects malformed envelopes without throwing
+ok 246 - request validation rejects malformed envelopes without throwing
   ---
-  duration_ms: 13.9975
+  duration_ms: 13.3479
   type: 'test'
   ...
 # Subtest: project lifecycle: register, list, update, preference, retire
-ok 245 - project lifecycle: register, list, update, preference, retire
+ok 247 - project lifecycle: register, list, update, preference, retire
   ---
-  duration_ms: 29.4431
+  duration_ms: 29.6162
   type: 'test'
   ...
 # Subtest: one project aggregates multiple repository scopes without exposing their roots
-ok 246 - one project aggregates multiple repository scopes without exposing their roots
+ok 248 - one project aggregates multiple repository scopes without exposing their roots
   ---
-  duration_ms: 96.876
+  duration_ms: 98.9982
   type: 'test'
   ...
 # Subtest: memory search, paging, detail, correction, archive, restore and explicit delete use the real store
-ok 247 - memory search, paging, detail, correction, archive, restore and explicit delete use the real store
+ok 249 - memory search, paging, detail, correction, archive, restore and explicit delete use the real store
   ---
-  duration_ms: 243.3147
+  duration_ms: 233.6355
   type: 'test'
   ...
 # Subtest: task listing and inspection expose safe states without blind retry
-ok 248 - task listing and inspection expose safe states without blind retry
+ok 250 - task listing and inspection expose safe states without blind retry
   ---
-  duration_ms: 77.4724
+  duration_ms: 78.6582
   type: 'test'
   ...
 # Subtest: task cancel requests only a local stop and confirmation releases the unknown lock
-ok 249 - task cancel requests only a local stop and confirmation releases the unknown lock
+ok 251 - task cancel requests only a local stop and confirmation releases the unknown lock
   ---
-  duration_ms: 72.7957
+  duration_ms: 71.9946
   type: 'test'
   ...
 # Subtest: cancel is honestly unavailable when the queue cannot stop a job
-ok 250 - cancel is honestly unavailable when the queue cannot stop a job
+ok 252 - cancel is honestly unavailable when the queue cannot stop a job
   ---
-  duration_ms: 49.9275
+  duration_ms: 47.2229
   type: 'test'
   ...
 # Subtest: HTTP route enforces transport rules and same-origin, then returns business envelopes
-ok 251 - HTTP route enforces transport rules and same-origin, then returns business envelopes
+ok 253 - HTTP route enforces transport rules and same-origin, then returns business envelopes
   ---
-  duration_ms: 15.5805
+  duration_ms: 14.9041
   type: 'test'
   ...
 # Subtest: HTTP operationId is idempotent for mutations and rejects conflicting payloads
-ok 252 - HTTP operationId is idempotent for mutations and rejects conflicting payloads
+ok 254 - HTTP operationId is idempotent for mutations and rejects conflicting payloads
   ---
-  duration_ms: 75.5876
+  duration_ms: 75.3082
   type: 'test'
   ...
 # Subtest: status and project responses never leak local absolute paths or credentials
-ok 253 - status and project responses never leak local absolute paths or credentials
+ok 255 - status and project responses never leak local absolute paths or credentials
   ---
-  duration_ms: 16.3895
+  duration_ms: 15.8947
   type: 'test'
   ...
 # Subtest: client half is a dependency-free classic plugin with locale-complete UI strings
-ok 254 - client half is a dependency-free classic plugin with locale-complete UI strings
+ok 256 - client half is a dependency-free classic plugin with locale-complete UI strings
   ---
-  duration_ms: 6.5302
+  duration_ms: 6.5315
   type: 'test'
   ...
 # Subtest: M2 abstract and sharing operations are user-only even before extras exist
-ok 255 - M2 abstract and sharing operations are user-only even before extras exist
+ok 257 - M2 abstract and sharing operations are user-only even before extras exist
   ---
-  duration_ms: 13.6168
+  duration_ms: 12.7051
   type: 'test'
   ...
 # Subtest: abstract-affecting memory mutations invoke the dirty hook after success
-ok 256 - abstract-affecting memory mutations invoke the dirty hook after success
+ok 258 - abstract-affecting memory mutations invoke the dirty hook after success
   ---
-  duration_ms: 64.4501
+  duration_ms: 63.6433
   type: 'test'
   ...
 # Subtest: valid Task1 databases require explicit migration and retain their scoped records
-ok 257 - valid Task1 databases require explicit migration and retain their scoped records
+ok 259 - valid Task1 databases require explicit migration and retain their scoped records
   ---
-  duration_ms: 71.3516
+  duration_ms: 68.2965
   type: 'test'
   ...
 # Subtest: explicit Task1 migration clears legacy deleted FTS segments before serving reads
-ok 258 - explicit Task1 migration clears legacy deleted FTS segments before serving reads
+ok 260 - explicit Task1 migration clears legacy deleted FTS segments before serving reads
   ---
-  duration_ms: 43.0617
+  duration_ms: 39.9791
   type: 'test'
   ...
 # Subtest: activation registers tools, command, HTTP route and a ready status
-ok 259 - activation registers tools, command, HTTP route and a ready status
+ok 261 - activation registers tools, command, HTTP route and a ready status
   ---
-  duration_ms: 58.0849
+  duration_ms: 58.5242
   type: 'test'
   ...
 # Subtest: closed loop: extraction persists, recall injects, stale projection blocks dispatch
-ok 260 - closed loop: extraction persists, recall injects, stale projection blocks dispatch
+ok 262 - closed loop: extraction persists, recall injects, stale projection blocks dispatch
   ---
-  duration_ms: 307.2399
+  duration_ms: 313.0546
   type: 'test'
   ...
 # Subtest: an unbound session keeps chatting, enqueues nothing and recalls nothing
-ok 261 - an unbound session keeps chatting, enqueues nothing and recalls nothing
+ok 263 - an unbound session keeps chatting, enqueues nothing and recalls nothing
   ---
-  duration_ms: 455.8147
+  duration_ms: 452.0343
   type: 'test'
   ...
 # Subtest: user-only memory actions are refused for model callers
-ok 262 - user-only memory actions are refused for model callers
+ok 264 - user-only memory actions are refused for model callers
   ---
-  duration_ms: 37.8139
+  duration_ms: 37.4602
   type: 'test'
   ...
 # Subtest: /memory register binds the current working directory as a new project
-ok 263 - /memory register binds the current working directory as a new project
+ok 265 - /memory register binds the current working directory as a new project
   ---
-  duration_ms: 288.4794
+  duration_ms: 283.8578
   type: 'test'
   ...
 # Subtest: activation-owned listeners, routes and tools are released on dispose and can be reinstalled
-ok 264 - activation-owned listeners, routes and tools are released on dispose and can be reinstalled
+ok 266 - activation-owned listeners, routes and tools are released on dispose and can be reinstalled
   ---
-  duration_ms: 54.1798
+  duration_ms: 51.0036
   type: 'test'
   ...
 # Subtest: annual draft and proof reminder are wired through the same admission
-ok 265 - annual draft and proof reminder are wired through the same admission
+ok 267 - annual draft and proof reminder are wired through the same admission
   ---
-  duration_ms: 373.5527
+  duration_ms: 371.2344
   type: 'test'
   ...
 # Subtest: an unusable data root degrades the plugin instead of throwing out of apply
-ok 266 - an unusable data root degrades the plugin instead of throwing out of apply
+ok 268 - an unusable data root degrades the plugin instead of throwing out of apply
   ---
-  duration_ms: 3.1714
+  duration_ms: 3.2684
   type: 'test'
   ...
 # Subtest: memory_status never returns an absolute local path to the model
-ok 267 - memory_status never returns an absolute local path to the model
+ok 269 - memory_status never returns an absolute local path to the model
   ---
-  duration_ms: 41.9059
+  duration_ms: 40.2043
   type: 'test'
   ...
 # Subtest: a static config conflict disables automatic memory instead of silently using the old binding
-ok 268 - a static config conflict disables automatic memory instead of silently using the old binding
+ok 270 - a static config conflict disables automatic memory instead of silently using the old binding
   ---
-  duration_ms: 461.5575
+  duration_ms: 462.5017
   type: 'test'
   ...
 # Subtest: M2: abstracts are discoverable, user-granted sharing follows latest, revoke/delete cut off
-ok 269 - M2: abstracts are discoverable, user-granted sharing follows latest, revoke/delete cut off
+ok 271 - M2: abstracts are discoverable, user-granted sharing follows latest, revoke/delete cut off
   ---
-  duration_ms: 201.141
+  duration_ms: 194.2909
   type: 'test'
   ...
 # Subtest: registry seeds declared projects and resolves trusted session bindings
-ok 270 - registry seeds declared projects and resolves trusted session bindings
+ok 272 - registry seeds declared projects and resolves trusted session bindings
   ---
-  duration_ms: 26.8746
+  duration_ms: 27.7298
   type: 'test'
   ...
 # Subtest: the most specific registered worktree wins and unregistered paths stay unbound
-ok 271 - the most specific registered worktree wins and unregistered paths stay unbound
+ok 273 - the most specific registered worktree wins and unregistered paths stay unbound
   ---
-  duration_ms: 37.3598
+  duration_ms: 27.9082
   type: 'test'
   ...
 # Subtest: user registration adds a binding and duplicate names with another binding are refused
-ok 272 - user registration adds a binding and duplicate names with another binding are refused
+ok 274 - user registration adds a binding and duplicate names with another binding are refused
   ---
-  duration_ms: 23.4704
+  duration_ms: 22.117
   type: 'test'
   ...
 # Subtest: stores persist across registry reopen and preferences follow project revisions
-ok 273 - stores persist across registry reopen and preferences follow project revisions
+ok 275 - stores persist across registry reopen and preferences follow project revisions
   ---
-  duration_ms: 63.7904
+  duration_ms: 62.5795
   type: 'test'
   ...
 # Subtest: retirement stops session binding while keeping the memory store readable
-ok 274 - retirement stops session binding while keeping the memory store readable
+ok 276 - retirement stops session binding while keeping the memory store readable
   ---
-  duration_ms: 50.779
+  duration_ms: 49.3512
   type: 'test'
   ...
 # Subtest: a changed static configuration is reported as degraded instead of silently rebinding
-ok 275 - a changed static configuration is reported as degraded instead of silently rebinding
+ok 277 - a changed static configuration is reported as degraded instead of silently rebinding
   ---
-  duration_ms: 23.1629
+  duration_ms: 20.1868
   type: 'test'
   ...
 # Subtest: closing the registry closes its stores and refuses later access
-ok 276 - closing the registry closes its stores and refuses later access
+ok 278 - closing the registry closes its stores and refuses later access
   ---
-  duration_ms: 37.562
+  duration_ms: 34.9866
   type: 'test'
   ...
 # Subtest: applicability marks active projects current, retired or missing sources historical
-ok 277 - applicability marks active projects current, retired or missing sources historical
+ok 279 - applicability marks active projects current, retired or missing sources historical
   ---
-  duration_ms: 23.3308
+  duration_ms: 21.7144
   type: 'test'
   ...
 # Subtest: multi-repository applicability is current only while every enabled source root exists
-ok 278 - multi-repository applicability is current only while every enabled source root exists
+ok 280 - multi-repository applicability is current only while every enabled source root exists
   ---
-  duration_ms: 19.3528
+  duration_ms: 18.4927
   type: 'test'
   ...
 # Subtest: catalog creates an identity anchor and refuses a replaced identity
-ok 279 - catalog creates an identity anchor and refuses a replaced identity
+ok 281 - catalog creates an identity anchor and refuses a replaced identity
   ---
-  duration_ms: 15.7374
+  duration_ms: 15.2198
   type: 'test'
   ...
 # Subtest: project registration is idempotent and rejects a conflicting binding
-ok 280 - project registration is idempotent and rejects a conflicting binding
+ok 282 - project registration is idempotent and rejects a conflicting binding
   ---
-  duration_ms: 13.9677
+  duration_ms: 13.9754
   type: 'test'
   ...
 # Subtest: a concrete scope cannot be registered by two projects
-ok 281 - a concrete scope cannot be registered by two projects
+ok 283 - a concrete scope cannot be registered by two projects
   ---
-  duration_ms: 10.9729
+  duration_ms: 11.1057
   type: 'test'
   ...
 # Subtest: updates advance binding revisions and retire removed repositories without deleting them
-ok 282 - updates advance binding revisions and retire removed repositories without deleting them
+ok 284 - updates advance binding revisions and retire removed repositories without deleting them
   ---
-  duration_ms: 17.2309
+  duration_ms: 17.2247
   type: 'test'
   ...
 # Subtest: retirement is terminal for edits but keeps repositories and memory identity
-ok 283 - retirement is terminal for edits but keeps repositories and memory identity
+ok 285 - retirement is terminal for edits but keeps repositories and memory identity
   ---
-  duration_ms: 14.4481
+  duration_ms: 12.2732
   type: 'test'
   ...
 # Subtest: preferences persist and are revision-checked
-ok 284 - preferences persist and are revision-checked
+ok 286 - preferences persist and are revision-checked
   ---
-  duration_ms: 13.4051
+  duration_ms: 13.2681
   type: 'test'
   ...
 # Subtest: operation idempotency caches results and rejects a changed payload
-ok 285 - operation idempotency caches results and rejects a changed payload
+ok 287 - operation idempotency caches results and rejects a changed payload
   ---
-  duration_ms: 11.4195
+  duration_ms: 10.0377
   type: 'test'
   ...
 # Subtest: reopened catalog preserves projects, bindings and preferences
-ok 286 - reopened catalog preserves projects, bindings and preferences
+ok 288 - reopened catalog preserves projects, bindings and preferences
   ---
-  duration_ms: 14.1651
+  duration_ms: 13.9419
   type: 'test'
   ...
 # Subtest: reminders record the last shown timestamp per claim and version
-ok 287 - reminders record the last shown timestamp per claim and version
+ok 289 - reminders record the last shown timestamp per claim and version
   ---
-  duration_ms: 9.9999
+  duration_ms: 9.6759
   type: 'test'
   ...
 # Subtest: catalog reports a stable schema version and rejects a foreign schema file
-ok 288 - catalog reports a stable schema version and rejects a foreign schema file
+ok 290 - catalog reports a stable schema version and rejects a foreign schema file
   ---
-  duration_ms: 2.376
+  duration_ms: 2.6413
   type: 'test'
   ...
 # Subtest: a reviewed v1 catalog migrates additively to v2 exactly once and keeps identity/data
-ok 289 - a reviewed v1 catalog migrates additively to v2 exactly once and keeps identity/data
+ok 291 - a reviewed v1 catalog migrates additively to v2 exactly once and keeps identity/data
   ---
-  duration_ms: 35.1775
+  duration_ms: 35.1569
   type: 'test'
   ...
 # Subtest: a v1-shaped catalog with drift is refused before migration and stays at v1
-ok 290 - a v1-shaped catalog with drift is refused before migration and stays at v1
+ok 292 - a v1-shaped catalog with drift is refused before migration and stays at v1
   ---
-  duration_ms: 35.7853
+  duration_ms: 34.5804
   type: 'test'
   ...
 # Subtest: identity mismatch is refused before a v1 catalog is migrated
-ok 291 - identity mismatch is refused before a v1 catalog is migrated
+ok 293 - identity mismatch is refused before a v1 catalog is migrated
   ---
-  duration_ms: 34.0018
+  duration_ms: 32.6119
   type: 'test'
   ...
 # Subtest: proof reminders append at most one short message, dedupe for 24h and list at most three records
-ok 292 - proof reminders append at most one short message, dedupe for 24h and list at most three records
+ok 294 - proof reminders append at most one short message, dedupe for 24h and list at most three records
   ---
-  duration_ms: 249.9228
+  duration_ms: 234.584
   type: 'test'
   ...
 # Subtest: a new record generation re-arms the reminder immediately
-ok 293 - a new record generation re-arms the reminder immediately
+ok 295 - a new record generation re-arms the reminder immediately
   ---
-  duration_ms: 76.0873
+  duration_ms: 66.7517
   type: 'test'
   ...
 # Subtest: defer and disable state persist in the catalog and suppress reminders exactly as written
-ok 294 - defer and disable state persist in the catalog and suppress reminders exactly as written
+ok 296 - defer and disable state persist in the catalog and suppress reminders exactly as written
   ---
-  duration_ms: 103.687
+  duration_ms: 95.2401
   type: 'test'
   ...
 # Subtest: a project-wide reminder disable and the global config switch suppress reminders
-ok 295 - a project-wide reminder disable and the global config switch suppress reminders
+ok 297 - a project-wide reminder disable and the global config switch suppress reminders
   ---
-  duration_ms: 76.1276
+  duration_ms: 80.0222
   type: 'test'
   ...
 # Subtest: reminder failures never block or alter the main chat request
-ok 296 - reminder failures never block or alter the main chat request
+ok 298 - reminder failures never block or alter the main chat request
   ---
-  duration_ms: 39.8332
+  duration_ms: 40.5211
   type: 'test'
   ...
 # Subtest: non-enter decisions, aborted signals and unbound sessions are returned untouched
-ok 297 - non-enter decisions, aborted signals and unbound sessions are returned untouched
+ok 299 - non-enter decisions, aborted signals and unbound sessions are returned untouched
   ---
-  duration_ms: 36.5208
+  duration_ms: 37.8437
   type: 'test'
   ...
 # Subtest: dispose detaches the listener and is idempotent
-ok 298 - dispose detaches the listener and is idempotent
+ok 300 - dispose detaches the listener and is idempotent
   ---
-  duration_ms: 36.7954
+  duration_ms: 37.1544
   type: 'test'
   ...
 # Subtest: reminders follow the persisted pending state: reviewed proof and confirmed claims stop the reminder
-ok 299 - reminders follow the persisted pending state: reviewed proof and confirmed claims stop the reminder
+ok 301 - reminders follow the persisted pending state: reviewed proof and confirmed claims stop the reminder
   ---
-  duration_ms: 120.425
+  duration_ms: 134.4427
   type: 'test'
   ...
 # Subtest: report draft fixes the time range, lists pending proofs and never invents dimensions or confirmations
-ok 300 - report draft fixes the time range, lists pending proofs and never invents dimensions or confirmations
+ok 302 - report draft fixes the time range, lists pending proofs and never invents dimensions or confirmations
   ---
-  duration_ms: 89.4403
+  duration_ms: 90.0205
   type: 'test'
   ...
 # Subtest: draft is deterministic for the same fixed clock and content
-ok 301 - draft is deterministic for the same fixed clock and content
+ok 303 - draft is deterministic for the same fixed clock and content
   ---
-  duration_ms: 50.7985
+  duration_ms: 48.4345
   type: 'test'
   ...
 # Subtest: approve binds the report digest and each source work generation; mismatches are REPORT_STALE
-ok 302 - approve binds the report digest and each source work generation; mismatches are REPORT_STALE
+ok 304 - approve binds the report digest and each source work generation; mismatches are REPORT_STALE
   ---
-  duration_ms: 66.4178
+  duration_ms: 66.8711
   type: 'test'
   ...
 # Subtest: unapproved export is marked as draft and writes Markdown and JSON without absolute paths
-ok 303 - unapproved export is marked as draft and writes Markdown and JSON without absolute paths
+ok 305 - unapproved export is marked as draft and writes Markdown and JSON without absolute paths
   ---
-  duration_ms: 52.2351
+  duration_ms: 51.5286
   type: 'test'
   ...
 # Subtest: approved export is final, includes references and rejects changed sources
-ok 304 - approved export is final, includes references and rejects changed sources
+ok 306 - approved export is final, includes references and rejects changed sources
   ---
-  duration_ms: 69.0305
+  duration_ms: 62.5408
   type: 'test'
   ...
 # Subtest: report draft keeps evidence references stable without local paths and never upgrades support
-ok 305 - report draft keeps evidence references stable without local paths and never upgrades support
+ok 307 - report draft keeps evidence references stable without local paths and never upgrades support
   ---
-  duration_ms: 74.888
+  duration_ms: 72.8737
   type: 'test'
   ...
 # Subtest: explicit work references must be live, inside the range and inside the selected projects
-ok 306 - explicit work references must be live, inside the range and inside the selected projects
+ok 308 - explicit work references must be live, inside the range and inside the selected projects
   ---
-  duration_ms: 89.9029
+  duration_ms: 80.911
   type: 'test'
   ...
 # Subtest: only active registered projects are selected and retired or unknown projects are refused
-ok 307 - only active registered projects are selected and retired or unknown projects are refused
+ok 309 - only active registered projects are selected and retired or unknown projects are refused
   ---
-  duration_ms: 58.4261
+  duration_ms: 53.5397
   type: 'test'
   ...
 # Subtest: report time ranges reject malformed or reversed bounds
-ok 308 - report time ranges reject malformed or reversed bounds
+ok 310 - report time ranges reject malformed or reversed bounds
   ---
-  duration_ms: 34.329
+  duration_ms: 31.7988
   type: 'test'
   ...
 # Subtest: catalog-backed reminder state supports 24h dedupe, defer and disable semantics
-ok 309 - catalog-backed reminder state supports 24h dedupe, defer and disable semantics
+ok 311 - catalog-backed reminder state supports 24h dedupe, defer and disable semantics
   ---
-  duration_ms: 40.0845
+  duration_ms: 39.2199
   type: 'test'
   ...
 # Subtest: start recovers an interrupted running job and never re-dispatches it
-ok 310 - start recovers an interrupted running job and never re-dispatches it
+ok 312 - start recovers an interrupted running job and never re-dispatches it
   ---
-  duration_ms: 75.6033
+  duration_ms: 75.7087
   type: 'test'
   ...
 # Subtest: tick executes the oldest queued job first and leaves the rest queued
-ok 311 - tick executes the oldest queued job first and leaves the rest queued
+ok 313 - tick executes the oldest queued job first and leaves the rest queued
   ---
-  duration_ms: 101.8403
+  duration_ms: 105.7938
   type: 'test'
   ...
 # Subtest: global concurrency one keeps a second scope queued instead of dispatching twice
-ok 312 - global concurrency one keeps a second scope queued instead of dispatching twice
+ok 314 - global concurrency one keeps a second scope queued instead of dispatching twice
   ---
-  duration_ms: 103.4411
+  duration_ms: 112.9338
   type: 'test'
   ...
 # Subtest: an outcome_unknown job is never re-sent and keeps the root dispatch gate held
-ok 313 - an outcome_unknown job is never re-sent and keeps the root dispatch gate held
+ok 315 - an outcome_unknown job is never re-sent and keeps the root dispatch gate held
   ---
-  duration_ms: 90.901
+  duration_ms: 86.3933
   type: 'test'
   ...
 # Subtest: stop aborts the current run, is idempotent and stops further polling
-ok 314 - stop aborts the current run, is idempotent and stops further polling
+ok 316 - stop aborts the current run, is idempotent and stops further polling
   ---
-  duration_ms: 176.0363
+  duration_ms: 192.6355
   type: 'test'
   ...
 # Subtest: start and tick never throw when the registry or a queue is unavailable
-ok 315 - start and tick never throw when the registry or a queue is unavailable
+ok 317 - start and tick never throw when the registry or a queue is unavailable
   ---
-  duration_ms: 0.3077
+  duration_ms: 0.3372
   type: 'test'
   ...
 # Subtest: status reports pending scopes before polling and bounded diagnostics after one tick
-ok 316 - status reports pending scopes before polling and bounded diagnostics after one tick
+ok 318 - status reports pending scopes before polling and bounded diagnostics after one tick
   ---
-  duration_ms: 54.8477
+  duration_ms: 55.6917
   type: 'test'
   ...
 # Subtest: recoverOnStart can be disabled without touching a running job
-ok 317 - recoverOnStart can be disabled without touching a running job
+ok 319 - recoverOnStart can be disabled without touching a running job
   ---
-  duration_ms: 48.1755
+  duration_ms: 46.5779
   type: 'test'
   ...
 # Subtest: queue pending/list views are read-only, bounded and oldest first
-ok 318 - queue pending/list views are read-only, bounded and oldest first
+ok 320 - queue pending/list views are read-only, bounded and oldest first
   ---
-  duration_ms: 38.1813
+  duration_ms: 37.5959
   type: 'test'
   ...
 # Subtest: a settled memory_extract job notifies the dirty observer exactly once
-ok 319 - a settled memory_extract job notifies the dirty observer exactly once
+ok 321 - a settled memory_extract job notifies the dirty observer exactly once
   ---
-  duration_ms: 0.9347
+  duration_ms: 1.0253
   type: 'test'
   ...
 # Subtest: only an accepted current user event enqueues and repeated delivery spends one reservation
-ok 320 - only an accepted current user event enqueues and repeated delivery spends one reservation
+ok 322 - only an accepted current user event enqueues and repeated delivery spends one reservation
   ---
-  duration_ms: 62.9103
+  duration_ms: 65.5891
   type: 'test'
   ...
 # Subtest: claimed rejection and claimed-only messages never enqueue or add recall
-ok 321 - claimed rejection and claimed-only messages never enqueue or add recall
+ok 323 - claimed rejection and claimed-only messages never enqueue or add recall
   ---
-  duration_ms: 37.6116
+  duration_ms: 37.5191
   type: 'test'
   ...
 # Subtest: same message ID with edited text or a second event sequence is refused as a new source
-ok 322 - same message ID with edited text or a second event sequence is refused as a new source
+ok 324 - same message ID with edited text or a second event sequence is refused as a new source
   ---
-  duration_ms: 41.62
+  duration_ms: 42.7415
   type: 'test'
   ...
 # Subtest: unapproved user tags and non-user producer classes do not gain extraction permission
-ok 323 - unapproved user tags and non-user producer classes do not gain extraction permission
+ok 325 - unapproved user tags and non-user producer classes do not gain extraction permission
   ---
-  duration_ms: 27.2276
+  duration_ms: 36.795
   type: 'test'
   ...
 # Subtest: attachments, secret-like text, oversized input and unsupported source data are not partly extracted
-ok 324 - attachments, secret-like text, oversized input and unsupported source data are not partly extracted
+ok 326 - attachments, secret-like text, oversized input and unsupported source data are not partly extracted
   ---
-  duration_ms: 25.7936
+  duration_ms: 26.3538
   type: 'test'
   ...
 # Subtest: a forged event object or replay into an unapproved session cannot reuse an admission
-ok 325 - a forged event object or replay into an unapproved session cannot reuse an admission
+ok 327 - a forged event object or replay into an unapproved session cannot reuse an admission
   ---
-  duration_ms: 37.2781
+  duration_ms: 38.5076
   type: 'test'
   ...
 # Subtest: a delayed A event cannot be rebound to a newly selected B scope
-ok 326 - a delayed A event cannot be rebound to a newly selected B scope
+ok 328 - a delayed A event cannot be rebound to a newly selected B scope
   ---
-  duration_ms: 27.9427
+  duration_ms: 30.2573
   type: 'test'
   ...
 # Subtest: post-enqueue permission revocation rolls back jobs, plaintext and budget together
-ok 327 - post-enqueue permission revocation rolls back jobs, plaintext and budget together
+ok 329 - post-enqueue permission revocation rolls back jobs, plaintext and budget together
   ---
-  duration_ms: 32.994
+  duration_ms: 36.3684
   type: 'test'
   ...
 # Subtest: a foreign queue is refused before any cross-store write
-ok 328 - a foreign queue is refused before any cross-store write
+ok 330 - a foreign queue is refused before any cross-store write
   ---
-  duration_ms: 26.635
+  duration_ms: 28.8206
   type: 'test'
   ...
 # Subtest: a held scope suppresses recall while the ordinary request continues
-ok 329 - a held scope suppresses recall while the ordinary request continues
+ok 331 - a held scope suppresses recall while the ordinary request continues
   ---
-  duration_ms: 35.8956
+  duration_ms: 40.0138
   type: 'test'
   ...
 # Subtest: recall preserves the final decision and injects only ordinary active memory once
-ok 330 - recall preserves the final decision and injects only ordinary active memory once
+ok 332 - recall preserves the final decision and injects only ordinary active memory once
   ---
-  duration_ms: 47.6659
+  duration_ms: 48.2131
   type: 'test'
   ...
 # Subtest: replaced or removed claimed input cannot become a historical fallback query
-ok 331 - replaced or removed claimed input cannot become a historical fallback query
+ok 333 - replaced or removed claimed input cannot become a historical fallback query
   ---
-  duration_ms: 42.7875
+  duration_ms: 44.1252
   type: 'test'
   ...
 # Subtest: scope and authorization changes while next is awaiting never inject the old scope
-ok 332 - scope and authorization changes while next is awaiting never inject the old scope
+ok 334 - scope and authorization changes while next is awaiting never inject the old scope
   ---
-  duration_ms: 43.1237
+  duration_ms: 41.3155
   type: 'test'
   ...
 # Subtest: uncommitted reentry keeps identity but deletion removes old recalled body instead of caching it
-ok 333 - uncommitted reentry keeps identity but deletion removes old recalled body instead of caching it
+ok 335 - uncommitted reentry keeps identity but deletion removes old recalled body instead of caching it
   ---
-  duration_ms: 75.4536
+  duration_ms: 70.3578
   type: 'test'
   ...
 # Subtest: changed recalled content gets a new injection ID rather than reusing the old body identity
-ok 334 - changed recalled content gets a new injection ID rather than reusing the old body identity
+ok 336 - changed recalled content gets a new injection ID rather than reusing the old body identity
   ---
-  duration_ms: 65.1823
+  duration_ms: 67.7633
   type: 'test'
   ...
 # Subtest: only an exact self-commit receipt suppresses reentry and never enqueues the recalled content
-ok 335 - only an exact self-commit receipt suppresses reentry and never enqueues the recalled content
+ok 337 - only an exact self-commit receipt suppresses reentry and never enqueues the recalled content
   ---
-  duration_ms: 76.8978
+  duration_ms: 75.5337
   type: 'test'
   ...
 # Subtest: same-root sibling fibers and a second module copy cannot install duplicate writers
-ok 336 - same-root sibling fibers and a second module copy cannot install duplicate writers
+ok 338 - same-root sibling fibers and a second module copy cannot install duplicate writers
   ---
-  duration_ms: 41.0276
+  duration_ms: 41.0077
   type: 'test'
   ...
 # Subtest: dispose drops not-yet-admitted material and late callbacks but reports durable queued material retained
-ok 337 - dispose drops not-yet-admitted material and late callbacks but reports durable queued material retained
+ok 339 - dispose drops not-yet-admitted material and late callbacks but reports durable queued material retained
   ---
-  duration_ms: 41.8634
+  duration_ms: 39.4441
   type: 'test'
   ...
 # Subtest: retrieval or authorization failures never return a previous recalled body or raw diagnostic error
-ok 338 - retrieval or authorization failures never return a previous recalled body or raw diagnostic error
+ok 340 - retrieval or authorization failures never return a previous recalled body or raw diagnostic error
   ---
-  duration_ms: 46.8145
+  duration_ms: 46.9897
   type: 'test'
   ...
 # Subtest: non-canonical session IDs and asynchronous authority callbacks fail closed
-ok 339 - non-canonical session IDs and asynchronous authority callbacks fail closed
+ok 341 - non-canonical session IDs and asynchronous authority callbacks fail closed
   ---
-  duration_ms: 30.6149
+  duration_ms: 28.861
   type: 'test'
   ...
 # Subtest: partial installation failure removes every listener and does not reserve the owner
-ok 340 - partial installation failure removes every listener and does not reserve the owner
+ok 342 - partial installation failure removes every listener and does not reserve the owner
   ---
-  duration_ms: 39.2369
+  duration_ms: 38.0866
   type: 'test'
   ...
 # Subtest: pending capacity, cumulative body size and expired admission do not create extra jobs
-ok 341 - pending capacity, cumulative body size and expired admission do not create extra jobs
+ok 343 - pending capacity, cumulative body size and expired admission do not create extra jobs
   ---
-  duration_ms: 97.6342
+  duration_ms: 113.0489
   type: 'test'
   ...
 # Subtest: recall bounds skip whole records and never search work summaries or session history
-ok 342 - recall bounds skip whole records and never search work summaries or session history
+ok 344 - recall bounds skip whole records and never search work summaries or session history
   ---
-  duration_ms: 88.0612
+  duration_ms: 87.6903
   type: 'test'
   ...
 # Subtest: evicted recall metadata does not retain body or reuse a different cached message identity
-ok 343 - evicted recall metadata does not retain body or reuse a different cached message identity
+ok 345 - evicted recall metadata does not retain body or reuse a different cached message identity
   ---
-  duration_ms: 64.7547
+  duration_ms: 64.4596
   type: 'test'
   ...
 # Subtest: an asynchronous rejected message factory is observed and cannot leak its raw failure
-ok 344 - an asynchronous rejected message factory is observed and cannot leak its raw failure
+ok 346 - an asynchronous rejected message factory is observed and cannot leak its raw failure
   ---
-  duration_ms: 47.0974
+  duration_ms: 47.6336
   type: 'test'
   ...
 # Subtest: configuration cannot enlarge the promised recall or admission lifetime bounds
-ok 345 - configuration cannot enlarge the promised recall or admission lifetime bounds
+ok 347 - configuration cannot enlarge the promised recall or admission lifetime bounds
   ---
-  duration_ms: 43.4546
+  duration_ms: 44.5152
   type: 'test'
   ...
 # Subtest: discover lists active sources, excludes the target and only keeps related retired sources
-ok 346 - discover lists active sources, excludes the target and only keeps related retired sources
+ok 348 - discover lists active sources, excludes the target and only keeps related retired sources
   ---
-  duration_ms: 176.3803
+  duration_ms: 171.4766
   type: 'test'
   ...
 # Subtest: grant requires the current source abstract revision and upserts an existing relation
-ok 347 - grant requires the current source abstract revision and upserts an existing relation
+ok 349 - grant requires the current source abstract revision and upserts an existing relation
   ---
-  duration_ms: 166.4796
+  duration_ms: 154.5786
   type: 'test'
   ...
 # Subtest: resolve is denied before grant and returns live source detail without copying it
-ok 348 - resolve is denied before grant and returns live source detail without copying it
+ok 350 - resolve is denied before grant and returns live source detail without copying it
   ---
-  duration_ms: 214.4508
+  duration_ms: 215.2937
   type: 'test'
   ...
 # Subtest: an active relation follows the latest source abstract without a new decision
-ok 349 - an active relation follows the latest source abstract without a new decision
+ok 351 - an active relation follows the latest source abstract without a new decision
   ---
-  duration_ms: 135.1068
+  duration_ms: 136.8017
   type: 'test'
   ...
 # Subtest: revoke takes effect on the same query, is idempotent, and a re-grant restores the relation
-ok 350 - revoke takes effect on the same query, is idempotent, and a re-grant restores the relation
+ok 352 - revoke takes effect on the same query, is idempotent, and a re-grant restores the relation
   ---
-  duration_ms: 98.8123
+  duration_ms: 104.0114
   type: 'test'
   ...
 # Subtest: retired sources keep existing shares as historical_unknown and retired targets fail closed
-ok 351 - retired sources keep existing shares as historical_unknown and retired targets fail closed
+ok 353 - retired sources keep existing shares as historical_unknown and retired targets fail closed
   ---
-  duration_ms: 116.7292
+  duration_ms: 126.1108
   type: 'test'
   ...
 # Subtest: a relation whose source abstract disappeared fails closed instead of guessing
-ok 352 - a relation whose source abstract disappeared fails closed instead of guessing
+ok 354 - a relation whose source abstract disappeared fails closed instead of guessing
   ---
-  duration_ms: 78.7398
+  duration_ms: 78.9791
   type: 'test'
   ...
 # Subtest: unknown projects fail closed and relations survive a catalog reopen with a new manager
-ok 353 - unknown projects fail closed and relations survive a catalog reopen with a new manager
+ok 355 - unknown projects fail closed and relations survive a catalog reopen with a new manager
   ---
-  duration_ms: 100.0121
+  duration_ms: 91.0606
   type: 'test'
   ...
 # Subtest: admission accepts fixed source and refuses another host or runtime
-ok 354 - admission accepts fixed source and refuses another host or runtime
+ok 356 - admission accepts fixed source and refuses another host or runtime
   ---
-  duration_ms: 9.0447
+  duration_ms: 4.9904
   type: 'test'
   ...
 # Subtest: changed vendor bytes fail before any vendor code can load
-ok 355 - changed vendor bytes fail before any vendor code can load
+ok 357 - changed vendor bytes fail before any vendor code can load
   ---
-  duration_ms: 19.5813
+  duration_ms: 18.6458
   type: 'test'
   ...
 # Subtest: undeclared executable file and removed license are rejected
-ok 356 - undeclared executable file and removed license are rejected
+ok 358 - undeclared executable file and removed license are rejected
   ---
-  duration_ms: 20.4835
+  duration_ms: 18.0147
   type: 'test'
   ...
 # Subtest: a lock cannot introduce an alternative vendor or network module
-ok 357 - a lock cannot introduce an alternative vendor or network module
+ok 359 - a lock cannot introduce an alternative vendor or network module
   ---
-  duration_ms: 17.86
+  duration_ms: 15.6448
   type: 'test'
   ...
 # Subtest: backend import verifies bytes before a modified vendor can cause a side effect
-ok 358 - backend import verifies bytes before a modified vendor can cause a side effect
+ok 360 - backend import verifies bytes before a modified vendor can cause a side effect
   ---
-  duration_ms: 164.6604
+  duration_ms: 157.6793
   type: 'test'
   ...
 # Subtest: layout plans the same-volume hot/cold/authority/staging/reports tree
-ok 359 - layout plans the same-volume hot/cold/authority/staging/reports tree
+ok 361 - layout plans the same-volume hot/cold/authority/staging/reports tree
   ---
-  duration_ms: 0.7262
+  duration_ms: 0.6549
   type: 'test'
   ...
 # Subtest: production root rejects C, relative, UNC, source-tree and missing paths; the test allowC exception is explicit
-ok 360 - production root rejects C, relative, UNC, source-tree and missing paths; the test allowC exception is explicit
+ok 362 - production root rejects C, relative, UNC, source-tree and missing paths; the test allowC exception is explicit
   ---
-  duration_ms: 3.1242
+  duration_ms: 2.8119
   type: 'test'
   ...
 # Subtest: cold journal records only metadata, enforces prepared→copied→index→cleaned, and fails closed on tamper
-ok 361 - cold journal records only metadata, enforces prepared→copied→index→cleaned, and fails closed on tamper
+ok 363 - cold journal records only metadata, enforces prepared→copied→index→cleaned, and fails closed on tamper
   ---
-  duration_ms: 15.1149
+  duration_ms: 15.9099
   type: 'test'
   ...
 # Subtest: cold journal rejects unsafe ids and malformed metadata
-ok 362 - cold journal rejects unsafe ids and malformed metadata
+ok 364 - cold journal rejects unsafe ids and malformed metadata
   ---
-  duration_ms: 3.3162
+  duration_ms: 3.3277
   type: 'test'
   ...
 # Subtest: work operations expose exactly the contracted operation map
-ok 363 - work operations expose exactly the contracted operation map
+ok 365 - work operations expose exactly the contracted operation map
   ---
-  duration_ms: 14.2754
+  duration_ms: 13.2681
   type: 'test'
   ...
 # Subtest: model actors may list/get/draft reports but cannot confirm, merge, read evidence, approve or export
-ok 364 - model actors may list/get/draft reports but cannot confirm, merge, read evidence, approve or export
+ok 366 - model actors may list/get/draft reports but cannot confirm, merge, read evidence, approve or export
   ---
-  duration_ms: 77.3626
+  duration_ms: 74.8894
   type: 'test'
   ...
 # Subtest: user confirmations persist and responses never expose local paths or secrets
-ok 365 - user confirmations persist and responses never expose local paths or secrets
+ok 367 - user confirmations persist and responses never expose local paths or secrets
   ---
-  duration_ms: 89.9797
+  duration_ms: 85.7082
   type: 'test'
   ...
 # Subtest: explicit approval.request gates evidence content reads
-ok 366 - explicit approval.request gates evidence content reads
+ok 368 - explicit approval.request gates evidence content reads
   ---
-  duration_ms: 116.4798
+  duration_ms: 114.0434
   type: 'test'
   ...
 # Subtest: extras handlers return synchronous envelopes for the management dispatcher
-ok 367 - extras handlers return synchronous envelopes for the management dispatcher
+ok 369 - extras handlers return synchronous envelopes for the management dispatcher
   ---
-  duration_ms: 46.7942
+  duration_ms: 41.1804
   type: 'test'
   ...
 # Subtest: an async approval service cannot block the synchronous dispatcher; pre-resolved user confirmation works
-ok 368 - an async approval service cannot block the synchronous dispatcher; pre-resolved user confirmation works
+ok 370 - an async approval service cannot block the synchronous dispatcher; pre-resolved user confirmation works
   ---
-  duration_ms: 66.3949
+  duration_ms: 66.4853
   type: 'test'
   ...
 # Subtest: project scope resolution works across repositories and from the trusted session binding
-ok 369 - project scope resolution works across repositories and from the trusted session binding
+ok 371 - project scope resolution works across repositories and from the trusted session binding
   ---
-  duration_ms: 79.3085
+  duration_ms: 78.7249
   type: 'test'
   ...
 # Subtest: report operations delegate to the catalog-backed report manager
-ok 370 - report operations delegate to the catalog-backed report manager
+ok 372 - report operations delegate to the catalog-backed report manager
   ---
-  duration_ms: 66.6729
+  duration_ms: 59.8425
   type: 'test'
   ...
 # Subtest: reminder.defer and reminder.disable write persisted catalog state with the documented cooldown semantics
-ok 371 - reminder.defer and reminder.disable write persisted catalog state with the documented cooldown semantics
+ok 373 - reminder.defer and reminder.disable write persisted catalog state with the documented cooldown semantics
   ---
-  duration_ms: 62.104
+  duration_ms: 59.2433
   type: 'test'
   ...
 # Subtest: stale generations and unknown records map to safe resource codes without leaking internals
-ok 372 - stale generations and unknown records map to safe resource codes without leaking internals
+ok 374 - stale generations and unknown records map to safe resource codes without leaking internals
   ---
-  duration_ms: 48.8353
+  duration_ms: 45.3164
   type: 'test'
   ...
 # Subtest: work/report operations dispatch through the real management extras envelope
-ok 373 - work/report operations dispatch through the real management extras envelope
+ok 375 - work/report operations dispatch through the real management extras envelope
   ---
-  duration_ms: 65.5265
+  duration_ms: 65.1058
   type: 'test'
   ...
 # Subtest: manual work drafts persist independently with unknown dates and missing proof
-ok 374 - manual work drafts persist independently with unknown dates and missing proof
+ok 376 - manual work drafts persist independently with unknown dates and missing proof
   ---
-  duration_ms: 58.1026
+  duration_ms: 58.0447
   type: 'test'
   ...
 # Subtest: a model supplied calendar date remains inferred and pending until explicit user confirmation
-ok 375 - a model supplied calendar date remains inferred and pending until explicit user confirmation
+ok 377 - a model supplied calendar date remains inferred and pending until explicit user confirmation
   ---
-  duration_ms: 43.5321
+  duration_ms: 43.7554
   type: 'test'
   ...
 # Subtest: contradictory dates remain visible without overwriting a confirmed date and replay is a no-op
-ok 376 - contradictory dates remain visible without overwriting a confirmed date and replay is a no-op
+ok 378 - contradictory dates remain visible without overwriting a confirmed date and replay is a no-op
   ---
-  duration_ms: 51.4378
+  duration_ms: 50.8219
   type: 'test'
   ...
 # Subtest: goal and association changes become explicit candidates instead of disappearing from a merge
-ok 377 - goal and association changes become explicit candidates instead of disappearing from a merge
+ok 379 - goal and association changes become explicit candidates instead of disappearing from a merge
   ---
-  duration_ms: 35.449
+  duration_ms: 36.3609
   type: 'test'
   ...
 # Subtest: evidence registration never certifies claims; explicit review is limited to one claim and version
-ok 378 - evidence registration never certifies claims; explicit review is limited to one claim and version
+ok 380 - evidence registration never certifies claims; explicit review is limited to one claim and version
   ---
-  duration_ms: 60.6498
+  duration_ms: 56.463
   type: 'test'
   ...
 # Subtest: source replay avoids duplicate items and model merges preserve user confirmation
-ok 379 - source replay avoids duplicate items and model merges preserve user confirmation
+ok 381 - source replay avoids duplicate items and model merges preserve user confirmation
   ---
-  duration_ms: 51.6126
+  duration_ms: 50.1643
   type: 'test'
   ...
 # Subtest: replaying the same work merge does not advance lifecycle epoch or content revision
-ok 380 - replaying the same work merge does not advance lifecycle epoch or content revision
+ok 382 - replaying the same work merge does not advance lifecycle epoch or content revision
   ---
-  duration_ms: 30.7161
+  duration_ms: 31.1017
   type: 'test'
   ...
 # Subtest: a new version of the same source anchor requires a revision rather than a new work item
-ok 381 - a new version of the same source anchor requires a revision rather than a new work item
+ok 383 - a new version of the same source anchor requires a revision rather than a new work item
   ---
-  duration_ms: 38.3465
+  duration_ms: 38.9472
   type: 'test'
   ...
 # Subtest: reviewing a new version for one claim cannot refresh another claims obsolete proof
-ok 382 - reviewing a new version for one claim cannot refresh another claims obsolete proof
+ok 384 - reviewing a new version for one claim cannot refresh another claims obsolete proof
   ---
-  duration_ms: 54.7956
+  duration_ms: 54.8325
   type: 'test'
   ...
 # Subtest: registering the same document for another claim extends links without increasing proof count
-ok 383 - registering the same document for another claim extends links without increasing proof count
+ok 385 - registering the same document for another claim extends links without increasing proof count
   ---
-  duration_ms: 45.4538
+  duration_ms: 44.2599
   type: 'test'
   ...
 # Subtest: revoked proof read authorization prevents automatic content revalidation
-ok 384 - revoked proof read authorization prevents automatic content revalidation
+ok 386 - revoked proof read authorization prevents automatic content revalidation
   ---
-  duration_ms: 45.8598
+  duration_ms: 44.3654
   type: 'test'
   ...
 # Subtest: work forget, source invalidation and restore use the same independent authority
-ok 385 - work forget, source invalidation and restore use the same independent authority
+ok 387 - work forget, source invalidation and restore use the same independent authority
   ---
-  duration_ms: 61.5106
+  duration_ms: 69.2841
   type: 'test'
   ...
-1..385
-# tests 385
+1..387
+# tests 387
 # suites 0
-# pass 385
+# pass 387
 # fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 37288.679
+# duration_ms 36243.7324

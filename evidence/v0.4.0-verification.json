@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "date": "2026-11-09",
-  "startedAtUtc": "2026-11-08T16:35:54.545Z",
-  "durationMs": 38221.7676,
+  "startedAtUtc": "2026-11-08T16:48:01.964Z",
+  "durationMs": 37182.9623,
   "purpose": "v0.4.0 experience/background delivery evidence: reading-first UI, attribution, excerpts, consolidation manifest/validator/queue/runJob/candidate/publish/derived views, correction suspension, M3 layout/journal skeleton; local full suite plus the real installed-library final-gate regression probe and live install observation",
   "runtime": {
     "node": "26.13.0",
@@ -16,8 +16,8 @@
   "suite": {
     "tap": "evidence/v0.4.0-node26.tap",
     "exitCode": 0,
-    "tests": 385,
-    "pass": 385,
+    "tests": 387,
+    "pass": 387,
     "fail": 0,
     "cancelled": 0,
     "skipped": 0,
@@ -48,7 +48,7 @@
           "state": "running",
           "running": 0,
           "pendingScopes": [],
-          "lastTickAt": "2026-11-08T16:36:32.325Z",
+          "lastTickAt": "2026-11-08T16:48:38.483Z",
           "lastError": null
         },
         "grants": {
@@ -58,7 +58,7 @@
           "recoveryConfirmations": 0,
           "manualConfirmations": 0,
           "revoked": false,
-          "authorizationVersion": "grant-v1:15ec12d5-dce8-4531-8437-b0f1f992e80a:1"
+          "authorizationVersion": "grant-v1:9fc42f6a-c0ed-4c84-8c54-6d77c18b6457:1"
         },
         "provider": "active",
         "config": {
@@ -114,7 +114,7 @@
           "running": 0,
           "pendingScopes": 0,
           "automaticDisabled": false,
-          "updatedAt": "2026-11-08T16:36:32.692Z"
+          "updatedAt": "2026-11-08T16:48:39.069Z"
         },
         "attribution": {
           "turns": 0,
@@ -138,12 +138,12 @@
         "background": {
           "state": "unknown",
           "running": 0,
-          "unknown": 12,
+          "unknown": 9,
           "idle": 0,
-          "agents": 12,
-          "quietForMs": 84720,
+          "agents": 9,
+          "quietForMs": 19227,
           "quietMs": 30000,
-          "at": "2026-11-08T16:36:32.693Z"
+          "at": "2026-11-08T16:48:39.069Z"
         }
       }
     },
@@ -179,11 +179,11 @@
     },
     {
       "path": "src/store-internals.mjs",
-      "sha256": "ba6f4f0651d734e27b4b2e5a517b8ae0b6f213043bdc0eb09476e716f322cebf"
+      "sha256": "0223a64c356cb7f543fda4e4067d95633e2f5294e2bc343ff931eedbe0e40965"
     },
     {
       "path": "src/backend.mjs",
-      "sha256": "773837e797b2e9e995d2316cfcb49b7d05a770e07a7561d5869cfc30adc48820"
+      "sha256": "85b130c4c270a14e4bcef537d381dd06535e341c58603c168c19e0f02c315db9"
     },
     {
       "path": "src/jobs.mjs",
@@ -191,7 +191,7 @@
     },
     {
       "path": "src/consolidation-inputs.mjs",
-      "sha256": "f697a81e3e0ba3cda7fc7cb8e579bbbf8997997d8fba1b9af502a9274c204096"
+      "sha256": "d35a0b912a5c924f9cb0aefd12d997516dd5a4af9634a010f3b6eef0dd7bebf7"
     },
     {
       "path": "src/consolidation-output.mjs",
@@ -199,11 +199,11 @@
     },
     {
       "path": "src/consolidation-queue.mjs",
-      "sha256": "50bac8948a105b41b51077e97f54e9f29da65370b38bd4e8ba2d5555adeac291"
+      "sha256": "925622aa20327176bb52d33fec500c1aa333b81290868aaaf42d21ec4bf0ec41"
     },
     {
       "path": "src/consolidation-versions.mjs",
-      "sha256": "ad1cbdb9a3d9da254dad156bb9ba0c3a3ccbf7fc9ff65058d61c3e94dc0dd6bb"
+      "sha256": "f60a4263af141c62cd20d96b183a13b4ebf44b3f989513a5f15864955822f26c"
     },
     {
       "path": "src/storage-layout.mjs",
@@ -227,11 +227,11 @@
     },
     {
       "path": "plugin/experience-operations.mjs",
-      "sha256": "4738f514a36c5156fa6b6035ed00f3e8a5176ca7187eb95afa5d5097f44b8755"
+      "sha256": "632b0f9e447342405c93ad31d5e3a487d909d74f2fd82d12dd96678049413e1b"
     },
     {
       "path": "plugin/correction.mjs",
-      "sha256": "075469238f614e9c59c7b1d8189ea94119b747d5636f7af5ac7a07837c7c6d7c"
+      "sha256": "03c69c1b9c47138f3291d3c370b39082463f750d1d4fd3df0d13f8198fde5bab"
     },
     {
       "path": "plugin/idle-gate.mjs",
@@ -275,11 +275,11 @@
     },
     {
       "path": "tests/consolidation-queue.test.mjs",
-      "sha256": "61b36969fcfeca2c4ae3660d74af507ef356d468df12603646771c45337fbcf0"
+      "sha256": "63148eb972b1a6513c4afca05a1b169bedb97017c683f9d2c08d3670b4222c2c"
     },
     {
       "path": "tests/consolidation-versions.test.mjs",
-      "sha256": "ac0da39beaefb6bb43c2ab636759967b303673781449ec03ece24f8941bdc389"
+      "sha256": "943035790c3289577babe53c3c9a97e48d09b0fd9aaba995199fb7ed8424e084"
     },
     {
       "path": "tests/consolidation-storage.test.mjs",
@@ -287,7 +287,7 @@
     },
     {
       "path": "tests/correction.test.mjs",
-      "sha256": "63dfdaff510d5091d43be5a8cea0c781338dc5a728df35855430b99573b58221"
+      "sha256": "ac12b6980d4f4c12353da155ab3590ea24782536cbd8f6d6029157d8a2f978c2"
     },
     {
       "path": "tests/excerpt-lifecycle.test.mjs",
@@ -315,19 +315,19 @@
     },
     {
       "path": "README.md",
-      "sha256": "950b75b2f908f97e2a4d0facd4a46fc59bfc377504846b1f268c23bd8316f5e9"
+      "sha256": "b1c0eb3b2d117ac7d1f16ff0c49649c6dc3f83901cf055412ff2c92a6f9d732f"
     },
     {
       "path": "TODO.md",
-      "sha256": "194d4c0ec477924ef5bda010ff4e3d8cf8df184a5b6b6aeb575650783747c444"
+      "sha256": "3cbcbd76935cc83bfb15a9738d43836194e00718f22ad0242f1d35fe9f060423"
     },
     {
       "path": "docs/mechanisms.md",
-      "sha256": "7ead533c5ac83e3b246b7119a911354a574af03f619a77b1f973c3cc9ff218b6"
+      "sha256": "1c935dca4cc617e58c01d7bc0dfe0a3830da179123559214e43b3d7da4908dfb"
     },
     {
       "path": "docs/implementation-route.md",
-      "sha256": "5d01610865762a94263824a945523f9f7ef470f38d4529297aeafd0fb2ce63f3"
+      "sha256": "61c069a13c8d6d577e4088fea1835fe6accdf26ed2dd7b57eee21893f9576e9f"
     },
     {
       "path": "docs/experience-implementation-plan.md",
@@ -335,19 +335,23 @@
     }
   ],
   "artifactsHashBasis": "SHA256 computed from the clean HEAD tree before this evidence file was written; compare with git show <git.head>:<path>",
-  "tapSha256": "44ed46b9f234387e2fa02381fac754329fcb8a1d58d38f88b8397d7e5a406cd9",
+  "tapSha256": "e75093462a0b4d47cc4567102615a761ad5f3849d6b706acd0a207e50a2ee113",
   "git": {
-    "head": "6c138921f40d9e898ce04c762c74c46baeacd08c",
+    "head": "8787f43cd2e2f1e151415a34378acffaf14d1cad",
     "cleanAtStart": true,
     "cleanAtEnd": true
   },
   "independentReview": {
     "path": "docs/v0.4.0-independent-review.md",
-    "status": "reviewed at HEAD a35b550; Critical/Important fixes landed after that review and require a fresh evidence run",
+    "addendum": "docs/v0.4.0-review-addendum.md",
+    "response": "docs/v0.4.0-independent-review-response.md",
+    "status": "original review at a35b550; addendum verified fixes at 7c68f0f (Critical cleared, 4 Important fixed/5 partial); later N-1/I-4/I-6/I-8/N-2..N-6 fixes await independent re-review",
     "findings": {
       "critical": 1,
       "important": 9,
-      "minor": 9
+      "minor": 9,
+      "addendumNewImportant": 1,
+      "addendumNewMinor": 5
     }
   },
   "verified": true,

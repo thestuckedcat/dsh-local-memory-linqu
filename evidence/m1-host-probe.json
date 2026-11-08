@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "date": "2026-11-07",
-  "startedAtUtc": "2026-11-08T16:36:32.316Z",
-  "durationMs": 331.2916,
+  "startedAtUtc": "2026-11-08T16:48:38.691Z",
+  "durationMs": 330.27169999999995,
   "purpose": "isolated real installed-library audit of the M1 final recall projection gate (llm/stream waterfall); not a full Host activation",
   "executable": "E:/dsh/DeepSeek Harness.exe",
   "archive": "E:/dsh/resources/app.asar",
@@ -41,7 +41,7 @@
     },
     {
       "path": "src/backend.mjs",
-      "sha256": "773837e797b2e9e995d2316cfcb49b7d05a770e07a7561d5869cfc30adc48820"
+      "sha256": "85b130c4c270a14e4bcef537d381dd06535e341c58603c168c19e0f02c315db9"
     },
     {
       "path": "src/scope.mjs",
@@ -53,7 +53,7 @@
     },
     {
       "path": "src/store-internals.mjs",
-      "sha256": "ba6f4f0651d734e27b4b2e5a517b8ae0b6f213043bdc0eb09476e716f322cebf"
+      "sha256": "0223a64c356cb7f543fda4e4067d95633e2f5294e2bc343ff931eedbe0e40965"
     },
     {
       "path": "src/validation.mjs",
@@ -91,5 +91,5 @@
   "declarationBasis": "The probe mounts the installed Cordis/LlmRuntime and a synthetic TextAdapter; the false flags follow the inspected call path, not OS-level monitoring.",
   "networkGuard": "tools/host-api/deny-network.cjs; covered Node API sinks only; not an OS policy",
   "scope": "Proves the llm/stream waterfall exists in the pinned Host, that a listener can pass or short-circuit dispatch, and that the final projection blocks a recalled message after the record is deleted. Does not certify the full Web profile, the real Provider, or the client bundle.",
-  "tapSha256": "27f0e59d62bd818d00d19c5fd30042d410d99f815152c0fab8949a90fc0f023b"
+  "tapSha256": "db48dea5f20e24dee228e3abba44c0407226d52682116981ef9a767dd2b33abd"
 }
