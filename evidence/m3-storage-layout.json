@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-09",
+  "scope": "M3 storage-layout validation and cold-transfer journal skeleton (no data move/recall/GC)",
+  "suite": {
+    "tests": 379,
+    "pass": 379,
+    "fail": 0,
+    "command": ".\\runtime\\node.exe --test tests/*.test.mjs"
+  },
+  "newTests": {
+    "tests/storage-layout.test.mjs": 4
+  },
+  "behavior": [
+    "planLayout: hot/cold/authority/staging/reports/cold journal remain under one local data root; no production root is created",
+    "validateLocalRoot: absolute-only, rejects UNC/network, parent traversal, source-tree overlap, non-existent/non-directory root, symlink/junction segments, and production C: unless allowC fixture",
+    "injected volume probe rejects network/removable; requireVolumeType=true fails closed when unknown",
+    "cold journal records metadata/digests only (no memory text) with prepared→copied_verified→index_switched→source_cleaned transitions, atomic writes, duplicate/wrong-order rejection",
+    "recover lists valid journals and reports corrupt ones fail-closed; digest tamper is rejected"
+  ],
+  "limitations": [
+    "MEM-302 layered recall/cold read, MEM-303 cold/open cleanup propagation, and actual body transfer are NOT implemented.",
+    "The production data root is not created or provisioned; only validation/planning is provided.",
+    "Volume type is an injected probe in tests; no real OS volume-type probe or ACL check was executed.",
+    "No real cold tier E2E test, no crash-during-copy test with actual bodies, no backup/restore integration.",
+    "Cold dirs are created only by tests under the system temp drive; production non-C root remains unverified."
+  ]
+}

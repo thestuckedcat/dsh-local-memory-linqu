@@ -81,10 +81,10 @@ M2退出：合成驱动/用户库两个登记仓库不互相放宽适用性；�
 
 ### M3：非C盘冷档、再次压缩和删除闭环
 
-- [ ] **MEM-301 独立数据根**：新增`src/storage-layout.mjs`、`src/cold-archive.mjs`。设计默认`E:/dsh-data/05-local-memory/<profile>`，`hot/`、`cold/`、`authority/`、`staging/`、`reports/`同一本地固定卷，独立于源码目录及plugin安装目录；**本轮不创建该数据根**。部署重新验证卷类型、ACL、非网络/非链接以及路径逐段身份。C盘仅允许隔离测试fixture；生产冷档无非C盘可用时停用冷档并显示容量/配置异常，不悄悄回C。
+- [ ] **MEM-301 独立数据根**：**部分实现** `src/storage-layout.mjs`：路径规划、绝对/UNC/父级/源码树/符号链接/卷类型校验与 `allowC` 测试例外；**未创建生产数据根**，卷类型仅注入探针，ACL/真实非C卷未验证。
 - [ ] **MEM-302 分层召回**：长期未有效调用默认90天转冷，可配置；仅通过权限/适用性检查且实际交付的用户检索更新lastAccess，后台压缩/索引遍历不能令全库永不变冷。热索引只保留冷条目的安全摘要与ref，按当前问题、预算、来源有效性选中后再读取小段明细。二次压缩是语义合并＋保留来源图，不是只压ZIP；原明细独立保留，不因总结而丢失证明。
 - [ ] **MEM-303 可恢复归档与明确删除**：`archive`进入用户归档、不参与自动召回；`restoreArchived`需重新核许可/适用性。冷存储是tier，不等于用户归档状态：active+cold仍可按需召回。明确删除先在独立权威账本提交tombstone/提升epoch/撤销在途lease，再清理本工具控制的正文、FTS、冷块、abstract、共享缓存和报告受控缓存。失败处保持不可读并重试清理，不能因残留块而恢复可召回状态。不得承诺SSD底层擦除或撤回模型已接收数据。
-- [ ] **MEM-304 崩溃/备份**：转冷journal记录prepared→copied_verified→index_switched→source_cleaned，单writer、同卷原子替换和文件摘要核对；重启依权威账本恢复。备份仅包含用户明确选择的本地内容，恢复先读取现行删除权威再重建索引。authority丢失/不匹配时禁止自动导入旧备份。不可变revision中的旧正文也纳入受控清理，不留下“旧版本仍可搜索”的旁路。
+- [ ] **MEM-304 崩溃/备份**：**部分实现** `src/cold-archive.mjs` 的 journal 状态机与 fail-closed 恢复（prepared→copied_verified→index_switched→source_cleaned、原子写、digest 校验）；**未搬运正文**、无真实崩溃/备份/authority 恢复集成。
 
 M3退出：非C盘路径断开、磁盘满、搬移中崩溃、旧备份、摘要残留和晚到模型结果均不得突破删除。上下文检查只出现所选摘要/片段，不出现整库；冷存储路径和上下文token控制分别证明。
 
