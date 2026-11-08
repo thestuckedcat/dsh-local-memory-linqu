@@ -33,7 +33,7 @@ function requireLiveDependencies(ctx, scopeRef, dependencies) {
   }
 }
 
-export function createConsolidationVersions(store, {now = () => new Date()} = {}) {
+export function createConsolidationVersions(store, {inputs, now = () => new Date()} = {}) {
   if (!store || typeof store.scopeRef !== 'string') throw failure('MC_VERSION_UNAVAILABLE', 'memory store required');
   const ctx = contextOf(store);
   function clock() {
@@ -98,6 +98,8 @@ export function createConsolidationVersions(store, {now = () => new Date()} = {}
       if (head.revision !== headRevision) throw failure('MC_HEAD_CHANGED', 'consolidation head changed before publish');
       const job = ctx.db.prepare('SELECT * FROM ledger.consolidation_jobs WHERE scope_ref=? AND candidate_id=?').get(store.scopeRef, id);
       if (!job || job.state !== 'ready') throw failure('MC_JOB_NOT_READY', 'candidate has no ready job');
+      if (!inputs || typeof inputs.assertCurrent !== 'function') throw failure('MC_PERMISSION_UNAVAILABLE', 'batch permission verifier is not attached');
+      inputs.assertCurrent(JSON.parse(job.manifest_json), {phase: 'publish'});
       requireLiveDependencies(ctx, store.scopeRef, candidate.dependencies);
       const versionId = `mc-version:${job.id}:${head.revision + 1}`;
       const candidateEntry = entryState(ctx, 'consolidation_candidates', id);

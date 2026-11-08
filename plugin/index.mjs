@@ -369,8 +369,8 @@ export function apply(ctx, rawConfig = {}) {
         return recorded;
       },
       onMessageAdmitted: (info) => {
-      enqueueAnnualDraft(info);
       try { correction?.onMessageAdmitted(info); } catch { noteDiagnostic('correction_failed'); }
+      enqueueAnnualDraft(info);
     },
     });
 

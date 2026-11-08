@@ -1,7 +1,7 @@
 import {randomUUID} from 'node:crypto';
 import {checkedText,digest} from './scope.mjs';
 import {shape,clean,canonical,fingerprint} from './validation.mjs';
-import {contextOf,write,checkEpoch,advance,entryState,assertSources,setEntry,memoryDigest,purgeExcerptsForMemory,purgeDerivedForMemory} from './store-internals.mjs';
+import {contextOf,write,checkEpoch,advance,entryState,assertSources,setEntry,memoryDigest,purgeExcerptsForMemory,purgeDerivedForMemory,invalidateConsolidationJobsForMemory,markDerivedStaleForMemory} from './store-internals.mjs';
 
 function target(store,args){
  shape(args,['id','collection','scopeRef','expectedGeneration'],'lifecycle');
@@ -26,7 +26,7 @@ export function forget(store,args){
   return {deleted:true,generation:store.generation(),currentSqliteBodyAndIndexCleared:true,backupCopies:'not-revoked'};
  });
 }
-export function archive(store,args){const {id,collection}=target(store,args),ctx=contextOf(store);return write(ctx,()=>{checkEpoch(ctx,args.expectedGeneration);if(entryState(ctx,collection,id)?.state!=='active')throw new Error('Record is not active');advance(ctx,{lifecycle:true});updateState(ctx,collection,id,'archived');return {archived:true,bodyRetained:true,generation:store.generation()};});}
+export function archive(store,args){const {id,collection}=target(store,args),ctx=contextOf(store);return write(ctx,()=>{checkEpoch(ctx,args.expectedGeneration);if(entryState(ctx,collection,id)?.state!=='active')throw new Error('Record is not active');advance(ctx,{lifecycle:true});updateState(ctx,collection,id,'archived');if(collection==='memories')markDerivedStaleForMemory(ctx,id);return {archived:true,bodyRetained:true,generation:store.generation()};});}
 export function restoreArchived(store,args){const {id,collection}=target(store,args),ctx=contextOf(store);return write(ctx,()=>{
  checkEpoch(ctx,args.expectedGeneration);const old=entryState(ctx,collection,id);if(old?.state!=='archived')throw new Error('Only archived entries can be restored; deleted entries cannot');assertSources(ctx,sourcesFor(ctx,collection,id));
  const row=ctx.db.prepare(`SELECT * FROM ${collection==='memories'?'records':'work_summaries'} WHERE id=? AND scope_ref=?`).get(id,ctx.scopeRef);

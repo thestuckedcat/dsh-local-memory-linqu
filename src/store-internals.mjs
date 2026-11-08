@@ -231,8 +231,33 @@ export function listExcerptsForMemory(store,{memoryId,limit=20}={}){
 }
 function integerLimit(value,min,max,label){if(!Number.isSafeInteger(value)||value<min||value>max)throw new Error('Invalid '+label);return value;}
 
+/** Invalidate queued/running consolidation jobs whose pinned manifest contains this memory. */
+export function invalidateConsolidationJobsForMemory(ctx,memoryId){
+ const jobs=ctx.db.prepare("SELECT id,manifest_json FROM ledger.consolidation_jobs WHERE scope_ref=? AND state IN ('queued','running')").all(ctx.scopeRef);
+ let invalidated=0;
+ for(const job of jobs){
+  let manifest;try{manifest=JSON.parse(job.manifest_json);}catch{manifest=undefined;}
+  if(!manifest||!Array.isArray(manifest.memories)||!manifest.memories.some((memory)=>memory&&memory.id===memoryId))continue;
+  ctx.db.prepare("UPDATE ledger.consolidation_jobs SET state='stale',reason='source_deleted',candidate_id=NULL,run_token=NULL,updated_at=? WHERE scope_ref=? AND id=?").run(new Date().toISOString(),ctx.scopeRef,job.id);
+  ctx.db.prepare('DELETE FROM consolidation_inputs WHERE job_id=?').run(job.id);
+  invalidated+=1;
+ }
+ return invalidated;
+}
+/** Archive propagation: keep derived bodies but make their entries unreadable and clear an invalid head. */
+export function markDerivedStaleForMemory(ctx,memoryId){
+ const owners=ctx.db.prepare("SELECT owner_kind AS kind,owner_id AS id FROM ledger.consolidation_dependencies WHERE scope_ref=? AND base_kind='memory' AND base_id=?").all(ctx.scopeRef,memoryId);
+ let stale=0,headCleared=false;
+ for(const owner of owners){
+  if(owner.kind==='candidate'){ctx.db.prepare("UPDATE ledger.entries SET state='stale' WHERE scope_ref=? AND collection='consolidation_candidates' AND id=?").run(ctx.scopeRef,owner.id);stale+=1;}
+  else if(owner.kind==='version'){ctx.db.prepare("UPDATE ledger.entries SET state='stale' WHERE scope_ref=? AND collection='consolidation_versions' AND id=?").run(ctx.scopeRef,owner.id);stale+=1;const head=ctx.db.prepare('SELECT * FROM ledger.consolidation_head WHERE scope_ref=?').get(ctx.scopeRef);if(head&&head.version_id===owner.id){ctx.db.prepare('UPDATE ledger.consolidation_head SET revision=revision+1,version_id=NULL WHERE scope_ref=?').run(ctx.scopeRef);headCleared=true;}}
+ }
+ invalidateConsolidationJobsForMemory(ctx,memoryId);
+ return {stale,headCleared};
+}
 /** Deletion/correction propagation: purge candidate/version bodies derived from a memory and clear an invalid head. */
 export function purgeDerivedForMemory(ctx,memoryId){
+ invalidateConsolidationJobsForMemory(ctx,memoryId);
  const owners=ctx.db.prepare("SELECT owner_kind AS kind,owner_id AS id FROM ledger.consolidation_dependencies WHERE scope_ref=? AND base_kind='memory' AND base_id=?").all(ctx.scopeRef,memoryId);
  const candidates=[],versions=[];
  for(const owner of owners){if(owner.kind==='candidate')candidates.push(owner.id);else if(owner.kind==='version')versions.push(owner.id);else if(owner.kind==='excerpt'){/* excerpts have their own purge path */}}

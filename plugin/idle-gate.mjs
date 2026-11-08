@@ -17,6 +17,7 @@ export function createBusyGate({agents, now = () => Date.now(), quietMs = DEFAUL
   if (typeof now !== 'function') throw new Error('Busy-gate clock required');
   const statuses = new Map();
   let lastActivityAt = null;
+  let listFailure = false;
   function clock() {
     const value = now();
     const ms = value instanceof Date ? value.getTime() : Number(value);
@@ -27,20 +28,27 @@ export function createBusyGate({agents, now = () => Date.now(), quietMs = DEFAUL
     if (!agents || typeof agents.list !== 'function') return [];
     try {
       const value = agents.list();
-      return Array.isArray(value) ? value : [];
+      if (!Array.isArray(value)) throw new Error('agent list unavailable');
+      listFailure = false;
+      return value;
     } catch {
-      return [];
+      listFailure = true;
+      return null;
     }
   }
   function discover() {
-    for (const agent of listAgents()) {
+    const listed = listAgents();
+    if (listed === null) return;
+    for (const agent of listed) {
       const id = typeof agent === 'string' ? agent : agent?.id;
       if (typeof id !== 'string' || !id) continue;
       if (!statuses.has(id) && statuses.size < MAX_AGENTS) statuses.set(id, {state: 'unknown', since: null});
     }
   }
   function prune() {
-    const live = new Set(listAgents().map((agent) => (typeof agent === 'string' ? agent : agent?.id)).filter((id) => typeof id === 'string' && id));
+    const listed = listAgents();
+    if (listed === null) return;
+    const live = new Set(listed.map((agent) => (typeof agent === 'string' ? agent : agent?.id)).filter((id) => typeof id === 'string' && id));
     for (const id of [...statuses.keys()]) if (!live.has(id)) statuses.delete(id);
   }
   function setStatus(id, state) {
@@ -67,8 +75,18 @@ export function createBusyGate({agents, now = () => Date.now(), quietMs = DEFAUL
   }
   function status() {
     discover();
-    prune();
     const at = clock();
+    if (listFailure) {
+      let running = 0, unknown = 0, idle = 0;
+      for (const entry of statuses.values()) {
+        if (entry.state === 'running') running += 1;
+        else if (entry.state === 'unknown') unknown += 1;
+        else idle += 1;
+      }
+      const quietForMs = lastActivityAt === null ? null : Math.max(0, at - lastActivityAt);
+      return Object.freeze({state: 'unknown', running, unknown, idle, agents: statuses.size, quietForMs, quietMs, listFailed: true, at: new Date(at).toISOString()});
+    }
+    prune();
     let running = 0, unknown = 0, idle = 0;
     for (const entry of statuses.values()) {
       if (entry.state === 'running') running += 1;

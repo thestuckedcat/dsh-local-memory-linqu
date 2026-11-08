@@ -27,7 +27,8 @@ function fixture(t) {
   };
   const clock = () => new Date(milliseconds);
   const inputs = createConsolidationInputs(store, {registry, now: clock, configDigest: 'config-v1'});
-  const queue = createConsolidationQueue(store, {inputs, now: clock});
+  const provider = createControlledProvider({resolveRoute: () => routeA, invoke: async () => ({text: '{}', finishReason: 'stop', usage: {inputTokens: 1, outputTokens: 1}})});
+  const queue = createConsolidationQueue(store, {inputs, provider, authorizeExecution: () => ({authorizationVersion: 'test'}), now: clock});
   t.after(() => {
     try { store.close(); } catch { /* already closed */ }
     rmSync(root, {recursive: true, force: true, maxRetries: 10, retryDelay: 50});
@@ -157,4 +158,37 @@ test('pending capacity, cancel idempotency, and recovery of running jobs', (t) =
   assert.equal(f.queue.get(two.jobId).state, 'outcome_unknown');
   assert.equal(contextOf(f.store).db.prepare('SELECT count(*) AS n FROM consolidation_inputs WHERE job_id=?').get(two.jobId).n, 0);
   assert.equal(f.queue.recoverInterrupted(), 0);
+});
+
+test('a queued job whose memory changed is settled stale and its input is cleared', async (t) => {
+  const f = fixture(t);
+  const first = memory(f.store, 'memory-1');
+  const second = memory(f.store, 'memory-2');
+  const job = f.queue.enqueue({requestId: 'preflight-1', selection: selection([first.id, second.id]), route: routeA, ...expected(f.store)});
+  f.store.correct({id: first.id, text: 'Descriptor reclamation requires the completion barrier.', sourceVersion: 'v2', expectedGeneration: f.store.generation()});
+  const result = await f.queue.runJob(job.jobId);
+  assert.equal(result.state, 'stale');
+  assert.equal(contextOf(f.store).db.prepare('SELECT count(*) AS n FROM consolidation_inputs WHERE job_id=?').get(job.jobId).n, 0);
+});
+
+test('a running consolidation job cannot be reported as cancelled without a trusted abort', (t) => {
+  const f = fixture(t);
+  const first = memory(f.store, 'memory-1');
+  const second = memory(f.store, 'memory-2');
+  const job = f.queue.enqueue({requestId: 'cancel-running', selection: selection([first.id, second.id]), route: routeA, ...expected(f.store)});
+  contextOf(f.store).db.prepare("UPDATE ledger.consolidation_jobs SET state='running' WHERE id=?").run(job.jobId);
+  assert.throws(() => f.queue.cancel({requestId: 'cancel-running', jobId: job.jobId, expectedEpoch: f.store.generation()}), (error) => error.code === 'MC_CANCEL_RUNNING_UNAVAILABLE');
+  assert.equal(f.queue.get(job.jobId).state, 'running');
+});
+
+test('deleting a selected memory invalidates the queued job and erases its stored input', (t) => {
+  const f = fixture(t);
+  const first = memory(f.store, 'memory-1');
+  const second = memory(f.store, 'memory-2', 'Ownership barrier precedes reclamation.');
+  const job = f.queue.enqueue({requestId: 'delete-input', selection: selection([first.id, second.id]), route: routeA, ...expected(f.store)});
+  const before = contextOf(f.store).db.prepare('SELECT payload FROM consolidation_inputs WHERE job_id=?').get(job.jobId);
+  assert.match(before.payload, /reclamation/i);
+  f.store.forget({id: first.id, expectedGeneration: f.store.generation()});
+  assert.equal(f.queue.get(job.jobId).state, 'stale');
+  assert.equal(contextOf(f.store).db.prepare('SELECT count(*) AS n FROM consolidation_inputs WHERE job_id=?').get(job.jobId).n, 0);
 });

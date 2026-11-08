@@ -49,29 +49,48 @@ export function createExperienceOperations({attribution, sessions, registry} = {
   }
   function readDerived(input, context) {
     const raw = rawObject(input);
-    const resolved = projectStoreOf(raw, context);
-    if (resolved.error) return resolved.error;
-    const versions = createConsolidationVersions(resolved.store);
-    const head = versions.head();
-    if (!head.versionId) return {ok: true, value: Object.freeze({projectId: resolved.projectId, head: null, groups: [], untouched: []})};
-    const version = versions.getVersion(head.versionId, {allowHistorical: false, actor: 'user'});
-    const byId = new Map(version.basis.map((memory) => [memory.ref, memory]));
-    const materials = (groupId) => groupId.map((ref) => {
-      const basis = byId.get(ref);
-      const record = basis ? resolved.store.get(basis.id) : undefined;
-      return Object.freeze({memoryId: basis?.id, ref, text: record?.state === 'active' ? record.text : undefined, textAvailable: record?.state === 'active'});
-    });
-    const groups = version.groups.map((group) => Object.freeze({...group, materials: Object.freeze(materials(group.memoryRefs))}));
-    return {ok: true, value: Object.freeze({
-      projectId: resolved.projectId,
-      head: Object.freeze({revision: head.revision, versionId: head.versionId, digest: version.digest, publishedAt: version.publishedAt}),
-      generator: version.generator,
-      verification: version.verification,
-      semanticValidation: version.semanticValidation,
-      warnings: version.warnings,
-      groups: Object.freeze(groups),
-      untouched: version.untouched,
-    })};
+    const projectId = projectIdOf(raw, context);
+    if (!projectId) return {ok: false, error: {code: 'PROJECT_REQUIRED', message: 'Select a project to read memory views.'}};
+    if (!registry || typeof registry.getProject !== 'function' || typeof registry.storeFor !== 'function') return {ok: false, error: {code: 'REGISTRY_UNAVAILABLE', message: 'Project registry is unavailable.'}};
+    const project = registry.getProject(projectId);
+    if (!project) return {ok: false, error: {code: 'PROJECT_NOT_FOUND', message: 'Project is not registered.'}};
+    const repositories = Array.isArray(project.repositories) ? project.repositories.filter((entry) => entry.enabled !== false) : [];
+    const requestedRepo = raw.repoId === undefined ? undefined : checkedText(raw.repoId, 'repository id', 128);
+    const candidates = requestedRepo === undefined ? repositories : repositories.filter((entry) => entry.repoId === requestedRepo);
+    if (requestedRepo !== undefined && candidates.length === 0) return {ok: false, error: {code: 'SCOPE_NOT_FOUND', message: 'Project repository is not enabled.'}};
+    for (const repository of candidates) {
+      let store, versions, head;
+      try {
+        store = registry.storeFor(repository.scopeRef);
+        versions = createConsolidationVersions(store);
+        head = versions.head();
+      } catch { continue; }
+      if (!head.versionId) continue;
+      let version, byRef;
+      try {
+        version = versions.getVersion(head.versionId, {allowHistorical: false, actor: 'user'});
+        byRef = new Map(version.basis.map((memory) => [memory.ref, memory]));
+      } catch { continue; }
+
+      const materials = (refs) => refs.map((ref) => {
+        const basis = byRef.get(ref);
+        const record = basis ? store.get(basis.id) : undefined;
+        return Object.freeze({memoryId: basis?.id, ref, text: record?.state === 'active' ? record.text : undefined, textAvailable: record?.state === 'active'});
+      });
+      const groups = version.groups.map((group) => Object.freeze({...group, materials: Object.freeze(materials(group.memoryRefs))}));
+      return {ok: true, value: Object.freeze({
+        projectId,
+        repoId: repository.repoId,
+        head: Object.freeze({revision: head.revision, versionId: head.versionId, digest: version.digest, publishedAt: version.publishedAt}),
+        generator: version.generator,
+        verification: version.verification,
+        semanticValidation: version.semanticValidation,
+        warnings: version.warnings,
+        groups: Object.freeze(groups),
+        untouched: version.untouched,
+      })};
+    }
+    return {ok: true, value: Object.freeze({projectId, repoId: requestedRepo ?? null, head: null, groups: [], untouched: []})};
   }
   function readExcerpts(input, context) {
     const raw = rawObject(input);
@@ -82,12 +101,15 @@ export function createExperienceOperations({attribution, sessions, registry} = {
     }
     const project = registry.getProject(projectId);
     if (!project) return {ok: false, error: {code: 'PROJECT_NOT_FOUND', message: 'Project is not registered.'}};
-    const repository = (project.repositories ?? []).find((entry) => entry.enabled);
-    if (!repository) return {ok: false, error: {code: 'SCOPE_NOT_FOUND', message: 'Project has no enabled repository.'}};
+    const repositories = (project.repositories ?? []).filter((entry) => entry.enabled !== false);
     const memoryId = checkedText(raw.memoryId, 'memory reference', 256);
+    const requestedRepo = raw.repoId === undefined ? undefined : checkedText(raw.repoId, 'repository id', 128);
+    const candidateRepos = requestedRepo === undefined ? repositories : repositories.filter((entry) => entry.repoId === requestedRepo);
+    const repository = candidateRepos.find((entry) => { try { return Boolean(registry.storeFor(entry.scopeRef).get(memoryId)); } catch { return false; } }) ?? candidateRepos[0];
+    if (!repository) return {ok: false, error: {code: 'SCOPE_NOT_FOUND', message: 'Project has no enabled repository.'}};
     const limit = raw.limit === undefined ? 20 : integer(raw.limit, 1, 100, 'excerpt limit');
     const items = registry.storeFor(repository.scopeRef).listExcerpts({memoryId, limit});
-    return {ok: true, value: Object.freeze({projectId, memoryId, items, total: items.length})};
+    return {ok: true, value: Object.freeze({projectId, repoId: repository.repoId, memoryId, items, total: items.length})};
   }
   return Object.freeze({
     'memory.attribution': (input, context) => {

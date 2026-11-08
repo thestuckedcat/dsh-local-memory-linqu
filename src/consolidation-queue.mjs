@@ -150,6 +150,7 @@ export function createConsolidationQueue(store, {inputs, provider, authorizeExec
       const row = ctx.db.prepare('SELECT * FROM ledger.consolidation_jobs WHERE scope_ref=? AND id=?').get(store.scopeRef, id);
       if (!row) throw failure('MC_JOB_NOT_FOUND');
       if (row.state === 'cancelled') return jobView(row);
+      if (row.state === 'running') throw failure('MC_CANCEL_RUNNING_UNAVAILABLE', 'running consolidation cancellation is not available without a trusted abort');
       if (TERMINAL.has(row.state)) throw failure('MC_JOB_TERMINAL', 'job is already terminal');
       if (row.epoch !== epoch) throw failure('MC_EPOCH_CHANGED', 'job epoch changed');
       ctx.db.prepare("UPDATE ledger.consolidation_jobs SET state='cancelled',reason='cancelled',updated_at=? WHERE scope_ref=? AND id=?").run(clock().toISOString(), store.scopeRef, id);
@@ -203,12 +204,18 @@ export function createConsolidationQueue(store, {inputs, provider, authorizeExec
       const input = ctx.db.prepare('SELECT * FROM consolidation_inputs WHERE job_id=?').get(id);
       if (!input) throw failure('MC_INPUT_UNAVAILABLE', 'queued job has no stored input');
       const manifest = JSON.parse(row.manifest_json);
-      inputs.assertCurrent(manifest, {phase: 'dispatch'});
+      try { inputs.assertCurrent(manifest, {phase: 'dispatch'}); }
+      catch (error) {
+        ctx.db.prepare("UPDATE ledger.consolidation_jobs SET state='stale',reason=?,run_token=NULL,updated_at=? WHERE scope_ref=? AND id=?").run(typeof error?.code === 'string' ? error.code : 'MC_PREFLIGHT_FAILED', clock().toISOString(), store.scopeRef, id);
+        ctx.db.prepare('DELETE FROM consolidation_inputs WHERE job_id=?').run(id);
+        return {failed: true, error};
+      }
       const token = randomUUID();
       ctx.db.prepare("UPDATE ledger.consolidation_jobs SET state='running',run_token=?,cost_status='unknown',updated_at=? WHERE scope_ref=? AND id=?").run(token, clock().toISOString(), store.scopeRef, id);
       return {row: ctx.db.prepare('SELECT * FROM ledger.consolidation_jobs WHERE scope_ref=? AND id=?').get(store.scopeRef, id), manifest, input: input.payload};
     });
     if (!claimed) return get(id);
+    if (claimed.failed) return get(id);
     const {row, manifest, input} = claimed;
     const route = JSON.parse(row.route_json);
     let approval;

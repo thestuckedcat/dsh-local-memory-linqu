@@ -46,7 +46,7 @@
 | `client.js`、`locale/*.json` | 记忆中心第4个tab「项目摘要与共享」：abstract查看/手动刷新、发现、建立/撤销共享、共享明细检索；文案走locale，仅`--dsw-alias-*`，无Harness客户端包导入 |
 
 验证（2026-11-08，命令均在05目录）：
-- `.\runtime\node.exe --test tests/*.test.mjs` → **318/318通过**（Node 26.13；TAP与摘要见`evidence/m2-node26.tap`、`evidence/m2-verification.json`）。
+- `.\runtime\node.exe --test tests/*.test.mjs` → **318/318通过（v0.3.0 历史快照）**（Node 26.13；TAP与摘要见`evidence/m2-node26.tap`、`evidence/m2-verification.json`）。
 - `.\runtime\node.exe tools\test-m1-host.mjs` → 真实安装库最终门回归3/3（M2未改坏`llm/stream`控制点）。
 - 安装：desktop profile linked bundle `dsh-local-memory-linqu@0.3.0`，真实数据根catalog迁移为`user_version=2`且M2表存在，插件行fiber active，`POST /dsh-local-memory/api` 返回`state:ready`（含abstracts/sharing计数），新模型工具已加载，客户端`settings.section`占用者`local-memory` active（见`evidence/m2-install-verification.json`）。
 - 未证明：真实业务Provider调用、真实profile内M2写入旅程、第4 tab浏览器视觉、OS级出口；`MEM-204`能力事件、M3冷档、年度维度模板未实现。
@@ -73,7 +73,7 @@ RestRegular、Hindsight、Mneme、OpenViking等保留为调查对照，当前没
 
 ## 首个验收与证据边界
 
-当前验收命令：在05目录执行`.\runtime\node.exe --test tests/*.test.mjs`（318/318），`.\runtime\node.exe tools\test-m1-host.mjs`（真实安装库`llm/stream`/最终门探针3/3），`.\runtime\node.exe tools\verify-m2.mjs`（生成`evidence/m2-*`证据）；旧执行授权runner仍保留历史证据身份。测试只用临时合成资源、FakeHost与假adapter；真实安装库探针挂真实Cordis/LlmRuntime但adapter为合成。业务模型请求、完整GUI视觉走查、OS出口、真实profile M2写入旅程尚未验收；M3冷档、MEM-204未实现。历史阶段报告/runner为历史快照，当前验收以`evidence/m2-*`与M2评审为准。
+当前验收命令（v0.4.0）：在05目录执行`.\runtime\node.exe --test tests/*.test.mjs`（v0.4 修复后 385/385；证据重生成中）、`.\runtime\node.exe tools/test-m1-host.mjs`（真实安装库最终门 3/3）、`.\runtime\node.exe tools/verify-v04.mjs`（生成 v0.4 证据，修复自比较缺陷后）；v0.3.0 的 318/318 与 M2 证据保留历史身份，不再代表 HEAD。
 
 新增年度工作维度的来源是用户要求，不是新合入的框架；模板仍待用户提供。完整项目交付时按[机制说明合同](shared/mechanism-document-contract.md)编写[完整机制](mechanisms.md)，重点为后续skill改进说明触发、判断规则、提醒、工具/证据与硬边界。
 
@@ -100,4 +100,5 @@ RestRegular、Hindsight、Mneme、OpenViking等保留为调查对照，当前没
 | M3 骨架 | 数据根/布局校验、冷搬移 journal 状态机与 fail-closed 恢复 | `evidence/m3-storage-layout.json`、`tests/storage-layout.test.mjs` | 实际搬移/冷召回/GC/崩溃恢复/真实卷探针 |
 | 文档 | README/TODO/mechanisms/implementation-route 同步；package 0.4.0 | 本文件与 `docs/mechanisms.md` §3.7、`MEM-MECH-5` | 独立评审、最终证据重生成、真实 Provider/GUI 验收 |
 
-当前全量命令与结果：`.\runtime\node.exe --test tests/*.test.mjs` → **379/379 pass**（Node 26.13.0，2026-11-09）。真实安装库`tools/test-m1-host.mjs`与最新 v0.4.0 证据尚未重跑/重生成；不得用旧 318/318 或 M2 证据替代。
+当前全量命令与结果：`.\runtime\node.exe --test tests/*.test.mjs` → **385/385 pass**（Node 26.13.0，2026-11-09 独立评审修复后；证据重生成前）；真实安装库`tools/test-m1-host.mjs` 3/3；v0.4.0 证据生成器 `tools/verify-v04.mjs` 已存在，但独立评审指出其 artifactsStable 自比较与 README 哈希漂移（I-3），修复后需重新生成。
+

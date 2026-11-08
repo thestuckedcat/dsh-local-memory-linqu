@@ -10,6 +10,11 @@ import {DatabaseSync} from 'node:sqlite';
 // content/authority schema observation, and reviewed material hashes. No business Provider call
 // and no profile boot are performed by this script.
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const git = (args) => spawnSync('git', args, {cwd: root, encoding: 'utf8'}).stdout.trim();
+const gitHead = git(['rev-parse', 'HEAD']);
+const generated = new Set(['evidence/v0.4.0-node26.tap', 'evidence/v0.4.0-verification.json', 'evidence/m1-host-probe.json', 'evidence/m1-host-probe.tap']);
+const statusClean = () => git(['status', '--porcelain']).split(/\r?\n/).filter(Boolean).every((line) => generated.has(line.slice(3).trim()));
+const cleanAtStart = statusClean();
 const sha = (path) => createHash('sha256').update(readFileSync(resolve(root, path))).digest('hex');
 const node = process.execPath;
 const suiteTap = 'evidence/v0.4.0-node26.tap';
@@ -70,11 +75,10 @@ const artifacts = [
 const installStatus = await liveStatus();
 const schemas = installedSchemas();
 const pkg = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf8'));
-const artifactDrift = artifacts.filter((artifact) => sha(artifact.path) !== artifact.sha256).map((artifact) => artifact.path);
-const artifactsStable = artifacts.length > 0 && artifactDrift.length === 0;
+const cleanAtEnd = statusClean();
 const installOk = installStatus.ok && installStatus.value?.state === 'ready'
   && schemas.available && schemas.contentUserVersion === 3 && schemas.authorityUserVersion === 2;
-const verified = suiteRun.status === 0 && summaryComplete() && probe?.verified === true && installOk && artifactsStable;
+const verified = suiteRun.status === 0 && summaryComplete() && probe?.verified === true && installOk && cleanAtStart && cleanAtEnd;
 function summaryComplete() {
   return Number.isFinite(suiteSummary.tests) && suiteSummary.tests === suiteSummary.pass && suiteSummary.fail === 0;
 }
@@ -94,8 +98,10 @@ const report = {
   hostProbe: {json: 'evidence/m1-host-probe.json', exitCode: probeRun.status, verified: probe?.verified === true, profileLoaded: probe?.profileLoaded ?? null, realProviderCalled: probe?.realProviderCalled ?? null},
   liveInstall: {status: installStatus, schemas},
   artifacts,
-  artifactsStable,
-  artifactDrift,
+  artifactsHashBasis: 'SHA256 computed from the clean HEAD tree before this evidence file was written; compare with git show <git.head>:<path>',
+  tapSha256: sha(suiteTap),
+  git: {head: gitHead, cleanAtStart, cleanAtEnd},
+  independentReview: {path: 'docs/v0.4.0-independent-review.md', status: 'reviewed at HEAD a35b550; Critical/Important fixes landed after that review and require a fresh evidence run', findings: {critical: 1, important: 9, minor: 9}},
   verified,
   limitations: [
     'Host probe uses a synthetic TextAdapter and installed Cordis/LlmRuntime; it does not boot the full Web profile or call a real Provider.',
@@ -107,7 +113,7 @@ const report = {
 };
 writeFileSync(resolve(root, 'evidence/v0.4.0-verification.json'), JSON.stringify(report, null, 2) + '\n', 'utf8');
 if (!verified) {
-  console.error(JSON.stringify({verified, suite: suiteSummary, probe: probe?.verified, installOk, artifactsStable, artifactDrift}, null, 2));
+  console.error(JSON.stringify({verified, suite: suiteSummary, probe: probe?.verified, installOk, git: {head: gitHead, cleanAtStart, cleanAtEnd}}, null, 2));
   process.exitCode = 1;
 } else {
   console.log(JSON.stringify({verified, suite: suiteSummary, probe: probe?.verified, content: schemas.contentUserVersion, authority: schemas.authorityUserVersion, artifacts: artifacts.length}, null, 2));

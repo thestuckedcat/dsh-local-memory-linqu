@@ -71,3 +71,17 @@ test('disposal removes an agent and the gate rejects an invalid quiet window', (
   assert.equal(f.gate.status().state, 'quieting');
   assert.throws(() => createBusyGate({quietMs: -1}), /Invalid quiet window/);
 });
+
+test('an agents.list failure stays unknown instead of decaying to idle', () => {
+  let ms = Date.parse('2026-11-09T00:00:00.000Z');
+  let failing = true;
+  const gate = createBusyGate({agents: {list: () => { if (failing) throw new Error('host list unavailable'); return []; }}, now: () => ms});
+  ms += 30_000;
+  const status = gate.status();
+  assert.equal(status.state, 'unknown');
+  assert.equal(status.listFailed, true);
+  assert.equal(gate.canDispatch(), false);
+  failing = false;
+  assert.equal(gate.status().state, 'idle');
+  assert.equal(gate.canDispatch(), true);
+});

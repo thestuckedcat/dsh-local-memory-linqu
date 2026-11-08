@@ -4,7 +4,9 @@
 >
 > v0.3.0 基线完成 **M1**、**M2 的 MEM-201/202/203**、管理界面/年度工作记录基础子集；v0.4.0 增量已交付 MEM-204 消费器、阅读优先/归因/小 bar、证据摘录、整理输入/校验/队列/候选/版本、派生视图与删除传播、显式纠正挂起、M3 layout/journal 骨架。**未完成**：自动空闲派发/profile 预算、反思根因、版本 search/list/GC、M3 实际搬移与冷召回、年度维度模板（MEM-405）、完整 GUI/真实 Provider/OS 出口/独立评审。完整边界见 [TODO.md](TODO.md)、[机制说明](docs/mechanisms.md) 与 [实施路线](docs/implementation-route.md)。
 >
-> **2026-11-09 进行中：v0.4.0 体验/后台增量**：已实现阅读优先列表、composer 小 bar、turnTail 归因、MEM-204 能力事件消费器、content v3/authority v2 与真实 profile 迁移、证据摘录自动捕获/删除清理、`mc-output-v1` 严格校验、整理 manifest/用户批次许可、持久整理队列、`memory_consolidate` purpose/prompt、runJob 候选落库、CAS 发布/版本读取、派生视图只读 API 与阅读卡片、删除/纠正传播、显式自然语言纠正挂起、M3 layout/journal 骨架。**仍缺**：自动空闲派发/profile 预算 broker、发布与候选 UI、版本 search/list/历史保留/GC、纠正后台根因反思、M3 实际搬移/冷召回/崩溃恢复、真实 Provider/03 事件/视觉验收与独立评审；不得把本版本称为完整 05 交付。全量 **379/379** 通过（Node 26.13.0），真实安装库最终门探针 3/3、live 安装观测与 41 个构件哈希见 [v0.4.0-verification.json](evidence/v0.4.0-verification.json)。
+> **2026-11-09 进行中：v0.4.0 体验/后台增量**：已实现阅读优先列表、composer 小 bar、turnTail 归因、MEM-204 能力事件消费器、content v3/authority v2 与真实 profile 迁移、证据摘录自动捕获/删除清理、`mc-output-v1` 严格校验、整理 manifest/用户批次许可、持久整理队列、`memory_consolidate` purpose/prompt、runJob 候选落库、CAS 发布/版本读取、派生视图只读 API 与阅读卡片、删除/纠正传播、显式自然语言纠正挂起、M3 layout/journal 骨架。**仍缺**：自动空闲派发/profile 预算 broker、发布与候选 UI、版本 search/list/历史保留/GC、纠正后台根因反思、M3 实际搬移/冷召回/崩溃恢复、真实 Provider/03 事件/视觉验收与独立评审；不得把本版本称为完整 05 交付。全量 **385/385** 通过（Node 26.13.0，独立评审修复后；证据需重新生成），真实安装库最终门探针 3/3、live 安装观测见 [v0.4.0-verification.json](evidence/v0.4.0-verification.json)（生成时 379，旧快照）。
+>
+> **阅读提示（2026-11-09）**：本文 §5–§8 保留 v0.3.0/M2 历史基线；其中“318/318”“MEM-204 未实现”“M3 未实现”“冷档未创建”等表述已过时。v0.4.0 的当前实现/验证边界以本提示、§7 的 v0.4 行、[TODO MEM-TODO-5](TODO.md)、[mechanisms §3.7](docs/mechanisms.md) 与 [v0.4.0 证据](evidence/v0.4.0-verification.json) 为准；独立评审见 [v0.4.0-independent-review.md](docs/v0.4.0-independent-review.md)。
 
 ## 1. 它解决什么
 
@@ -126,27 +128,30 @@ docs/                        设计、阶段机制、评审、共享合同副本
 - 管理 API 仅同源 POST JSON、body≤64KiB、Origin/Content-Type 校验、operationId 幂等；错误与状态不返回绝对路径或秘密。
 - 项目登记是用户动作；模型不能自报 scope、不能授权、不能解锁 unknown、不能审定报告。
 
-## 7. 验证与证据（2026-11-08）
+## 7. 验证与证据（v0.3.0/M2 历史基线，v0.4 见下）
 
 | 验证 | 结果 | 证据 |
 |---|---|---|
-| 本地全量测试（Node 26.13，`.\runtime\node.exe --test tests/*.test.mjs`） | **318/318 通过**（含 M2：abstract 17、sharing 8、m2-management 26 及 M1 回归） | `evidence/m2-node26.tap`、`evidence/m2-verification.json` |
+| v0.3.0 历史：本地全量测试（Node 26.13） | 318/318 通过 | `evidence/m2-node26.tap`、`evidence/m2-verification.json`（历史） |
 | 真实安装库 Host 探针（真实 Cordis/LlmRuntime + 合成 adapter，无 profile/凭据/真实 Provider） | 3/3 通过：`llm/stream` waterfall 存在；监听器可放行或短路；最终门对已删除记录阻断且零派发 | `evidence/m1-host-probe.json`、`m1-host-probe.tap`（M2 回归仍通过） |
 | 真实安装（desktop profile，本地 linked bundle） | 插件行 `include:dsh-local-memory-linqu` fiber active；真实数据根 catalog 已迁移到 `user_version=2` 且 M2 表存在；`POST /dsh-local-memory/api` 返回 `state:ready`（含 abstracts/sharing 计数）；新工具 `memory_abstracts`/`memory_shared_search` 已加载；客户端 `settings.section` 注册项 `local-memory` active | `evidence/m2-install-verification.json` |
 | M2 端到端闭环（测试内 FakeHost） | 发现 abstract → 未授权被拒 → 用户 grant → 模型检索明细（来源/未核验）→ 删除即时消失 → revoke 后立即 `SHARE_DENIED` | `tests/plugin-entry.test.mjs` M2 用例、`tests/m2-management.test.mjs` |
 | 流接口修复与现场复验 | `llm/stream` 监听器改为同步返回 `AsyncIterable`；重启桌面 Harness 后普通流式对话恢复；安装库回归 34/34 | `docs/stream-contract-fix.md`、`evidence/stream-contract-*.tap` |
 | 端到端闭环（测试内 FakeHost：登记→审批→提炼→持久化→召回→最终门→删除后阻断→重启/晚到结果） | 通过 | `tests/plugin-entry.test.mjs` 等 |
 
-**未证明边界**：本版本没有以真实 Provider 业务 API 跑过提炼/召回（测试与探针使用合成 adapter）；**M2 未在真实数据根执行 grant/revoke/refresh 写入旅程**；没有人工逐屏视觉验收（安装后仅以 Host 状态、客户端 slot 注册、静态与渲染冒烟验证，第 4 tab 需页面重载后确认）；没有 OS 级出口/沙箱证明；MEM-204、冷档和年度维度模板未实现。
+**v0.4.0 补充证据（2026-11-09）**：HEAD `a35b550` 时全量 379/379 通过（随后修复独立评审 CR-1/I-4/I-5/I-6/I-7/I-8/I-9 后为 385/385，需重新生成证据）；真实安装库最终门 3/3、live `state:ready`、content v3/authority v2、41 构件哈希见 [v0.4.0-verification.json](evidence/v0.4.0-verification.json)；独立评审 1 Critical/9 Important/9 Minor 见 [审查报告](docs/v0.4.0-independent-review.md)。
+
+**未证明边界**：v0.4.0 仍无真实 Provider 业务调用、完整 GUI 视觉、OS 级出口、自动空闲派发、真实 03 事件源、M3 实际搬冷/冷召回、浏览器 slot 现场复核；MEM-204 仅有消费器与未来 `capability/event` 接缝；M3 只有 layout/journal 骨架。
 
 ## 8. 已知限制与后续版本
 
-1. **M2 的 MEM-204 未实现**：项目 abstract、用户授权共享与退休适用性（MEM-201/202/203）已交付；但能力事件 producer generation/断档/restore 对账未接线，catalog 仅预留表；共享明细检索为词法范围，无向量/跨 scope 相关性合并；记忆中心只列 target 侧关系（本项目作为 source 授予他人的关系当前只在 API 审计视角可见）。
-2. **M3（非C盘冷档/再次压缩/删除传播）未实现**：本版不创建冷档；明确删除已走权威账本，但冷 tier、二次压缩与备份恢复链路未交付。
+1. **【v0.3.0 历史】M2 的 MEM-204 当时未实现**：v0.4.0 已实现 `plugin/capability-events.mjs` 消费器（基线/游标/hold），但真实 03 outbox/transport 未接；catalog 表与旧描述保留历史含义。
+2. **【v0.3.0 历史】M3 当时未实现**：v0.4.0 只有 `src/storage-layout.mjs`/`src/cold-archive.mjs` 校验与 journal 骨架；实际搬移、冷召回、GC、备份恢复仍未交付。
 3. **M4 维度模板待提供**：《年终总结维度.md》未提供，`dimensionMapping.status='pending_reference'`，不生成评分维度。
 4. **证明正文读取的用户确认**：管理 API 为同步 dispatch，而 `ctx.approval.request` 是异步的；当前 HTTP `work.evidence.review` 会返回 `USER_ACTION_REQUIRED`，需要 Host 层先解析用户确认再调用（或后续提供同步确认接缝）。
 5. **召回消息呈现与失效代价**：首版作为一条带来源的消息显示在对话中，尚未做成可折叠提示卡；召回后的删除会使该会话 fail-closed，需新会话继续；投影元数据淘汰或重装后旧召回消息同样阻断而非放行。
 6. **管理 UI 子项**：年度记录人工纠正/合并、证明正文评审、项目仓库编辑等仍需后续补齐；基础列表/详情/确认/报告导出已可用。年度自动草稿当前按单条来源锚生成，尚未按 requirement/problem 自动聚合（需人工 `work.merge`，本轮 UI 未提供该按钮）。
+6b. **v0.4.0 增量限制**：整理 queue/runJob/publish 只在组件测试中可达，`plugin/` 未接管理/UI 入口；派生视图只读；无 publication 独立许可、版本 search/list/GC；纠正仅显式短语挂起和本地新事实保存，无后台根因反思；`verify-v04` 的 hash 自比较缺陷见独立评审 I-3（待修）。
 7. **任务取消**：当前队列没有 `cancel` 方法，处理任务页的取消动作返回 `CANCEL_UNAVAILABLE`；真正停止只能停用插件/退出进程（可能落 `outcome_unknown`，重启后保持待核）。
 8. **停用不等任务收尾**：dispose 会先 abort 调度并撤权，但不 `await` 在途任务完成；重启后由 `recoverInterrupted` 标为 `unknown`，不重发，数据不复活。
 9. **安装/更新/卸载旅程**：停用会撤销 lease、停止调度、清理注入并保留数据；卸载默认保留 `dataRoot`；更新/迁移/版本门禁仍按总工作区门禁执行。
@@ -168,6 +173,7 @@ docs/                        设计、阶段机制、评审、共享合同副本
 - [M1 实现合同（接口/存储/配置/入口/管理 API/验收）](docs/m1-plugin-design.md)
 - [M2 设计合同（catalog v2/abstract/共享/适用性/管理 API/客户端/验收）](docs/m2-design.md)
 - [完整机制说明（场景→触发→判断→动作→状态→证据→失败恢复；skill 可调策略 vs 硬边界）](docs/mechanisms.md)
+- [v0.4.0 独立评审](docs/v0.4.0-independent-review.md)、[评审响应](docs/v0.4.0-independent-review-response.md)、[v0.4.0 证据说明](evidence/v0.4.0-verification.json)
 - [M1 独立评审](docs/m1-independent-review.md)、[M2 独立评审](docs/m2-independent-review.md)
 - [流接口修复记录（llm/stream 监听器必须同步返回 AsyncIterable）](docs/stream-contract-fix.md)
 - [实施路线与逐来源机制](docs/implementation-route.md)
@@ -178,3 +184,4 @@ docs/                        设计、阶段机制、评审、共享合同副本
 ## 10. 许可
 
 本项目采用 Apache-2.0（见 [LICENSE](LICENSE)）。直接复用的第三方代码仅限固定版本 kovey/dsh-memory 0.3.2 的 `vendor/kovey/cjk.js`（Apache-2.0，字节一致），来源、许可与清单见 [source-lock.json](source-lock.json)、[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)；其余为接口参考或自行实现，未合入上游代码。
+

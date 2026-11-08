@@ -401,10 +401,11 @@ flowchart TD
 | M2 组件全回归 318/318 通过 | [evidence/m2-node26.tap](../evidence/m2-node26.tap)、[evidence/m2-verification.json](../evidence/m2-verification.json) | 24 个测试文件、318 项（新增 `abstracts` 17、`sharing` 8、`m2-management` 26；既有用例扩展见 §6.2），Node 26.13.0；同一次运行含真实安装库最终门回归探针 3/3；物料摘要零漂移（项数见该证据文件的 artifacts） | catalog v1→v2、abstract 生成/失效、共享授权/自动跟随/撤权/删除断开、适用性、管理 API 用户动作、客户端静态与渲染冒烟、M1 最终门未回归 | 真实业务 Provider、真实 profile 内 M2 写入旅程、浏览器视觉、MEM-204 |
 | M2 安装观测 | [evidence/m2-install-verification.json](../evidence/m2-install-verification.json) | 桌面 profile 重载后插件行光纤 active；真实数据根 catalog `user_version=2` 且 M2 表存在；`status` 路由 `state:ready` 并含 abstracts/sharing 计数；新工具 `memory_abstracts`/`memory_shared_search` 已出现在运行会话；客户端槽位占用者 `local-memory` order 10 active | 安装态能打开旧 catalog 并完成迁移，Host 半与模型工具在真实进程加载，客户端入口仍注册 | 未在真实 profile 执行 grant/revoke/refresh 写入旅程；第四 tab 需页面重载后才能看到；不等于视觉验收 |
 | M2 独立评审 | [docs/m2-independent-review.md](m2-independent-review.md) | 对 v0.3.0 增量代码、边界、证据与声明做独立复核；结论与遗留项以该文件为准 | 交付声明经过非作者复核 | 评审不能替代真实 Provider/GUI/运行时长验证 |
+| v0.4.0 组件/安装证据 379/379（修复前） | [evidence/v0.4.0-verification.json](../evidence/v0.4.0-verification.json)、[.tap](../evidence/v0.4.0-node26.tap) | 36 个测试文件、379 项；真实安装库最终门 3/3；live `state:ready`；真实 store content v3/authority v2；41 个构件哈希（生成时 HEAD `a35b550`） | v0.4 增量代码/测试/安装态观测 | 真实 Provider/GUI/OS 出口、自动派发、M3 实际搬移；独立评审 1 Critical/9 Important/9 Minor 见 [评审](v0.4.0-independent-review.md)；作者修复见 [响应](v0.4.0-independent-review-response.md)，修复后全量 385/385 |
 
 ### 6.2 测试覆盖（按文件，便于回归定位）
 
-`tests/` 共 24 个测试文件、318 项（v0.3.0）：`abstracts` 17（abstract 生成/版本/basis 失效/阈值/退休/持久化/60 条上限/适用性/配置阈值）、`backend` 17、`configuration` 12、`execution-authorization` 13、`final-projection` 22、`harness-provider` 26、`harness-sdk` 4、`host-grants` 16、`jobs` 14、`lifecycle` 11、`m2-management` 26（7 个 M2 操作信封/用户动作/项目解析/模型 target 越权/脱敏/真实模块集成）、`management` 16、`migration` 2、`plugin-entry` 11（含 M2 端到端：发现→授权→自动跟随→删除→撤权）、`project-registry` 9（含 applicability 与多仓有效期）、`projects` 13（含 v1→v2 迁移与漂移拒绝）、`proof-reminders` 8、`reports` 10、`scheduler` 10、`session-hooks` 25、`sharing` 8、`source-lock` 5、`work-management` 11、`work-summary` 12。
+`tests/` 共 **36 个测试文件**；v0.3.0 历史基线 318 项，v0.4.0 修复后当前 **385 项**（Node 26.13.0）。v0.3.0 文件分布保留历史：`abstracts` 17、`backend` 17、`configuration` 12、`execution-authorization` 13、`final-projection` 22、`harness-provider` 26+1、`harness-sdk` 4、`host-grants` 16、`jobs` 14+1、`lifecycle` 11、`m2-management` 26、`management` 16、`migration` 2、`plugin-entry` 11、`project-registry` 9、`projects` 13、`proof-reminders` 8、`reports` 10、`scheduler` 10、`session-hooks` 25、`sharing` 8、`source-lock` 5、`work-management` 11、`work-summary` 12；v0.4.0 新增 `attribution`、`capability-events`、`idle-gate`、`consolidation-*`、`correction`、`excerpt-lifecycle`、`storage-layout` 等，详见当前 `tests/`。
 
 ### 6.3 证据不能证明什么（明确边界）
 
@@ -416,7 +417,7 @@ flowchart TD
 6. **M2 无真实 profile 写入旅程**：真实安装证据只覆盖 catalog 迁移、状态路由、工具加载与槽位注册；grant/revoke/refresh/共享检索只在 FakeHost/临时库测试中跑过，不在用户真实数据根创建测试项目或记忆。
 7. **M2 客户端第四 tab 未做浏览器视觉验收**：只有 `client.js` 语法/静态/字典/渲染冒烟与槽位注册；页面需重载更新后的 bundle 才能看到该 tab，布局与真实交互未截图验证。
 8. **abstract 不是模型语义压缩**：`local-extractive-v1` 按 generation 取最新 60 条并截取原文前缀，不做跨记录语义合并；其"摘要"可能含原文中的路径式字符串，只在管理 API/工具边界脱敏。
-9. **MEM-204 未实现**：共同合同 v1 能力事件的 producer generation/断档/restore 对账与暂停来源逻辑不在本版；catalog 仅预留表。
+9. **MEM-204 真实 producer 未接**：v0.4.0 已有 `plugin/capability-events.mjs` 消费器与 `capability/event` 未来 transport seam（基线/游标/hold/暂停召回），但真实 03 outbox、完整 producer generation/断档/restore 对账未接；本行不再声称"未实现"，真实事件源仍为未验证接缝。
 
 ### 6.4 已知限制（实现现状）
 
@@ -442,14 +443,27 @@ flowchart TD
 20. **abstract 新增可见性依赖 `noteChange` 或手动刷新**：管理 mutation 会累计 dirty 并在 10 条/24h 后重建；普通外部写入若不经管理 API，最多到下一次维护 tick + 阈值才更新。删除/纠正不受此影响（basis 校验即时重建）。
 21. **共享 `upToDate` 语义**：`resolve` 自动跟随最新有效 abstract revision 时只更新 `share_relations.abstract_revision`，用户决策依据/permission/创建时间保持审计原值；因此列表在变更后、下一次 resolve 前会显示 `upToDate:false`。
 22. **共享界面只列 target 侧关系**：记忆中心列出"其他项目分享给本项目"的关系；本项目作为 source 主动授予其他项目的关系只能在 API/审计视角看到，当前 UI 未列。
-23. **MEM-204 能力事件未接线**：catalog v2 已建 `capability_cursors/capability_holds/capability_events`，但没有 producer generation 对账、断档暂停来源或 restore 复核消费者；不得把乱序事件安全当作已实现。
+23. **MEM-204 真实事件源未接**：消费器/表/未来 seam 已存在；本行是 v0.3.0 历史限制，真实 03 outbox 与生产者对账仍未完成。
 24. **共享关系的审计历史不是 append-only**：`share_relations` 只保留当前状态；对同一 source→target 重新 grant 会覆盖 `decision_basis`/`permission_ref` 并清空 `revoked_at`（`created_at`/`relation_id` 保留）。这是"当前状态"模型，不记录每次授权/撤销历史；已在 README 限制中说明。
 25. **abstract/sharing manager 的模块级 view 保留原文文本**：basis 的 summary/sourceRef 是记忆原文前缀，可能包含路径式字符串；管理 API 与模型工具边界会脱敏为 `[redacted-path]`，但直接使用 manager 的内部调用者会看到原文。合同"view 无绝对路径"按"外部边界"解释，见 §6.3。
 26. **abstract dirty 依赖产品写入路径**：自动提炼 commit 经 scheduler 的 `onJobSettled`，`memory_remember` 工具与 `/memory remember` 命令成功后调用 `noteChange`；绕过这些路径直接 `store.put`（仅测试/内部）不会累计 dirty，但 basis 校验仍会让 read 在记录变化时返回 stale。
 
+### 6.4b v0.4.0 新增限制（2026-11-09，独立评审后）
+
+- **CR-1 修复**：删除/纠正/归档现在会失效并清空包含该记忆的 queued/running consolidation job input（`invalidateConsolidationJobsForMemory`），并有队列测试。
+- **I-4 修复**：显式纠正会先把旧 cited memory 挂起并保存当前用户纠正为新 `origin:user` 记忆；同一次 admission 已入队的旧 epoch extraction 仍会 stale，但新事实已本地保存。
+- **I-5 修复**：`agents.list()` 失败时 idle gate 保持 `unknown`/`listFailed`，不再 30s 后误报 idle。
+- **I-6 修复**：publish 会重核 batch permission；仍未实现独立 publication permission/过期策略。
+- **I-7 修复**：queued job 的预检失败会转 stale 并清输入；running cancel 明确 fail-closed（无 trusted abort）。
+- **I-8 修复**：归档会标记依赖派生 entry stale 并清 head、失效队列；capability event 的派生失效仍未接。
+- **I-9 修复**：`memory.derived` 会遍历项目已启用仓库，`memory.excerpts` 会定位实际包含该记忆的仓库；多仓 UI 选择器未实现。
+- **仍未实现/未验证**：自动空闲派发/profile 预算、整理管理/UI 入口、publication 权限、版本 search/list/GC、后台根因反思、M3 实际搬移、真实 Provider/03/GUI/OS 出口、slot 现场复核。
+
+
 ### 6.5 实施状态（已实现 / 设计未实现 / 未验证）
 
 **已实现且有运行证据（组件级）**
+- v0.4.0（增量，非完整 05）：Phase A/B 体验、MEM-204 消费器、content v3/authority v2、摘录捕获/清理、manifest/批次许可/`mc-output-v1`、队列/runJob/candidate/CAS 发布/派生视图/删除传播、显式纠正挂起、M3 layout/journal 骨架；证据见 `evidence/consolidation-*.json`、`correction-suspension.json`、`m3-storage-layout.json` 与 `v0.4.0-verification.json`。
 - M1：`MEM-101` 范围与授权适配、`MEM-102` 可见入口与调度、`MEM-103` 最终请求复核、`MEM-104` 闭环（夹具闭环）。
 - M2（v0.3.0 子集）：`MEM-201` 多仓映射、`MEM-202` abstract/共享（`MEM-ABS-01..02`、`MEM-SHARE-01..03`）、`MEM-203` 退休与适用性（`MEM-APPL-01`）、`MEM-CAT-02` catalog v1→v2；管理 API 7 个 M2 操作、模型工具 `memory_abstracts`/`memory_shared_search`、记忆中心第 4 个 tab（客户端静态/渲染冒烟）。`MEM-204` 仍未实现。
 - 基础管理界面（`MEM-501` 的一部分）：四标签（M2 新增"项目摘要与共享"）、搜索/详情/纠正/归档/恢复/删除、任务状态、项目登记/偏好/退休。
@@ -457,8 +471,8 @@ flowchart TD
 - 安装/停用（`MEM-502` 的安装与停用部分；更新/迁移未实现）。
 
 **设计未实现**
-- M2 剩余：`MEM-204` 能力事件适配（`plugin/capability-events.mjs` 不存在；`consumeCapabilityEvent` 组件在 `src/lifecycle.mjs`，插件未接线；catalog v2 仅预留表）。
-- M3 全部：`MEM-301` 独立数据根/冷档（无 `cold/`、无 `storage-layout.mjs`/`cold-archive.mjs`）、`MEM-302` 分层召回、`MEM-303` 可恢复归档的冷档传播、`MEM-304` 转冷 journal 与备份。
+- M2 剩余（v0.4 部分）：`plugin/capability-events.mjs` 消费器已实现并接到未来 `capability/event` seam；真实 03 outbox/transport 与生产者 generation 对账仍未接线。
+- M3（v0.4 骨架）：`src/storage-layout.mjs` 路径/卷校验与 `src/cold-archive.mjs` journal 状态机已有测试；`MEM-302` 分层召回、`MEM-303` 冷档删除传播、`MEM-304` 实际搬移/备份恢复仍未实现。
 - `MEM-405` 模板映射（等《年终总结维度.md》）。
 - M5：`MEM-502` 更新/迁移/schema 版本门禁与完整卸载流程、`MEM-503` 最终验证与独立评审（当前只有 M1/M2 增量评审）、`MEM-504` 本文件之外没有其他"完成"声明。
 - 设计合同里的"宿主缺 `llm/stream` 时降级为手动搜索"（无运行时探测，见 §6.4-9）。

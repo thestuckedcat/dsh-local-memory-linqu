@@ -47,12 +47,12 @@ function fixture(t) {
   });
   const inputs = createConsolidationInputs(store, {registry, configDigest: 'config-v1'});
   const queue = createConsolidationQueue(store, {inputs, provider, authorizeExecution: () => ({authorizationVersion: 'grant-v1:test:1'})});
-  const versions = createConsolidationVersions(store);
+  const versions = createConsolidationVersions(store, {inputs});
   t.after(() => {
     try { store.close(); } catch { /* already closed */ }
     rmSync(root, {recursive: true, force: true, maxRetries: 10, retryDelay: 50});
   });
-  return {store, inputs, queue, versions, registry};
+  return {store, inputs, queue, versions, registry, root};
 }
 function memory(store, id, text = 'Descriptor reclamation waits for completion.') {
   return store.put({id, sourceRef: `session-A/${id}`, sourceVersion: 'v1', kind: 'lesson', text, origin: 'user'});
@@ -123,17 +123,19 @@ test('memory.derived exposes the published head with full original texts and unv
   const {candidateId} = await readyCandidate(f);
   const candidate = f.versions.getCandidate(candidateId);
   f.versions.publish({requestId: 'publish-derived', candidateId, expectedDigest: candidate.digest, expectedEpoch: f.store.generation(), expectedScopeRevision: f.store.revision(), expectedHeadRevision: 0});
+  const storeB = {scopeRef: 'B', head: () => ({revision: 0, versionId: null}), get: () => undefined, listExcerpts: () => []};
   const operations = createExperienceOperations({
     attribution: {read: () => ({state: 'none'})},
     sessions: {get: () => undefined},
     registry: {
-      getProject: (id) => (id === 'project-1' ? {projectId: id, repositories: [{scopeRef: 'A', enabled: true}]} : undefined),
-      storeFor: () => f.store,
+      getProject: (id) => (id === 'project-1' ? {projectId: id, repositories: [{repoId: 'secondary', scopeRef: 'B', enabled: true}, {repoId: 'main', scopeRef: 'A', enabled: true}]} : undefined),
+      storeFor: (scopeRef) => (scopeRef === 'B' ? storeB : f.store),
     },
   });
   const result = operations['memory.derived']({projectId: 'project-1'}, {actor: 'user'});
   assert.equal(result.ok, true, JSON.stringify(result));
   assert.equal(result.value.head.revision, 1);
+  assert.equal(result.value.repoId, 'main', 'the first enabled repo has no head; the read must find the published repo');
   assert.equal(result.value.verification, 'unverified');
   assert.equal(result.value.semanticValidation, 'not_performed');
   assert.equal(result.value.groups.length, 1);
@@ -167,4 +169,25 @@ test('correcting a memory also invalidates its derived views', async (t) => {
   f.store.correct({id: first.id, text: 'Descriptor reclamation requires the completion barrier.', sourceVersion: 'v2', expectedGeneration: f.store.generation()});
   assert.equal(f.versions.head().versionId, null);
   assert.equal(f.store.list({limit: 10}).length, 2);
+});
+
+test('publish rechecks the batch permission and fails closed after revocation', async (t) => {
+  const f = fixture(t);
+  const {candidateId} = await readyCandidate(f);
+  const candidate = f.versions.getCandidate(candidateId);
+  const job = contextOf(f.store).db.prepare('SELECT permission_id FROM ledger.consolidation_jobs WHERE candidate_id=?').get(candidateId);
+  f.inputs.revokePermission({permissionId: job.permission_id});
+  assert.throws(() => f.versions.publish({requestId: 'publish-revoked', candidateId, expectedDigest: candidate.digest, expectedEpoch: f.store.generation(), expectedScopeRevision: f.store.revision(), expectedHeadRevision: 0}), (error) => error.code === 'MC_PERMISSION_EXPIRED');
+  assert.equal(f.versions.head().versionId, null);
+});
+
+test('archiving a source memory invalidates the derived head but keeps its body', async (t) => {
+  const f = fixture(t);
+  const {candidateId, first} = await readyCandidate(f);
+  const candidate = f.versions.getCandidate(candidateId);
+  const published = f.versions.publish({requestId: 'publish-archive', candidateId, expectedDigest: candidate.digest, expectedEpoch: f.store.generation(), expectedScopeRevision: f.store.revision(), expectedHeadRevision: 0});
+  f.store.archive({id: first.id, expectedGeneration: f.store.generation()});
+  assert.equal(f.versions.head().versionId, null);
+  assert.throws(() => f.versions.getVersion(published.versionId), (error) => error.code === 'MC_VERSION_UNAVAILABLE');
+  assert.equal(contextOf(f.store).db.prepare('SELECT count(*) AS n FROM consolidation_bodies WHERE id=?').get(published.versionId).n, 1);
 });

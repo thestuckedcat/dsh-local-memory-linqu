@@ -8,6 +8,8 @@
  * the current user message still goes through the normal extraction/admission path, and deeper
  * background reflection/root-cause analysis is not implemented in this increment.
  */
+import {randomUUID} from 'node:crypto';
+
 const CORRECTION_PATTERNS = Object.freeze([
   /这里(?:已经|已经)?改(?:了|成|过)/u,
   /上次(?:理解|记|说)(?:错|反)了/u,
@@ -55,13 +57,25 @@ export function createCorrectionManager({attribution, now = () => new Date()} = 
         suspended += 1;
       } catch { failed += 1; }
     }
-    if (suspended > 0) { counters.applied += 1; counters.suspended += suspended; }
+    let savedMemoryId;
+    if (suspended > 0) {
+      counters.applied += 1;
+      counters.suspended += suspended;
+      const text = typeof input === 'string' ? input.slice(0, 4000) : '';
+      if (text.trim() && typeof info.sourceRef === 'string' && typeof info.sourceVersion === 'string') {
+        try {
+          const saved = store.put({id: randomUUID(), text, sourceRef: info.sourceRef, sourceVersion: info.sourceVersion, kind: 'decision', origin: 'user'});
+          savedMemoryId = saved.id;
+        } catch { /* the old version is already suspended; saving the new fact is best effort */ }
+      }
+    }
     if (failed > 0) counters.failed += 1;
     return Object.freeze({
       state: suspended > 0 ? 'corrected' : 'unresolved',
       turn: latest.turn,
       suspended,
       failed,
+      savedMemoryId,
       at: now().toISOString(),
     });
   }
