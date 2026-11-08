@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "date": "2026-11-09",
-  "startedAtUtc": "2026-11-08T16:15:24.061Z",
-  "durationMs": 38581.8834,
+  "startedAtUtc": "2026-11-08T16:35:54.545Z",
+  "durationMs": 38221.7676,
   "purpose": "v0.4.0 experience/background delivery evidence: reading-first UI, attribution, excerpts, consolidation manifest/validator/queue/runJob/candidate/publish/derived views, correction suspension, M3 layout/journal skeleton; local full suite plus the real installed-library final-gate regression probe and live install observation",
   "runtime": {
     "node": "26.13.0",
@@ -16,8 +16,8 @@
   "suite": {
     "tap": "evidence/v0.4.0-node26.tap",
     "exitCode": 0,
-    "tests": 379,
-    "pass": 379,
+    "tests": 385,
+    "pass": 385,
     "fail": 0,
     "cancelled": 0,
     "skipped": 0,
@@ -48,7 +48,7 @@
           "state": "running",
           "running": 0,
           "pendingScopes": [],
-          "lastTickAt": "2026-11-08T16:16:01.760Z",
+          "lastTickAt": "2026-11-08T16:36:32.325Z",
           "lastError": null
         },
         "grants": {
@@ -58,7 +58,7 @@
           "recoveryConfirmations": 0,
           "manualConfirmations": 0,
           "revoked": false,
-          "authorizationVersion": "grant-v1:9ebcb01f-788a-4005-8745-2008df24f45a:1"
+          "authorizationVersion": "grant-v1:15ec12d5-dce8-4531-8437-b0f1f992e80a:1"
         },
         "provider": "active",
         "config": {
@@ -114,7 +114,7 @@
           "running": 0,
           "pendingScopes": 0,
           "automaticDisabled": false,
-          "updatedAt": "2026-11-08T16:16:02.631Z"
+          "updatedAt": "2026-11-08T16:36:32.692Z"
         },
         "attribution": {
           "turns": 0,
@@ -136,14 +136,14 @@
           "suspended": 0
         },
         "background": {
-          "state": "busy",
-          "running": 1,
-          "unknown": 5,
-          "idle": 1,
-          "agents": 7,
-          "quietForMs": 20185,
+          "state": "unknown",
+          "running": 0,
+          "unknown": 12,
+          "idle": 0,
+          "agents": 12,
+          "quietForMs": 84720,
           "quietMs": 30000,
-          "at": "2026-11-08T16:16:02.631Z"
+          "at": "2026-11-08T16:36:32.693Z"
         }
       }
     },
@@ -179,7 +179,7 @@
     },
     {
       "path": "src/store-internals.mjs",
-      "sha256": "79faaf4e818ed71120fd69ba3ed8a6e55e02b543ef3516b87fb494fe6657959a"
+      "sha256": "ba6f4f0651d734e27b4b2e5a517b8ae0b6f213043bdc0eb09476e716f322cebf"
     },
     {
       "path": "src/backend.mjs",
@@ -199,11 +199,11 @@
     },
     {
       "path": "src/consolidation-queue.mjs",
-      "sha256": "76ec3d05d915466133c29681d6f9f2a04300061586ea49380e999ba45e37b78d"
+      "sha256": "50bac8948a105b41b51077e97f54e9f29da65370b38bd4e8ba2d5555adeac291"
     },
     {
       "path": "src/consolidation-versions.mjs",
-      "sha256": "24fc82ef1af122e54ef6779494a0d7720e4f51262941876d9e0b4b427f931190"
+      "sha256": "ad1cbdb9a3d9da254dad156bb9ba0c3a3ccbf7fc9ff65058d61c3e94dc0dd6bb"
     },
     {
       "path": "src/storage-layout.mjs",
@@ -219,7 +219,7 @@
     },
     {
       "path": "plugin/index.mjs",
-      "sha256": "dfee5664e6a4d88c732e8c1cfd0aa73a0f2babef0503c6c7e6f2853841579e43"
+      "sha256": "a8d87262857e8b8143f1f53c514fbba4ea275f3140ae0759195d5435cc4717dc"
     },
     {
       "path": "plugin/attribution.mjs",
@@ -227,15 +227,15 @@
     },
     {
       "path": "plugin/experience-operations.mjs",
-      "sha256": "980a41fd9f606a118dd2d08c19fb0d474c3886815f725a19c4ce51d8f43fa0d5"
+      "sha256": "4738f514a36c5156fa6b6035ed00f3e8a5176ca7187eb95afa5d5097f44b8755"
     },
     {
       "path": "plugin/correction.mjs",
-      "sha256": "c6788d46c9e5597a8935396cbf4d021ccef03850e48bb855f14347acc01dfd73"
+      "sha256": "075469238f614e9c59c7b1d8189ea94119b747d5636f7af5ac7a07837c7c6d7c"
     },
     {
       "path": "plugin/idle-gate.mjs",
-      "sha256": "80e497ec50a42fee1b216cd8eff0486f34195de644e7dbf47ff67be03e3ce5a8"
+      "sha256": "eb625066818b10faf1e0a8a20f02ec6a3ec9684d98523ea11319c19a983f0317"
     },
     {
       "path": "plugin/harness-provider.mjs",
@@ -275,11 +275,11 @@
     },
     {
       "path": "tests/consolidation-queue.test.mjs",
-      "sha256": "583000434bb430af04ae0ac16ed12a8a0317c52dd04b3d5a5aaa967ecf876066"
+      "sha256": "61b36969fcfeca2c4ae3660d74af507ef356d468df12603646771c45337fbcf0"
     },
     {
       "path": "tests/consolidation-versions.test.mjs",
-      "sha256": "622e5d489395c5d7b32d81187ad64e4352f565c992a3d51ecc2f0ce8803f05e4"
+      "sha256": "ac0da39beaefb6bb43c2ab636759967b303673781449ec03ece24f8941bdc389"
     },
     {
       "path": "tests/consolidation-storage.test.mjs",
@@ -287,7 +287,7 @@
     },
     {
       "path": "tests/correction.test.mjs",
-      "sha256": "f9ae0da00add8b4e194632a38006fe34120c5fc993a088cc3dac4f88c0e7835b"
+      "sha256": "63dfdaff510d5091d43be5a8cea0c781338dc5a728df35855430b99573b58221"
     },
     {
       "path": "tests/excerpt-lifecycle.test.mjs",
@@ -303,7 +303,7 @@
     },
     {
       "path": "tests/idle-gate.test.mjs",
-      "sha256": "6b18a484ec3dc06d6ed4618db856adac8ae814d9473b448d8d188839c782bb7b"
+      "sha256": "997d8c202afbbbac5173528905c77f3d8f9dcf4669ca441d9b1c894907953728"
     },
     {
       "path": "tests/plugin-entry.test.mjs",
@@ -315,27 +315,41 @@
     },
     {
       "path": "README.md",
-      "sha256": "91cf36ff1d06fb5c6451c16032d48aede55336b507e9d4f44ba340f13e3bd335"
+      "sha256": "950b75b2f908f97e2a4d0facd4a46fc59bfc377504846b1f268c23bd8316f5e9"
     },
     {
       "path": "TODO.md",
-      "sha256": "2fe061e2d9de5b9b26a6ffd0901f0408c05ecc2ccb87b3febaee7383b5528314"
+      "sha256": "194d4c0ec477924ef5bda010ff4e3d8cf8df184a5b6b6aeb575650783747c444"
     },
     {
       "path": "docs/mechanisms.md",
-      "sha256": "198e7c66189c6e06bb0ffbaa8167c82762744318f6f45dd7730df2db2d5c9a32"
+      "sha256": "7ead533c5ac83e3b246b7119a911354a574af03f619a77b1f973c3cc9ff218b6"
     },
     {
       "path": "docs/implementation-route.md",
-      "sha256": "707408fdaaed433896ea305d8458bf759ab2fbe296be0e82290607b503dafebf"
+      "sha256": "5d01610865762a94263824a945523f9f7ef470f38d4529297aeafd0fb2ce63f3"
     },
     {
       "path": "docs/experience-implementation-plan.md",
       "sha256": "20caecd40e3cf870597c5edde8c354b9d2da15bcf21f864fb6d1d0d8e88e4021"
     }
   ],
-  "artifactsStable": true,
-  "artifactDrift": [],
+  "artifactsHashBasis": "SHA256 computed from the clean HEAD tree before this evidence file was written; compare with git show <git.head>:<path>",
+  "tapSha256": "44ed46b9f234387e2fa02381fac754329fcb8a1d58d38f88b8397d7e5a406cd9",
+  "git": {
+    "head": "6c138921f40d9e898ce04c762c74c46baeacd08c",
+    "cleanAtStart": true,
+    "cleanAtEnd": true
+  },
+  "independentReview": {
+    "path": "docs/v0.4.0-independent-review.md",
+    "status": "reviewed at HEAD a35b550; Critical/Important fixes landed after that review and require a fresh evidence run",
+    "findings": {
+      "critical": 1,
+      "important": 9,
+      "minor": 9
+    }
+  },
   "verified": true,
   "limitations": [
     "Host probe uses a synthetic TextAdapter and installed Cordis/LlmRuntime; it does not boot the full Web profile or call a real Provider.",
