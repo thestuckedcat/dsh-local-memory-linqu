@@ -6,6 +6,9 @@ import test from 'node:test';
 import {openStore} from '../src/backend.mjs';
 import {contextOf} from '../src/store-internals.mjs';
 import {createCorrectionManager, detectCorrectionIntent} from '../plugin/correction.mjs';
+import {createJobQueue} from '../src/jobs.mjs';
+import {createControlledProvider} from '../src/provider.mjs';
+import {authorizeTestExecution, extraction, job, routeA} from './helpers.mjs';
 
 function fixture(t) {
   const root = mkdtempSync(join(tmpdir(), 'memory-correction-'));
@@ -65,4 +68,24 @@ test('a correction without a cited memory or with another session is not applied
   assert.equal(store.list({limit: 10}).length, 1);
   const ordinary = correction.onMessageAdmitted({candidate: {input: '请解释这个设计'}, session: {id: 'session-1'}, binding: {store}});
   assert.equal(ordinary.state, 'none');
+});
+
+test('correction re-extraction is accepted by the real job queue identity checks', (t) => {
+  const {store} = fixture(t);
+  const record = memory(store);
+  const provider = createControlledProvider({resolveRoute: () => routeA, invoke: async () => extraction()});
+  const queue = createJobQueue(store, {provider, authorizeExecution: authorizeTestExecution});
+  queue.enqueue(job(store));
+  const correction = createCorrectionManager({attribution: attributionFor({id: record.id, ref: '记1', generation: record.generation, scopeRef: 'A'})});
+  const result = correction.onMessageAdmitted({
+    candidate: {input: '这里已经改了：需要 completion barrier。', id: 'msg-correction'},
+    session: {id: 'session-1'},
+    binding: {store, queue, scopeRef: 'A', sessionRef: 'session-ref', routeRef: 'registered-A'},
+    sourceRef: 'session-A/event/1/message/abc',
+    sourceVersion: 'version-A',
+  });
+  assert.equal(result.state, 'corrected');
+  assert.equal(result.enqueued, true, 'the correction extraction must not be rejected by source identity');
+  const count = contextOf(store).db.prepare("SELECT count(*) AS n FROM ledger.jobs WHERE scope_ref='A' AND purpose='memory_extract'").get().n;
+  assert.equal(count, 2);
 });

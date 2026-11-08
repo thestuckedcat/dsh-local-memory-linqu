@@ -104,11 +104,11 @@ const report = {
   independentReview: {path: 'docs/v0.4.0-independent-review.md', addendum: 'docs/v0.4.0-review-addendum.md', response: 'docs/v0.4.0-independent-review-response.md', status: 'original review at a35b550; addendum verified fixes at 7c68f0f (Critical cleared, 4 Important fixed/5 partial); later N-1/I-4/I-6/I-8/N-2..N-6 fixes await independent re-review', findings: {critical: 1, important: 9, minor: 9, addendumNewImportant: 1, addendumNewMinor: 5}},
   verified,
   limitations: [
-    'Host probe uses a synthetic TextAdapter and installed Cordis/LlmRuntime; it does not boot the full Web profile or call a real Provider.',
+    'Host probe uses a synthetic TextAdapter and installed Cordis/LlmRuntime; it does not boot the full Web profile, call a real Provider, or verify real idle worker dispatch.',
     'No real business Provider call, real consolidation on the installed profile, browser visual walkthrough, OS-level egress test, or independent review is included in this evidence.',
-    'Consolidation is storage/queue/runJob/publish-tested but not wired to automatic idle dispatch or a profile budget broker.',
+    'Consolidation is storage/queue/runJob/publish-tested; opt-in dirty-triggered auto dispatch and user-gesture UI exist, but real Host idle status events, profile budget broker, and real Provider execution are not verified.',
     'M3 layout/journal is validated only; no actual body transfer, cold recall, GC or crash-during-copy test was run.',
-    'Correction reflection/root-cause and cross-restart attribution were not implemented; derived/candidate UI actions remain read-only.',
+    'Correction reflection/root-cause and cross-restart attribution were not implemented; derived views have a user-gesture consolidate button but no candidate/publish/version-history UI.',
   ],
 };
 writeFileSync(resolve(root, 'evidence/v0.4.0-verification.json'), JSON.stringify(report, null, 2) + '\n', 'utf8');

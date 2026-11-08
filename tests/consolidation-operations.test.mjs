@@ -4,6 +4,7 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import test from 'node:test';
 import {openStore} from '../src/backend.mjs';
+import {contextOf} from '../src/store-internals.mjs';
 import {createConsolidationInputs} from '../src/consolidation-inputs.mjs';
 import {createConsolidationVersions} from '../src/consolidation-versions.mjs';
 import {createConsolidationOperations} from '../plugin/consolidation-operations.mjs';
@@ -121,4 +122,19 @@ test('an opt-in dirty marker auto-enqueues and publishes when the foreground is 
   assert.equal(ticked.results[0].state, 'published');
   assert.equal(auto.status().autoEnqueued, 1);
   assert.equal(resets, 1);
+});
+
+test('recovery moves an interrupted running job to outcome_unknown instead of leaving it stuck', (t) => {
+  const f = fixture(t);
+  memory(f.store, 'memory-1', 'Descriptor reclamation waits for completion.');
+  memory(f.store, 'memory-2', 'Ownership barrier precedes reclamation.');
+  const queued = f.operations['memory.consolidate']({projectId: 'project-1'}, {actor: 'user'});
+  assert.equal(queued.ok, true, JSON.stringify(queued));
+  const ctx = contextOf(f.store);
+  ctx.db.prepare("UPDATE ledger.consolidation_jobs SET state='running',run_token='interrupted' WHERE id=?").run(queued.value.jobId);
+  const restarted = createConsolidationOperations({config: f.config, registry: f.registry, provider: f.provider, now: () => new Date('2026-11-09T00:00:00.000Z')});
+  assert.equal(restarted.recover(), 0);
+  const row = ctx.db.prepare('SELECT state,reason FROM ledger.consolidation_jobs WHERE id=?').get(queued.value.jobId);
+  assert.equal(row.state, 'outcome_unknown');
+  assert.equal(row.reason, 'recovered_unknown');
 });

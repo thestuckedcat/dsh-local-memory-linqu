@@ -94,7 +94,7 @@ export function createConsolidationOperations({config, registry, provider, dirty
           if ([...pending.values()].some((entry) => entry.store === store)) continue;
           const due = dirty.due(store, {threshold: config.consolidation.dirtyCountThreshold, maxWaitMs: config.consolidation.maxWaitHours * 3600_000});
           if (!due.due) continue;
-          const ids = store.list({limit: 16, stateFilter: 'active'}).map((item) => item.id).slice(0, config.consolidation.maxMemories);
+          const ids = store.list({limit: 16, stateFilter: 'active'}).map((item) => item.id).slice(0, Math.min(5, config.consolidation.maxMemories));
           if (ids.length < MIN_SELECTION) { dirty.reset(store); continue; }
           const route = provider.bind(config.consolidation.routeRef || config.extraction.routeRef, 'memory_consolidate');
           inputs = createConsolidationInputs(store, {registry, now, configDigest: configDigestOf(config)});
@@ -119,7 +119,7 @@ export function createConsolidationOperations({config, registry, provider, dirty
     const {projectId, repository} = resolve(input, context);
     const store = registry.storeFor(repository.scopeRef);
     const memoryIds = select(store, input?.memoryIds);
-    const routeRef = routeRefFor(config, 'memory_extract');
+    const routeRef = config.consolidation?.routeRef || routeRefFor(config, 'memory_extract');
     let route;
     try { route = provider.bind(routeRef, 'memory_consolidate'); } catch { throw failure('CONSOLIDATE_ROUTE_UNAVAILABLE', 'The approved consolidation route is unavailable.'); }
     const inputs = createConsolidationInputs(store, {registry, now, configDigest: configDigestOf(config)});
@@ -154,7 +154,9 @@ export function createConsolidationOperations({config, registry, provider, dirty
         if (!canDispatch()) break;
         pending.delete(jobId);
         try {
-          const job = await grant.queue.runJob(jobId, {timeoutMs: 30_000});
+          let job = grant.queue.get(jobId);
+          if (!job) continue;
+          if (job.state === 'queued') job = await grant.queue.runJob(jobId, {timeoutMs: 30_000});
           if (job.state !== 'ready') {
             counters.failed += 1;
             counters.lastError = job.state;
@@ -187,6 +189,9 @@ export function createConsolidationOperations({config, registry, provider, dirty
     } finally { running = false; }
     return Object.freeze({state: 'ticked', results: Object.freeze(results)});
   }
+  function requestIdOf(store, jobId) {
+    try { return contextOf(store).db.prepare('SELECT request_id FROM ledger.consolidation_jobs WHERE scope_ref=? AND id=?').get(store.scopeRef, jobId)?.request_id; } catch { return undefined; }
+  }
   function recover() {
     let recovered = 0;
     let projects;
@@ -200,9 +205,12 @@ export function createConsolidationOperations({config, registry, provider, dirty
           versions = createConsolidationVersions(store, {inputs});
           queue = createConsolidationQueue(store, {inputs, provider, now, authorizeExecution: ({jobId}) => ({authorizationVersion: `persisted-user-consolidation:${jobId}`})});
         } catch { continue; }
+        try { queue.recoverInterrupted(); } catch { continue; }
         let jobs;
-        try { jobs = queue.list({state: 'queued', limit: 2}).items; } catch { continue; }
+        try { jobs = [...queue.list({state: 'queued', limit: 2}).items, ...queue.list({state: 'ready', limit: 2}).items]; } catch { continue; }
         for (const job of jobs) {
+          const requestId = requestIdOf(store, job.jobId);
+          if (typeof requestId === 'string' && requestId.startsWith('auto-consolidate:') && !config.consolidation?.enabled) continue;
           const candidateId = `mc-candidate:${job.jobId}`;
           if (!publicationRow(store, candidateId)) continue;
           if (pending.has(job.jobId)) continue;
