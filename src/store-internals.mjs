@@ -208,3 +208,25 @@ export function restoreSnapshot(store,snapshot){
   advance(ctx);return {restored,skipped,versionsRestored:0,versionsSkipped,authorityPreserved:true};
  });
 }
+
+/** Explicit removal propagation: clear excerpt bodies that depend on a deleted/superseded memory. */
+export function purgeExcerptsForMemory(ctx,memoryId){
+ const dependencies=ctx.db.prepare("SELECT owner_id FROM ledger.consolidation_dependencies WHERE scope_ref=? AND owner_kind='excerpt' AND base_kind='memory' AND base_id=?").all(ctx.scopeRef,memoryId);
+ let purged=0;
+ for(const {owner_id:excerptId} of dependencies){
+  const entry=entryState(ctx,EXCERPT_COLLECTION,excerptId);
+  if(entry&&entry.state!=='deleted'){ctx.db.prepare('DELETE FROM consolidation_excerpts WHERE id=? AND scope_ref=?').run(excerptId,ctx.scopeRef);ctx.db.prepare("UPDATE ledger.entries SET state='deleted' WHERE scope_ref=? AND collection=? AND id=?").run(ctx.scopeRef,EXCERPT_COLLECTION,excerptId);purged+=1;}
+ }
+ return purged;
+}
+
+/** Metadata-only excerpt listing for a memory; bodies/read permissions stay behind readExcerpt. */
+export function listExcerptsForMemory(store,{memoryId,limit=20}={}){
+ const ctx=contextOf(store);assertAuthority(ctx);
+ const memory=checkedText(memoryId,'memory reference',256);integerLimit(limit,1,100,'excerpt limit');
+ const rows=ctx.db.prepare(`SELECT d.base_generation AS recordGeneration, e.id AS fragmentId, e.source_ref AS sourceRef, e.source_version AS sourceVersion, e.state AS state, e.generation AS generation
+  FROM ledger.consolidation_dependencies d JOIN ledger.entries e ON e.scope_ref=d.scope_ref AND e.collection='consolidation_excerpts' AND e.id=d.owner_id
+  WHERE d.scope_ref=? AND d.owner_kind='excerpt' AND d.base_kind='memory' AND d.base_id=? ORDER BY e.generation DESC LIMIT ?`).all(ctx.scopeRef,memory,limit);
+ return Object.freeze(rows.map(row=>Object.freeze({fragmentId:row.fragmentId,sourceRef:row.sourceRef,sourceVersion:row.sourceVersion,recordGeneration:row.recordGeneration,state:row.state,generation:row.generation})));
+}
+function integerLimit(value,min,max,label){if(!Number.isSafeInteger(value)||value<min||value>max)throw new Error('Invalid '+label);return value;}

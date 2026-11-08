@@ -3,8 +3,8 @@
   "date": "2026-11-09",
   "scope": "Phase D storage foundation: content v3 / authority v2 migration + evidence-excerpt storage (no queue/provider/UI)",
   "suite": {
-    "tests": 346,
-    "pass": 346,
+    "tests": 351,
+    "pass": 351,
     "fail": 0,
     "command": ".\\runtime\\node.exe --test tests/*.test.mjs"
   },
@@ -16,7 +16,10 @@
     "historical v1/v2 schemas/signatures preserved; unknown/modified/mixed schemas refused before writes",
     "new roots create content v3/authority v2; existing stores preserve records/work/identity/anchor/revision",
     "excerpt register/read/forget: body in content DB, authority entry/root sources, memory dependency generation/digest, replay/refusal, byte purge on forget, secret/bounded text",
-    "snapshot v3 exports live version metadata/source refs/dependencies but no version bodies; v2/v3 restore semantics tested, version bodies fail-closed/skipped"
+    "snapshot v3 exports live version metadata/source refs/dependencies but no version bodies; v2/v3 restore semantics tested, version bodies fail-closed/skipped",
+    "extraction commit offers a bounded input excerpt to the queue observer; index registers an excerpt for each extracted memory best-effort",
+    "explicit memory deletion and correction purge dependent excerpt bodies via purgeExcerptsForMemory; archive retains the body but read is unavailable until restore",
+    "read-only memory.excerpts operation lists metadata/source refs for one memory without returning the body (user/HTTP and bound model session)"
   ],
   "realDataCopy": {
     "source": "E:/dsh-data/05-local-memory/default (copied before migration)",
@@ -32,7 +35,7 @@
     "note": "copy only; real root not yet migrated by this test"
   },
   "limitations": [
-    "Storage only: no consolidation queue/worker/provider purpose/permissions/policy enforcement/maxExcerpts/UI.",
+    "Storage/excerpt capture only: consolidation queue/worker/provider purpose/permissions/policy enforcement/maxExcerpts/UI are still not wired.",
     "Source deletion makes excerpts unreadable but does not yet purge excerpt bodies (lifecycle propagation is Phase D remainder).",
     "v3 snapshot restore validates and skips version bodies; full version-body restore is not implemented.",
     "Host baseline Node 24.21.0 migration was not exercised; tests run on bundled Node 26.13.0.",
@@ -62,5 +65,12 @@
       "consolidation_head"
     ],
     "note": "Real desktop-profile store migrated in place on plugin reload; backup copy was taken before migration."
-  }
+  },
+  "tests": [
+    "tests/consolidation-storage.test.mjs (13)",
+    "tests/jobs.test.mjs extraction observer (+1)",
+    "tests/excerpt-lifecycle.test.mjs (3)",
+    "tests/experience-operations.test.mjs excerpt listing (+1)",
+    "tests/plugin-entry.test.mjs extraction→excerpt listing assertion"
+  ]
 }

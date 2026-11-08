@@ -59,7 +59,7 @@ const READ_ONLY_OPERATIONS = new Set([
   'status', 'project.list', 'memory.search', 'memory.list', 'memory.get', 'task.list', 'task.inspect',
   'work.list', 'work.get', 'report.list', 'report.get',
   'abstract.list', 'share.discover', 'share.list', 'shared.search',
-  'memory.attribution',
+  'memory.attribution', 'memory.excerpts',
 ]);
 const PASSTHROUGH_ERROR_CODES = new Set([
   'PROJECT_NOT_FOUND', 'STALE_REVISION', 'PROJECT_RETIRED', 'PROJECT_EXISTS', 'DUPLICATE_NAME',

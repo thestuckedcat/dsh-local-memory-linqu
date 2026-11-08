@@ -44,3 +44,17 @@ test('memory.attribution fails closed for missing sessions and invalid turns', (
   assert.equal(badTurn.ok, false);
   assert.equal(badTurn.error.code, 'INVALID_INPUT');
 });
+
+test('memory.excerpts lists metadata for an explicit project without returning bodies', () => {
+ const store={listExcerpts(args){return [{fragmentId:'mc-excerpt:1',sourceRef:'session-A/turn-1',sourceVersion:'v1',recordGeneration:2,state:'active',generation:3,__args:args}];}};
+ const registry={getProject:(id)=>(id==='project-1'?{projectId:id,repositories:[{scopeRef:'scope-1',enabled:true}]}:undefined),storeFor:()=>store};
+ const operations=createExperienceOperations({attribution:{read:()=>({state:'none',turn:0})},sessions:{get:()=>undefined},registry});
+ const result=operations['memory.excerpts']({projectId:'project-1',memoryId:'memory-1',limit:5},{actor:'user'});
+ assert.equal(result.ok,true);
+ assert.equal(result.value.total,1);
+ assert.equal(result.value.items[0].fragmentId,'mc-excerpt:1');
+ assert.equal('text' in result.value.items[0],false);
+ const missing=operations['memory.excerpts']({projectId:'project-1'},{actor:'user'});
+ assert.equal(missing.ok,false);
+ assert.equal(missing.error.code,'INVALID_INPUT');
+});

@@ -81,6 +81,11 @@ test('closed loop: extraction persists, recall injects, stale projection blocks 
   assert.equal(project.item.origin, 'model');
   assert.equal(project.item.verification, 'unverified');
   assert.match(project.item.text, /Completion|reclamation/i);
+  const excerpts = await api(host, 'memory.excerpts', {projectId: project.id, memoryId: project.item.id});
+  assert.equal(excerpts.ok, true, JSON.stringify(excerpts));
+  assert.ok(excerpts.value.total >= 1, JSON.stringify(excerpts.value));
+  assert.ok(excerpts.value.items[0].fragmentId);
+  assert.equal('text' in excerpts.value.items[0], false, 'excerpt listing never returns the body');
 
   const {session: second} = host.addSession({id: 'session-2', cwd: repo});
   const query = userQuery('q-1', 'How does descriptor reclamation work?');

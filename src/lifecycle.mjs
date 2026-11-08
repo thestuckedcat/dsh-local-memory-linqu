@@ -1,7 +1,7 @@
 import {randomUUID} from 'node:crypto';
 import {checkedText,digest} from './scope.mjs';
 import {shape,clean,canonical,fingerprint} from './validation.mjs';
-import {contextOf,write,checkEpoch,advance,entryState,assertSources,setEntry,memoryDigest} from './store-internals.mjs';
+import {contextOf,write,checkEpoch,advance,entryState,assertSources,setEntry,memoryDigest,purgeExcerptsForMemory} from './store-internals.mjs';
 
 function target(store,args){
  shape(args,['id','collection','scopeRef','expectedGeneration'],'lifecycle');
@@ -20,6 +20,7 @@ export function forget(store,args){
   checkEpoch(ctx,args.expectedGeneration);advance(ctx,{lifecycle:true});
   blockSources(ctx,sourcesFor(ctx,collection,id));updateState(ctx,collection,id,'deleted');
   ctx.db.prepare(`DELETE FROM ${collection==='memories'?'records':'work_summaries'} WHERE id=? AND scope_ref=?`).run(id,ctx.scopeRef);
+  if(collection==='memories')purgeExcerptsForMemory(ctx,id);
   // Persisted inputs for invalidated epochs cannot remain a hidden copy of deleted material.
   ctx.db.prepare('DELETE FROM job_inputs WHERE id IN (SELECT id FROM ledger.jobs WHERE scope_ref=? AND epoch<>?)').run(ctx.scopeRef,store.generation());
   return {deleted:true,generation:store.generation(),currentSqliteBodyAndIndexCleared:true,backupCopies:'not-revoked'};
@@ -38,7 +39,7 @@ export function correctMemory(store,args){
  if(value.sourceVersion===old.sourceVersion)throw new Error('Correction requires its new source version');
  return write(ctx,()=>{
   checkEpoch(ctx,args.expectedGeneration);if(store.get(old.id)?.generation!==old.generation)throw new Error('Stale correction');
-  const generation=advance(ctx,{lifecycle:true});blockSources(ctx,sourcesFor(ctx,'memories',old.id));updateState(ctx,'memories',old.id,'superseded');ctx.db.prepare('DELETE FROM records WHERE id=?').run(old.id);
+  const generation=advance(ctx,{lifecycle:true});blockSources(ctx,sourcesFor(ctx,'memories',old.id));updateState(ctx,'memories',old.id,'superseded');ctx.db.prepare('DELETE FROM records WHERE id=?').run(old.id);purgeExcerptsForMemory(ctx,old.id);
   const row=ctx.insertMemory({...value,supersedes:old.id},generation);setEntry(ctx,{collection:'memories',id:value.id,bodyDigest:memoryDigest(row),sources:[{sourceRef:value.sourceRef,sourceVersion:value.sourceVersion,fragmentRef:'whole'}],generation,supersedes:old.id});return store.get(value.id);
  });
 }

@@ -222,6 +222,24 @@ export function apply(ctx, rawConfig = {}) {
         limits: config.limits,
         authorizeExecution: (metadata) => grants.authorizeExecution(metadata),
         authorizeRecovery: (args) => grants.authorizeRecovery(args),
+        onMemoryExtracted: (info) => {
+          try {
+            const input = typeof info.input === 'string' ? info.input.slice(0, 1500) : '';
+            if (!input.trim()) return;
+            for (const record of info.records ?? []) {
+              try {
+                store.registerExcerpt({
+                  requestId: `excerpt-${info.jobId}-${record.id}`,
+                  memoryId: record.id,
+                  expectedRecordGeneration: record.generation,
+                  sourceVersion: record.sourceVersion,
+                  fragmentRef: info.fragmentRef || 'whole',
+                  text: input,
+                });
+              } catch { noteDiagnostic('excerpt_capture_failed'); }
+            }
+          } catch { noteDiagnostic('excerpt_capture_failed'); }
+        },
       }),
       onDiagnostic: (entry) => noteDiagnostic(entry),
     });
@@ -259,7 +277,7 @@ export function apply(ctx, rawConfig = {}) {
     busyGate = createBusyGate({agents: ctx.agents, now: () => Date.now(), quietMs: 30_000});
     const workOperations = createWorkOperations({registry, config, reports, approval: ctx.approval, sessions: ctx.sessions});
     m2Operations = createM2Operations({registry, abstracts, sharing, sessions: ctx.sessions});
-    const experienceOperations = createExperienceOperations({attribution, sessions: ctx.sessions});
+    const experienceOperations = createExperienceOperations({attribution, sessions: ctx.sessions, registry});
     operations = createManagementOperations({
       config,
       registry,

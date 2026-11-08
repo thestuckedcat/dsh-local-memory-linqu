@@ -20,10 +20,11 @@ export function snapshotQueueRoute(queue,store,routeRef,purpose='memory_extract'
 function limitsOf(value){shape(value,Object.keys(DEFAULTS),'budget limits');return Object.fromEntries(Object.keys(DEFAULTS).map(k=>[k,integer(value[k]??DEFAULTS[k],1,CAPS[k],k)]));}
 const terminal=state=>!['queued','running'].includes(state);
 const dayOf=date=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).format(date);
-export function createJobQueue(store,{provider,limits={},now=()=>new Date(),authorizeRecovery=()=>false,authorizeExecution=()=>undefined}={}){
+export function createJobQueue(store,{provider,limits={},now=()=>new Date(),authorizeRecovery=()=>false,authorizeExecution=()=>undefined,onMemoryExtracted}={}){
  if(!provider||typeof provider.bind!=='function'||typeof provider.execute!=='function'||typeof provider.approved!=='function')throw new Error('Controlled provider required');
  if(provider.measureInput!==undefined&&typeof provider.measureInput!=='function')throw new Error('Trusted input measurement required');
  if(typeof authorizeExecution!=='function')throw new Error('Trusted execution authority required');
+ if(onMemoryExtracted!==undefined&&typeof onMemoryExtracted!=='function')throw new Error('Memory extraction observer must be a function');
  const ctx=contextOf(store),policy=limitsOf(limits),policyHash=fingerprint(policy);
  function inputSize(input,purpose){
   try{const value=provider.measureInput===undefined?input.length:provider.measureInput(Object.freeze({input,purpose}));if(value&&typeof value.then==='function'){Promise.resolve(value).catch(()=>{});throw new Error('Asynchronous input measurement');}return integer(value,input.length,8000,'model input length');}
@@ -151,7 +152,10 @@ export function createJobQueue(store,{provider,limits={},now=()=>new Date(),auth
     const row=raw(id);if(row.state!=='running'||row.run_token!==claim.token)return view(row);
     checkRunning('commit');
     let ids;
-    if(row.purpose==='memory_extract')ids=parsed.memories.map(v=>store.put(v,{expectedGeneration:claim.row.epoch}).id);
+    if(row.purpose==='memory_extract'){
+     const saved=parsed.memories.map(v=>store.put(v,{expectedGeneration:claim.row.epoch}));ids=saved.map(v=>v.id);
+     if(typeof onMemoryExtracted==='function')try{onMemoryExtracted(Object.freeze({jobId:id,scopeRef:ctx.scopeRef,purpose:row.purpose,input:claim.payload.input,sourceRef:claim.payload.sourceRef,sourceVersion:claim.payload.sourceVersion,fragmentRef:claim.payload.fragmentRef,generation:claim.row.epoch,records:Object.freeze(saved)}));}catch{/* Evidence capture is best effort; the memory write remains committed. */}
+    }
     else{
      const work=createWorkSummaryManager(store),source={sourceRef:claim.payload.sourceRef,sourceVersion:claim.payload.sourceVersion,fragmentRef:claim.payload.fragmentRef};
      const saved=row.purpose==='work_summary_merge'?work.merge({id:claim.payload.itemRef,draft:parsed.summary,sources:[source],origin:'model',expectedGeneration:claim.row.epoch}):work.save({requestId:`job-${id}`,itemRef:claim.payload.itemRef??undefined,draft:parsed.summary,sources:[source],origin:'model',expectedGeneration:claim.row.epoch});ids=[saved.id];

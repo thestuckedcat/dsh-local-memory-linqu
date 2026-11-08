@@ -113,3 +113,18 @@ test('work model output is an unverified draft in its own collection',async t=>{
  const saved=q.enqueue(job(s,{purpose:'work_summary_extract'}));assert.equal((await q.runJob(saved.jobId)).state,'completed');
  assert.deepEqual(s.list(),[]);const work=createWorkSummaryManager(s).list().items[0];assert.equal(work.myContribution.basis,'inferred');assert.equal(work.result.support,'missing');assert.equal(work.dimensionMapping.status,'pending_reference');
 });
+
+test('memory extract commit offers one bounded evidence capture', async (t) => {
+ const {openStore,createJobQueue,createControlledProvider}=await task2(),f=fixture(t),s=f.track(openStore(f.root,{scopeRef:'A'}));
+ const seen=[];
+ const provider=createControlledProvider({resolveRoute:()=>routeA,invoke:async()=>extraction()});
+ const q=createJobQueue(s,{authorizeExecution:authorizeTestExecution,provider,onMemoryExtracted:(info)=>seen.push(info)});
+ const saved=q.enqueue(job(s)),result=await q.runJob(saved.jobId);
+ assert.equal(result.state,'completed');
+ assert.equal(seen.length,1);
+ assert.equal(seen[0].purpose,'memory_extract');
+ assert.equal(seen[0].records.length,result.result.ids.length);
+ assert.ok(seen[0].input.length>=1);
+ assert.ok(seen[0].sourceRef);
+ assert.equal(seen[0].sourceVersion,job(s).sourceVersion);
+});
