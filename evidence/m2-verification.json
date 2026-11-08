@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "date": "2026-11-08",
-  "startedAtUtc": "2026-11-08T08:01:22.510Z",
-  "durationMs": 26606.768399999997,
+  "startedAtUtc": "2026-11-08T08:05:46.082Z",
+  "durationMs": 26776.7582,
   "purpose": "M2 (v0.3.0) delivery evidence: catalog v1->v2, project abstracts, user-granted sharing, applicability, management API and client tab; local full suite plus the real installed-library final-gate regression probe",
   "runtime": {
     "node": "26.13.0",
@@ -22,7 +22,7 @@
       "todo": 0
     },
     "exitCode": 0,
-    "tapSha256": "1ed93ec4f321c868bc9ab1f5f45c35c1d0035c2cde3e1443c42a16e44771c61b"
+    "tapSha256": "687f6e897993eb35b26cbf63731edc752154df2a35ca9f56cdb9beb2e7eec4f3"
   },
   "probe": {
     "verified": true,
@@ -35,7 +35,7 @@
       "todo": 0
     },
     "exitCode": 0,
-    "tapSha256": "54c7c8679b98c9569d8451a75dad3383f18986dfcee8b5bfbca7133b59a5c930"
+    "tapSha256": "fbd76fb471307ca657b64695769c015dded4ae5f1a406b84ccf401f96ebff6e4"
   },
   "liveInstall": {
     "ref": "evidence/m2-install-verification.json",
@@ -175,7 +175,7 @@
     },
     {
       "path": "docs/m2-independent-review.md",
-      "sha256": "c48176a21c2fe08dd003f4b574ab5a7f355ca1ffa3b928a7a53ccf0a07e9a2b0"
+      "sha256": "4a9a03593794f8e5a7fb06865d587ada3526463fae8bafd115ed2dc1e8287ae2"
     },
     {
       "path": "docs/m1-independent-review.md",
