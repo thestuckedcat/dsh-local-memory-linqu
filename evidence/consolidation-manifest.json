@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-09",
+  "scope": "Phase D consolidation input manifest + batch permissions (memory_only) — no queue/provider/worker/UI",
+  "suite": {
+    "tests": 355,
+    "pass": 355,
+    "fail": 0,
+    "command": ".\\runtime\\node.exe --test tests/*.test.mjs"
+  },
+  "newTests": {
+    "tests/consolidation-inputs.test.mjs": 4
+  },
+  "behavior": [
+    "memory-only snapshot of 2..16 active memories with pinned id/generation/bodyDigest/kind/source/rootSources/verification=unverified",
+    "canonical InputSnapshot (no absolute paths/ids in model text), inputDigest, inputChars bound 2000..8000, manifestDigest over all fields except itself",
+    "binding/project/applicability/epoch/scopeRevision/headRevision/configDigest/route/policyRevision captured; buildVerification unknown",
+    "batch permission is user-only, 24h TTL, bound to manifestDigest/inputDigest/route digest/epoch/policy revision; replay conflict refused",
+    "assertCurrent rechecks permission, binding/project revision, epoch/revision, each memory generation/body digest and root sources; tampered manifest refused",
+    "excerpt mode is explicitly rejected (MC_EXCERPTS_NOT_READY) until excerpt permission/expiry wiring exists"
+  ],
+  "limitations": [
+    "No consolidation queue/provider purpose/prompt/candidate/publish/UI; this module is not wired into Host dispatch.",
+    "No excerpt manifest support yet; registerExcerpt has no permissionId/expiry semantics in this increment.",
+    "Route/config digest are local trust inputs; no Host route approval or budget reservation is performed.",
+    "No real model call or real background idle dispatch was exercised."
+  ]
+}
