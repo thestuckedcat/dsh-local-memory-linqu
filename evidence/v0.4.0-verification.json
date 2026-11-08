@@ -1,0 +1,347 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-09",
+  "startedAtUtc": "2026-11-08T16:15:24.061Z",
+  "durationMs": 38581.8834,
+  "purpose": "v0.4.0 experience/background delivery evidence: reading-first UI, attribution, excerpts, consolidation manifest/validator/queue/runJob/candidate/publish/derived views, correction suspension, M3 layout/journal skeleton; local full suite plus the real installed-library final-gate regression probe and live install observation",
+  "runtime": {
+    "node": "26.13.0",
+    "executable": "E:\\dsh\\plugin\\05-local-memory\\runtime\\node.exe"
+  },
+  "packageVersion": "0.4.0",
+  "commands": {
+    "suite": "E:\\dsh\\plugin\\05-local-memory\\runtime\\node.exe --test --test-concurrency=1 --test-reporter=tap tests/abstracts.test.mjs tests/attribution.test.mjs tests/backend.test.mjs tests/capability-events.test.mjs tests/configuration.test.mjs tests/consolidation-inputs.test.mjs tests/consolidation-output.test.mjs tests/consolidation-queue.test.mjs tests/consolidation-storage.test.mjs tests/consolidation-versions.test.mjs tests/correction.test.mjs tests/excerpt-lifecycle.test.mjs tests/execution-authorization.test.mjs tests/experience-operations.test.mjs tests/final-projection.test.mjs tests/harness-provider.test.mjs tests/harness-sdk.test.mjs tests/host-grants.test.mjs tests/idle-gate.test.mjs tests/jobs.test.mjs tests/lifecycle.test.mjs tests/m2-management.test.mjs tests/management.test.mjs tests/migration.test.mjs tests/plugin-entry.test.mjs tests/project-registry.test.mjs tests/projects.test.mjs tests/proof-reminders.test.mjs tests/reports.test.mjs tests/scheduler.test.mjs tests/session-hooks.test.mjs tests/sharing.test.mjs tests/source-lock.test.mjs tests/storage-layout.test.mjs tests/work-management.test.mjs tests/work-summary.test.mjs",
+    "hostProbe": "E:\\dsh\\plugin\\05-local-memory\\runtime\\node.exe tools/test-m1-host.mjs"
+  },
+  "suite": {
+    "tap": "evidence/v0.4.0-node26.tap",
+    "exitCode": 0,
+    "tests": 379,
+    "pass": 379,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "hostProbe": {
+    "json": "evidence/m1-host-probe.json",
+    "exitCode": 0,
+    "verified": true,
+    "profileLoaded": false,
+    "realProviderCalled": false
+  },
+  "liveInstall": {
+    "status": {
+      "ok": true,
+      "value": {
+        "schemaVersion": 1,
+        "plugin": "dsh-local-memory-linqu",
+        "registry": {
+          "state": "ready",
+          "projectCount": 1,
+          "activeProjectCount": 0,
+          "scopeCount": 1,
+          "openStores": 1,
+          "degraded": []
+        },
+        "scheduler": {
+          "state": "running",
+          "running": 0,
+          "pendingScopes": [],
+          "lastTickAt": "2026-11-08T16:16:01.760Z",
+          "lastError": null
+        },
+        "grants": {
+          "state": "active",
+          "leases": 0,
+          "receipts": 0,
+          "recoveryConfirmations": 0,
+          "manualConfirmations": 0,
+          "revoked": false,
+          "authorizationVersion": "grant-v1:9ebcb01f-788a-4005-8745-2008df24f45a:1"
+        },
+        "provider": "active",
+        "config": {
+          "schemaVersion": 1,
+          "profile": "default",
+          "configDigest": "c83b4cc93c3a399617f1573cbddd5eff99920ea62c253398265694de154c4b08",
+          "extraction": {
+            "enabled": true
+          },
+          "recall": {
+            "enabled": true,
+            "maxRecords": 5
+          },
+          "workSummary": {
+            "enabled": true
+          },
+          "reminders": {
+            "enabled": true
+          },
+          "reports": {
+            "enabled": true
+          }
+        },
+        "semantics": {
+          "explicitDelete": "irreversible",
+          "archive": "restorable",
+          "remoteModelData": "not_revoked",
+          "backupCopies": "not-revoked",
+          "remoteStop": "not_claimed"
+        },
+        "state": "ready",
+        "reason": null,
+        "projects": 1,
+        "scopes": 1,
+        "recallIntegration": "llm-stream-gate",
+        "cold": {
+          "status": "not_configured",
+          "detail": "M3 cold tier is not implemented; all memory data stays local."
+        },
+        "degraded": [],
+        "abstracts": {
+          "projectsWithAbstracts": 1,
+          "totalRevisions": 1,
+          "dirtyProjects": 0
+        },
+        "sharing": {
+          "activeRelations": 0,
+          "revokedRelations": 0,
+          "targets": 0
+        },
+        "experience": {
+          "phase": "idle",
+          "running": 0,
+          "pendingScopes": 0,
+          "automaticDisabled": false,
+          "updatedAt": "2026-11-08T16:16:02.631Z"
+        },
+        "attribution": {
+          "turns": 0,
+          "available": 0,
+          "unavailable": 0,
+          "overLimit": 0
+        },
+        "capability": {
+          "cursors": 0,
+          "holds": 0,
+          "events": 0,
+          "applied": 0
+        },
+        "corrections": {
+          "detected": 0,
+          "applied": 0,
+          "unresolved": 0,
+          "failed": 0,
+          "suspended": 0
+        },
+        "background": {
+          "state": "busy",
+          "running": 1,
+          "unknown": 5,
+          "idle": 1,
+          "agents": 7,
+          "quietForMs": 20185,
+          "quietMs": 30000,
+          "at": "2026-11-08T16:16:02.631Z"
+        }
+      }
+    },
+    "schemas": {
+      "available": true,
+      "contentUserVersion": 3,
+      "authorityUserVersion": 2,
+      "contentTables": [
+        "consolidation_bodies",
+        "consolidation_excerpts",
+        "consolidation_inputs"
+      ],
+      "authorityTables": [
+        "consolidation_audit",
+        "consolidation_dependencies",
+        "consolidation_head",
+        "consolidation_jobs",
+        "consolidation_operations",
+        "consolidation_permissions",
+        "consolidation_policy",
+        "consolidation_versions"
+      ]
+    }
+  },
+  "artifacts": [
+    {
+      "path": "src/schema.mjs",
+      "sha256": "9232d7694fa8e712f2b917f7d932e76eee6a4d9b4b10ce169df0fd6e0b1d1b7d"
+    },
+    {
+      "path": "src/consolidation-schema.mjs",
+      "sha256": "58279964f9c37c8eef66806e766bac2b91d302c6ad76630a1a39e12cbd81f0f0"
+    },
+    {
+      "path": "src/store-internals.mjs",
+      "sha256": "79faaf4e818ed71120fd69ba3ed8a6e55e02b543ef3516b87fb494fe6657959a"
+    },
+    {
+      "path": "src/backend.mjs",
+      "sha256": "773837e797b2e9e995d2316cfcb49b7d05a770e07a7561d5869cfc30adc48820"
+    },
+    {
+      "path": "src/jobs.mjs",
+      "sha256": "d2fc1f7d115cd77725e3d98a08ffa732d1484f570f29915b1e760d3b578770cb"
+    },
+    {
+      "path": "src/consolidation-inputs.mjs",
+      "sha256": "f697a81e3e0ba3cda7fc7cb8e579bbbf8997997d8fba1b9af502a9274c204096"
+    },
+    {
+      "path": "src/consolidation-output.mjs",
+      "sha256": "fc1100b624e738a2cc9675c26b0891feb312b03f168ef6388ac73a2201b9b3bc"
+    },
+    {
+      "path": "src/consolidation-queue.mjs",
+      "sha256": "76ec3d05d915466133c29681d6f9f2a04300061586ea49380e999ba45e37b78d"
+    },
+    {
+      "path": "src/consolidation-versions.mjs",
+      "sha256": "24fc82ef1af122e54ef6779494a0d7720e4f51262941876d9e0b4b427f931190"
+    },
+    {
+      "path": "src/storage-layout.mjs",
+      "sha256": "314f002f73cfe016df2a0a6cbc365bb32323795bb3944d6f342b580d5682edec"
+    },
+    {
+      "path": "src/cold-archive.mjs",
+      "sha256": "f02674e37832ea2b7c07e427b5aff12eb84aabb6f411790289581872828598f1"
+    },
+    {
+      "path": "src/provider.mjs",
+      "sha256": "380d641d2e0cc86fa87ba40c36e6773068e790d6c77fe9818284d80a3052d9c8"
+    },
+    {
+      "path": "plugin/index.mjs",
+      "sha256": "dfee5664e6a4d88c732e8c1cfd0aa73a0f2babef0503c6c7e6f2853841579e43"
+    },
+    {
+      "path": "plugin/attribution.mjs",
+      "sha256": "0c3e13fa396ee78eee4757c2c04d250e41c6bd9a3e2dedc57537f08e64f05b67"
+    },
+    {
+      "path": "plugin/experience-operations.mjs",
+      "sha256": "980a41fd9f606a118dd2d08c19fb0d474c3886815f725a19c4ce51d8f43fa0d5"
+    },
+    {
+      "path": "plugin/correction.mjs",
+      "sha256": "c6788d46c9e5597a8935396cbf4d021ccef03850e48bb855f14347acc01dfd73"
+    },
+    {
+      "path": "plugin/idle-gate.mjs",
+      "sha256": "80e497ec50a42fee1b216cd8eff0486f34195de644e7dbf47ff67be03e3ce5a8"
+    },
+    {
+      "path": "plugin/harness-provider.mjs",
+      "sha256": "919030b5096c5eddb8fcc14def9cf84c6eb346314651e4762f07cd4b61c9bb03"
+    },
+    {
+      "path": "plugin/session-hooks.mjs",
+      "sha256": "2b49d2d4104282421e479d553321f4c61f465edd16cf41d95ddc297ce6efa654"
+    },
+    {
+      "path": "plugin/management.mjs",
+      "sha256": "b0a49d9feb8af99840092368158556ac48953ec0c9dbb1748f0af09163c31b8e"
+    },
+    {
+      "path": "client.js",
+      "sha256": "709d64b7677b3b8c99e1e879b1600929d8c42a5f3f750a3755f190f43366d8fb"
+    },
+    {
+      "path": "package.json",
+      "sha256": "4e4221c2feb80464a3991afb4b9e9d4cfa8ff6c3cdfffc8d1462174c8802a3bf"
+    },
+    {
+      "path": "locale/en.json",
+      "sha256": "815cabb6181306b2a8d687b9cbdbf3e796ebaf3fa5f6f999ed530e8fb03e0ad9"
+    },
+    {
+      "path": "locale/zh.json",
+      "sha256": "a25302ce7efcc3d38cefaffca27196d7683e1179347fa2a77d4d7c22905cc7ac"
+    },
+    {
+      "path": "tests/consolidation-inputs.test.mjs",
+      "sha256": "9e443867a922cfdbf9b4072cbef5169c46d16bc5657e4379ebf48295a55f9b90"
+    },
+    {
+      "path": "tests/consolidation-output.test.mjs",
+      "sha256": "17901abf58ff44f509494c0a58186ed169ed20c5d9673d9838442577e406cd5d"
+    },
+    {
+      "path": "tests/consolidation-queue.test.mjs",
+      "sha256": "583000434bb430af04ae0ac16ed12a8a0317c52dd04b3d5a5aaa967ecf876066"
+    },
+    {
+      "path": "tests/consolidation-versions.test.mjs",
+      "sha256": "622e5d489395c5d7b32d81187ad64e4352f565c992a3d51ecc2f0ce8803f05e4"
+    },
+    {
+      "path": "tests/consolidation-storage.test.mjs",
+      "sha256": "698c4f28b1ef6117f09275c1562830b7e1c06765e70ef3417a22d78bc652a907"
+    },
+    {
+      "path": "tests/correction.test.mjs",
+      "sha256": "f9ae0da00add8b4e194632a38006fe34120c5fc993a088cc3dac4f88c0e7835b"
+    },
+    {
+      "path": "tests/excerpt-lifecycle.test.mjs",
+      "sha256": "0e9c323294a5d409f005868d07636cddac8859460bdec0694f6ffd4809d5f529"
+    },
+    {
+      "path": "tests/storage-layout.test.mjs",
+      "sha256": "02f25e2443392483cd6738e64cf2f4af680d0b215ea8f222de37790a0f5a62f8"
+    },
+    {
+      "path": "tests/attribution.test.mjs",
+      "sha256": "9909e9df15067137b1afe86787bfa9ba69b7f8f54cef1d5128f317d340072c48"
+    },
+    {
+      "path": "tests/idle-gate.test.mjs",
+      "sha256": "6b18a484ec3dc06d6ed4618db856adac8ae814d9473b448d8d188839c782bb7b"
+    },
+    {
+      "path": "tests/plugin-entry.test.mjs",
+      "sha256": "29cdc56596576473d46376ba8d82d0ca7101b8efc28dc962f7e8412fc64d9317"
+    },
+    {
+      "path": "tests/harness-provider.test.mjs",
+      "sha256": "44c88f317e5fed7c605c1c91d75f115cf8c946f708db9bfd1b3314d18f6ad8c2"
+    },
+    {
+      "path": "README.md",
+      "sha256": "91cf36ff1d06fb5c6451c16032d48aede55336b507e9d4f44ba340f13e3bd335"
+    },
+    {
+      "path": "TODO.md",
+      "sha256": "2fe061e2d9de5b9b26a6ffd0901f0408c05ecc2ccb87b3febaee7383b5528314"
+    },
+    {
+      "path": "docs/mechanisms.md",
+      "sha256": "198e7c66189c6e06bb0ffbaa8167c82762744318f6f45dd7730df2db2d5c9a32"
+    },
+    {
+      "path": "docs/implementation-route.md",
+      "sha256": "707408fdaaed433896ea305d8458bf759ab2fbe296be0e82290607b503dafebf"
+    },
+    {
+      "path": "docs/experience-implementation-plan.md",
+      "sha256": "20caecd40e3cf870597c5edde8c354b9d2da15bcf21f864fb6d1d0d8e88e4021"
+    }
+  ],
+  "artifactsStable": true,
+  "artifactDrift": [],
+  "verified": true,
+  "limitations": [
+    "Host probe uses a synthetic TextAdapter and installed Cordis/LlmRuntime; it does not boot the full Web profile or call a real Provider.",
+    "No real business Provider call, real consolidation on the installed profile, browser visual walkthrough, OS-level egress test, or independent review is included in this evidence.",
+    "Consolidation is storage/queue/runJob/publish-tested but not wired to automatic idle dispatch or a profile budget broker.",
+    "M3 layout/journal is validated only; no actual body transfer, cold recall, GC or crash-during-copy test was run.",
+    "Correction reflection/root-cause and cross-restart attribution were not implemented; derived/candidate UI actions remain read-only."
+  ]
+}

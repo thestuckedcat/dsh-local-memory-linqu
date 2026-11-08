@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "date": "2026-11-07",
-  "startedAtUtc": "2026-11-08T08:06:12.501Z",
-  "durationMs": 335.4611,
+  "startedAtUtc": "2026-11-08T16:16:02.239Z",
+  "durationMs": 343.4092,
   "purpose": "isolated real installed-library audit of the M1 final recall projection gate (llm/stream waterfall); not a full Host activation",
   "executable": "E:/dsh/DeepSeek Harness.exe",
   "archive": "E:/dsh/resources/app.asar",
@@ -25,7 +25,7 @@
     },
     {
       "path": "plugin/final-projection.mjs",
-      "sha256": "7ef9cfa45590c7305c3cacf6c62191f2a9132cd2cae7fd63a3826518b821f5b8"
+      "sha256": "265d49d3a35dbd1f85ebe84204316c4c22cd8881e49cf6f77b99bf7e8b2fb096"
     },
     {
       "path": "plugin/configuration.mjs",
@@ -41,7 +41,7 @@
     },
     {
       "path": "src/backend.mjs",
-      "sha256": "3dfca144e7099c19e8dd7112646c0bf3bd68366b99c116fe3c360172802eb187"
+      "sha256": "773837e797b2e9e995d2316cfcb49b7d05a770e07a7561d5869cfc30adc48820"
     },
     {
       "path": "src/scope.mjs",
@@ -49,11 +49,11 @@
     },
     {
       "path": "src/schema.mjs",
-      "sha256": "e1e505538339eba17d2a27c3deb150fccefdd84b20c9983f6dd850c134676c02"
+      "sha256": "9232d7694fa8e712f2b917f7d932e76eee6a4d9b4b10ce169df0fd6e0b1d1b7d"
     },
     {
       "path": "src/store-internals.mjs",
-      "sha256": "45f252a7403cb4f2b0b90d341195a5a173bb3b9c3689e2e794643053b7499052"
+      "sha256": "79faaf4e818ed71120fd69ba3ed8a6e55e02b543ef3516b87fb494fe6657959a"
     },
     {
       "path": "src/validation.mjs",
@@ -61,7 +61,7 @@
     },
     {
       "path": "src/lifecycle.mjs",
-      "sha256": "49e1762b80e58310e3739358376eb3f5b57da6de73a7c353ff9b380c87d19e20"
+      "sha256": "e7aaee6f3b2a38cff64f89d8dc038d7a8e71c59b224ba223dd3f8d94fa3b87ef"
     }
   ],
   "args": [
@@ -91,5 +91,5 @@
   "declarationBasis": "The probe mounts the installed Cordis/LlmRuntime and a synthetic TextAdapter; the false flags follow the inspected call path, not OS-level monitoring.",
   "networkGuard": "tools/host-api/deny-network.cjs; covered Node API sinks only; not an OS policy",
   "scope": "Proves the llm/stream waterfall exists in the pinned Host, that a listener can pass or short-circuit dispatch, and that the final projection blocks a recalled message after the record is deleted. Does not certify the full Web profile, the real Provider, or the client bundle.",
-  "tapSha256": "fbd76fb471307ca657b64695769c015dded4ae5f1a406b84ccf401f96ebff6e4"
+  "tapSha256": "d16cf2603861644521b99fa8cc75c994291489bad8eda6d5d97c18e4dddf3121"
 }
