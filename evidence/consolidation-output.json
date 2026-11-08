@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-09",
+  "scope": "Phase D mc-output-v1 strict validator (no provider/queue/worker/UI)",
+  "suite": {
+    "tests": 360,
+    "pass": 360,
+    "fail": 0,
+    "command": ".\\runtime\\node.exe --test tests/*.test.mjs"
+  },
+  "newTests": {
+    "tests/consolidation-output.test.mjs": 5
+  },
+  "behavior": [
+    "strict JSON/schema/extra-field rejection; max 8 groups and output 12000 chars/48000 UTF-8 bytes",
+    "exact coverage: every selected memory appears exactly once across groups+untouched; unknown/duplicate refs refused",
+    "per-group support exactly covers memoryRefs; excerptRefs bounded by the manifest permissions",
+    "duplicates require literal equality after trim only; source_correction requires permitted excerpt and hypothesis/conflict status",
+    "inputDigest cross-check against the full InputSnapshot; secret-like token rejection",
+    "local candidate metadata: unverified, semanticValidation=not_performed, generator=memory-consolidate-v1, coverage/warnings computed locally (build_unverified, freshness_unknown, conflict_unresolved, semantic_support_unverified, user_excerpt_not_host_proof)"
+  ],
+  "limitations": [
+    "Validator proves structure/coverage/reference bounds only; it does not prove semantic support, model quality or conflict resolution.",
+    "No provider purpose/prompt/queue/worker/candidate persistence/publish/UI; validator is not yet called by a Host dispatch path.",
+    "Excerpt mode is rejected by the validator in this increment; source_correction tests use a synthetic permitted excerpt allowance.",
+    "No real model output was validated; no real Host/Provider call was made."
+  ]
+}
