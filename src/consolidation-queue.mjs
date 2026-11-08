@@ -274,7 +274,7 @@ export function createConsolidationQueue(store, {inputs, provider, authorizeExec
         ctx.db.prepare('INSERT OR IGNORE INTO ledger.consolidation_dependencies(scope_ref,owner_kind,owner_id,base_kind,base_id,base_generation,base_digest) VALUES(?,?,?,?,?,?,?)')
           .run(store.scopeRef, 'candidate', candidateId, 'memory', memory.id, memory.recordGeneration, memory.bodyDigest);
       }
-      ctx.db.prepare("UPDATE ledger.consolidation_jobs SET state='ready',candidate_id=?,cost_status='reported',run_token=NULL,updated_at=? WHERE scope_ref=? AND id=?").run(candidateId, clock().toISOString(), store.scopeRef, id);
+      ctx.db.prepare("UPDATE ledger.consolidation_jobs SET state='ready',candidate_id=?,cost_status='unknown',run_token=NULL,updated_at=? WHERE scope_ref=? AND id=?").run(candidateId, clock().toISOString(), store.scopeRef, id);
       ctx.db.prepare('DELETE FROM consolidation_inputs WHERE job_id=?').run(id);
       return jobView(ctx.db.prepare('SELECT * FROM ledger.consolidation_jobs WHERE scope_ref=? AND id=?').get(store.scopeRef, id));
     });

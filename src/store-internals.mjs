@@ -288,3 +288,18 @@ export function suspendMemoryForCorrection(store,{id,expectedGeneration,reason='
   return Object.freeze({suspended:true,id:memoryId,reason:checkedText(reason,'correction reason',256),generation:scopeState(ctx).epoch});
  });
 }
+
+/** Capability/restore propagation: invalidate every consolidation job, input and derived body in this scope. */
+export function invalidateConsolidationForScope(store,{reason='capability_event'}={}){
+ const ctx=contextOf(store);
+ return write(ctx,()=>{
+  const at=new Date().toISOString();
+  const jobs=ctx.db.prepare("SELECT id FROM ledger.consolidation_jobs WHERE scope_ref=? AND state IN ('queued','running')").all(ctx.scopeRef);
+  for(const job of jobs){ctx.db.prepare("UPDATE ledger.consolidation_jobs SET state='stale',reason=?,candidate_id=NULL,run_token=NULL,updated_at=? WHERE scope_ref=? AND id=?").run(checkedText(reason,'reason',256),at,ctx.scopeRef,job.id);ctx.db.prepare('DELETE FROM consolidation_inputs WHERE job_id=?').run(job.id);}
+  const entries=ctx.db.prepare("SELECT collection,id FROM ledger.entries WHERE scope_ref=? AND collection IN ('consolidation_candidates','consolidation_versions') AND state='active'").all(ctx.scopeRef);
+  for(const entry of entries){ctx.db.prepare('DELETE FROM consolidation_bodies WHERE id=? AND scope_ref=?').run(entry.id,ctx.scopeRef);ctx.db.prepare("UPDATE ledger.entries SET state='deleted' WHERE scope_ref=? AND collection=? AND id=?").run(ctx.scopeRef,entry.collection,entry.id);}
+  const head=ctx.db.prepare('SELECT * FROM ledger.consolidation_head WHERE scope_ref=?').get(ctx.scopeRef);
+  if(head&&head.version_id!==null)ctx.db.prepare('UPDATE ledger.consolidation_head SET revision=revision+1,version_id=NULL WHERE scope_ref=?').run(ctx.scopeRef);
+  return Object.freeze({jobs:jobs.length,derived:entries.length,headCleared:Boolean(head&&head.version_id!==null),reason});
+ });
+}

@@ -149,6 +149,8 @@ export function createCapabilityEventConsumer({catalog, registry, now = () => ne
     }
     try {
       const result = consumeCapabilityEvent(store, {...event});
+      let derivedInvalidated;
+      try { derivedInvalidated = store.invalidateConsolidationScope?.({reason: `capability:${event.kind}`}); } catch { derivedInvalidated = undefined; }
       const at = clock();
       catalog.write(() => {
         db.prepare(`INSERT INTO capability_cursors(source_capability,scope_ref,last_generation,last_event_id,last_outcome,updated_at)
@@ -157,7 +159,7 @@ export function createCapabilityEventConsumer({catalog, registry, now = () => ne
           .run(SOURCE, scopeRef, event.generation, eventId, event.outcome, at);
       });
       noteEvent(scopeRef, eventId, eventFingerprint, true);
-      return Object.freeze({state: 'applied', duplicate: result?.duplicate === true, generation: event.generation, eventId});
+      return Object.freeze({state: 'applied', duplicate: result?.duplicate === true, generation: event.generation, eventId, ...(derivedInvalidated ? {derivedInvalidated} : {})});
     } catch {
       noteEvent(scopeRef, eventId, eventFingerprint, false);
       return hold(SOURCE, scopeRef, 'apply_failed', event.generation, eventId);

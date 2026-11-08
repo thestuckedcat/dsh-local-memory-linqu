@@ -214,6 +214,9 @@ export function createConsolidationInputs(store, {
       throw failure('MC_MANIFEST_TAMPERED', 'manifest digest does not match its content');
     }
     if (!permissionCurrent(manifest)) throw failure('MC_PERMISSION_EXPIRED', 'batch permission is not active');
+    if (manifest.configDigest !== configDigest) throw failure('MC_CONFIG_CHANGED', 'configuration digest changed');
+    const policy = ctx.db.prepare('SELECT revision FROM ledger.consolidation_policy WHERE scope_ref=?').get(store.scopeRef);
+    if (!policy || policy.revision !== manifest.policyRevision) throw failure('MC_POLICY_CHANGED', 'consolidation policy revision changed');
     const {binding, project} = bindingNow();
     if (binding.projectId !== manifest.projectId || binding.repoId !== manifest.repoId || binding.scopeRef !== manifest.scopeRef || binding.bindingRevision !== manifest.bindingRevision) {
       throw failure('MC_BINDING_CHANGED', 'project binding changed');

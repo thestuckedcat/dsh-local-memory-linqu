@@ -33,7 +33,7 @@ function requireLiveDependencies(ctx, scopeRef, dependencies) {
   }
 }
 
-export function createConsolidationVersions(store, {inputs, now = () => new Date()} = {}) {
+export function createConsolidationVersions(store, {inputs, publication, now = () => new Date()} = {}) {
   if (!store || typeof store.scopeRef !== 'string') throw failure('MC_VERSION_UNAVAILABLE', 'memory store required');
   const ctx = contextOf(store);
   function clock() {
@@ -56,7 +56,8 @@ export function createConsolidationVersions(store, {inputs, now = () => new Date
     return {body, digest: body.digest, parsed, entry, dependencies: dependenciesOf(ctx, store.scopeRef, 'candidate', id)};
   }
   function getCandidate(candidateId) {
-    const {body, digest, parsed} = candidateOf(candidateId);
+    const {body, digest, parsed, dependencies} = candidateOf(candidateId);
+    requireLiveDependencies(ctx, store.scopeRef, dependencies);
     return Object.freeze({
       candidateId: body.id,
       digest,
@@ -100,6 +101,9 @@ export function createConsolidationVersions(store, {inputs, now = () => new Date
       if (!job || job.state !== 'ready') throw failure('MC_JOB_NOT_READY', 'candidate has no ready job');
       if (!inputs || typeof inputs.assertCurrent !== 'function') throw failure('MC_PERMISSION_UNAVAILABLE', 'batch permission verifier is not attached');
       inputs.assertCurrent(JSON.parse(job.manifest_json), {phase: 'publish'});
+      if (!publication || typeof publication.authorize !== 'function') throw failure('MC_PUBLICATION_UNAVAILABLE', 'publication permission is not attached');
+      const publishedPermission = publication.authorize({candidateId: id, digest, manifestDigest: job.manifest_digest, scopeRef: store.scopeRef});
+      if (!publishedPermission || typeof publishedPermission.permissionId !== 'string' || !publishedPermission.permissionId) throw failure('MC_PUBLICATION_UNAVAILABLE', 'publication permission was refused');
       requireLiveDependencies(ctx, store.scopeRef, candidate.dependencies);
       const versionId = `mc-version:${job.id}:${head.revision + 1}`;
       const candidateEntry = entryState(ctx, 'consolidation_candidates', id);

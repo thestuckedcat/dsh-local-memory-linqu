@@ -101,7 +101,7 @@ const report = {
   artifactsHashBasis: 'SHA256 computed from the clean HEAD tree before this evidence file was written; compare with git show <git.head>:<path>',
   tapSha256: sha(suiteTap),
   git: {head: gitHead, cleanAtStart, cleanAtEnd},
-  independentReview: {path: 'docs/v0.4.0-independent-review.md', status: 'reviewed at HEAD a35b550; Critical/Important fixes landed after that review and require a fresh evidence run', findings: {critical: 1, important: 9, minor: 9}},
+  independentReview: {path: 'docs/v0.4.0-independent-review.md', addendum: 'docs/v0.4.0-review-addendum.md', response: 'docs/v0.4.0-independent-review-response.md', status: 'original review at a35b550; addendum verified fixes at 7c68f0f (Critical cleared, 4 Important fixed/5 partial); later N-1/I-4/I-6/I-8/N-2..N-6 fixes await independent re-review', findings: {critical: 1, important: 9, minor: 9, addendumNewImportant: 1, addendumNewMinor: 5}},
   verified,
   limitations: [
     'Host probe uses a synthetic TextAdapter and installed Cordis/LlmRuntime; it does not boot the full Web profile or call a real Provider.',

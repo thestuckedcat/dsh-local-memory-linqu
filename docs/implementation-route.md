@@ -73,7 +73,7 @@ RestRegular、Hindsight、Mneme、OpenViking等保留为调查对照，当前没
 
 ## 首个验收与证据边界
 
-当前验收命令（v0.4.0）：在05目录执行`.\runtime\node.exe --test tests/*.test.mjs`（v0.4 修复后 385/385；证据重生成中）、`.\runtime\node.exe tools/test-m1-host.mjs`（真实安装库最终门 3/3）、`.\runtime\node.exe tools/verify-v04.mjs`（生成 v0.4 证据，修复自比较缺陷后）；v0.3.0 的 318/318 与 M2 证据保留历史身份，不再代表 HEAD。
+当前验收命令（v0.4.0）：在05目录执行`.\runtime\node.exe --test tests/*.test.mjs`（v0.4 修复后 387/387；证据见 `evidence/v0.4.0-verification.json`）、`.\runtime\node.exe tools/test-m1-host.mjs`（真实安装库最终门 3/3）、`.\runtime\node.exe tools/verify-v04.mjs`（生成 v0.4 证据，修复自比较缺陷后）；v0.3.0 的 318/318 与 M2 证据保留历史身份，不再代表 HEAD。
 
 新增年度工作维度的来源是用户要求，不是新合入的框架；模板仍待用户提供。完整项目交付时按[机制说明合同](shared/mechanism-document-contract.md)编写[完整机制](mechanisms.md)，重点为后续skill改进说明触发、判断规则、提醒、工具/证据与硬边界。
 
@@ -100,5 +100,5 @@ RestRegular、Hindsight、Mneme、OpenViking等保留为调查对照，当前没
 | M3 骨架 | 数据根/布局校验、冷搬移 journal 状态机与 fail-closed 恢复 | `evidence/m3-storage-layout.json`、`tests/storage-layout.test.mjs` | 实际搬移/冷召回/GC/崩溃恢复/真实卷探针 |
 | 文档 | README/TODO/mechanisms/implementation-route 同步；package 0.4.0 | 本文件与 `docs/mechanisms.md` §3.7、`MEM-MECH-5` | 独立评审、最终证据重生成、真实 Provider/GUI 验收 |
 
-当前全量命令与结果：`.\runtime\node.exe --test tests/*.test.mjs` → **385/385 pass**（Node 26.13.0，2026-11-09 独立评审修复后；证据重生成前）；真实安装库`tools/test-m1-host.mjs` 3/3；v0.4.0 证据生成器 `tools/verify-v04.mjs` 已存在，但独立评审指出其 artifactsStable 自比较与 README 哈希漂移（I-3），修复后需重新生成。
+当前全量命令与结果：`.\runtime\node.exe --test tests/*.test.mjs` → **387/387 pass**（Node 26.13.0，2026-11-09 独立评审修复后；）；真实安装库`tools/test-m1-host.mjs` 3/3；v0.4.0 证据生成器 `tools/verify-v04.mjs` 已改为 clean HEAD 基准并记录 TAP sha256（I-3 修复）；`evidence/v0.4.0-verification.json` 已在修复后的干净 HEAD 重新生成。
 

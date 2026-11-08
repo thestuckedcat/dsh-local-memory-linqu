@@ -47,7 +47,7 @@ function fixture(t) {
   });
   const inputs = createConsolidationInputs(store, {registry, configDigest: 'config-v1'});
   const queue = createConsolidationQueue(store, {inputs, provider, authorizeExecution: () => ({authorizationVersion: 'grant-v1:test:1'})});
-  const versions = createConsolidationVersions(store, {inputs});
+  const versions = createConsolidationVersions(store, {inputs, publication: {authorize: () => ({permissionId: 'publication-test'})}});
   t.after(() => {
     try { store.close(); } catch { /* already closed */ }
     rmSync(root, {recursive: true, force: true, maxRetries: 10, retryDelay: 50});
@@ -190,4 +190,13 @@ test('archiving a source memory invalidates the derived head but keeps its body'
   assert.equal(f.versions.head().versionId, null);
   assert.throws(() => f.versions.getVersion(published.versionId), (error) => error.code === 'MC_VERSION_UNAVAILABLE');
   assert.equal(contextOf(f.store).db.prepare('SELECT count(*) AS n FROM consolidation_bodies WHERE id=?').get(published.versionId).n, 1);
+});
+
+test('publish fails closed when no publication verifier is attached', async (t) => {
+  const f = fixture(t);
+  const {candidateId} = await readyCandidate(f);
+  const candidate = f.versions.getCandidate(candidateId);
+  const noPublication = createConsolidationVersions(f.store, {inputs: f.inputs});
+  assert.throws(() => noPublication.publish({requestId: 'publish-no-publication', candidateId, expectedDigest: candidate.digest, expectedEpoch: f.store.generation(), expectedScopeRevision: f.store.revision(), expectedHeadRevision: 0}), (error) => error.code === 'MC_PUBLICATION_UNAVAILABLE');
+  assert.equal(f.versions.head().versionId, null);
 });

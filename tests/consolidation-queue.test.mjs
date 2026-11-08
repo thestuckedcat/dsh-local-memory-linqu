@@ -165,7 +165,7 @@ test('a queued job whose memory changed is settled stale and its input is cleare
   const first = memory(f.store, 'memory-1');
   const second = memory(f.store, 'memory-2');
   const job = f.queue.enqueue({requestId: 'preflight-1', selection: selection([first.id, second.id]), route: routeA, ...expected(f.store)});
-  f.store.correct({id: first.id, text: 'Descriptor reclamation requires the completion barrier.', sourceVersion: 'v2', expectedGeneration: f.store.generation()});
+  memory(f.store, 'memory-3', 'A new unrelated memory advances the scope revision.');
   const result = await f.queue.runJob(job.jobId);
   assert.equal(result.state, 'stale');
   assert.equal(contextOf(f.store).db.prepare('SELECT count(*) AS n FROM consolidation_inputs WHERE job_id=?').get(job.jobId).n, 0);
@@ -189,6 +189,17 @@ test('deleting a selected memory invalidates the queued job and erases its store
   const before = contextOf(f.store).db.prepare('SELECT payload FROM consolidation_inputs WHERE job_id=?').get(job.jobId);
   assert.match(before.payload, /reclamation/i);
   f.store.forget({id: first.id, expectedGeneration: f.store.generation()});
+  assert.equal(f.queue.get(job.jobId).state, 'stale');
+  assert.equal(contextOf(f.store).db.prepare('SELECT count(*) AS n FROM consolidation_inputs WHERE job_id=?').get(job.jobId).n, 0);
+});
+
+test('capability/restore invalidation clears queued consolidation inputs for the whole scope', (t) => {
+  const f = fixture(t);
+  const first = memory(f.store, 'memory-1');
+  const second = memory(f.store, 'memory-2');
+  const job = f.queue.enqueue({requestId: 'scope-invalidate', selection: selection([first.id, second.id]), route: routeA, ...expected(f.store)});
+  const result = f.store.invalidateConsolidationScope({reason: 'capability:test'});
+  assert.equal(result.jobs, 1);
   assert.equal(f.queue.get(job.jobId).state, 'stale');
   assert.equal(contextOf(f.store).db.prepare('SELECT count(*) AS n FROM consolidation_inputs WHERE job_id=?').get(job.jobId).n, 0);
 });

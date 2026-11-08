@@ -58,19 +58,28 @@ export function createExperienceOperations({attribution, sessions, registry} = {
     const requestedRepo = raw.repoId === undefined ? undefined : checkedText(raw.repoId, 'repository id', 128);
     const candidates = requestedRepo === undefined ? repositories : repositories.filter((entry) => entry.repoId === requestedRepo);
     if (requestedRepo !== undefined && candidates.length === 0) return {ok: false, error: {code: 'SCOPE_NOT_FOUND', message: 'Project repository is not enabled.'}};
+    const unavailableRepos = [];
     for (const repository of candidates) {
       let store, versions, head;
       try {
         store = registry.storeFor(repository.scopeRef);
         versions = createConsolidationVersions(store);
         head = versions.head();
-      } catch { continue; }
+      } catch (error) {
+        if (requestedRepo !== undefined) return {ok: false, error: {code: error?.code ?? 'DERIVED_UNAVAILABLE', message: 'Requested repository derived view is unavailable.'}};
+        unavailableRepos.push(repository.repoId);
+        continue;
+      }
       if (!head.versionId) continue;
       let version, byRef;
       try {
         version = versions.getVersion(head.versionId, {allowHistorical: false, actor: 'user'});
         byRef = new Map(version.basis.map((memory) => [memory.ref, memory]));
-      } catch { continue; }
+      } catch (error) {
+        if (requestedRepo !== undefined) return {ok: false, error: {code: error?.code ?? 'DERIVED_UNAVAILABLE', message: 'Requested repository derived view is unavailable.'}};
+        unavailableRepos.push(repository.repoId);
+        continue;
+      }
 
       const materials = (refs) => refs.map((ref) => {
         const basis = byRef.get(ref);
@@ -82,6 +91,7 @@ export function createExperienceOperations({attribution, sessions, registry} = {
         projectId,
         repoId: repository.repoId,
         head: Object.freeze({revision: head.revision, versionId: head.versionId, digest: version.digest, publishedAt: version.publishedAt}),
+        unavailableRepos: Object.freeze(unavailableRepos),
         generator: version.generator,
         verification: version.verification,
         semanticValidation: version.semanticValidation,
@@ -90,7 +100,7 @@ export function createExperienceOperations({attribution, sessions, registry} = {
         untouched: version.untouched,
       })};
     }
-    return {ok: true, value: Object.freeze({projectId, repoId: requestedRepo ?? null, head: null, groups: [], untouched: []})};
+    return {ok: true, value: Object.freeze({projectId, repoId: requestedRepo ?? null, head: null, groups: [], untouched: [], unavailableRepos: Object.freeze(unavailableRepos)})};
   }
   function readExcerpts(input, context) {
     const raw = rawObject(input);
@@ -105,11 +115,14 @@ export function createExperienceOperations({attribution, sessions, registry} = {
     const memoryId = checkedText(raw.memoryId, 'memory reference', 256);
     const requestedRepo = raw.repoId === undefined ? undefined : checkedText(raw.repoId, 'repository id', 128);
     const candidateRepos = requestedRepo === undefined ? repositories : repositories.filter((entry) => entry.repoId === requestedRepo);
-    const repository = candidateRepos.find((entry) => { try { return Boolean(registry.storeFor(entry.scopeRef).get(memoryId)); } catch { return false; } }) ?? candidateRepos[0];
-    if (!repository) return {ok: false, error: {code: 'SCOPE_NOT_FOUND', message: 'Project has no enabled repository.'}};
+    const repository = candidateRepos.find((entry) => { try { return Boolean(registry.storeFor(entry.scopeRef).get(memoryId)); } catch { return false; } });
+    if (!repository) {
+      if (requestedRepo !== undefined && candidateRepos[0]) return {ok: true, value: Object.freeze({projectId, repoId: candidateRepos[0].repoId, memoryId, items: [], total: 0, memoryFound: false})};
+      return {ok: true, value: Object.freeze({projectId, memoryId, items: [], total: 0, memoryFound: false})};
+    }
     const limit = raw.limit === undefined ? 20 : integer(raw.limit, 1, 100, 'excerpt limit');
     const items = registry.storeFor(repository.scopeRef).listExcerpts({memoryId, limit});
-    return {ok: true, value: Object.freeze({projectId, repoId: repository.repoId, memoryId, items, total: items.length})};
+    return {ok: true, value: Object.freeze({projectId, repoId: repository.repoId, memoryId, items, total: items.length, memoryFound: true})};
   }
   return Object.freeze({
     'memory.attribution': (input, context) => {

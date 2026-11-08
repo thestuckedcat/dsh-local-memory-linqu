@@ -8,7 +8,7 @@
  * the current user message still goes through the normal extraction/admission path, and deeper
  * background reflection/root-cause analysis is not implemented in this increment.
  */
-import {randomUUID} from 'node:crypto';
+import {fingerprint} from '../src/validation.mjs';
 
 const CORRECTION_PATTERNS = Object.freeze([
   /这里(?:已经|已经)?改(?:了|成|过)/u,
@@ -57,16 +57,32 @@ export function createCorrectionManager({attribution, now = () => new Date()} = 
         suspended += 1;
       } catch { failed += 1; }
     }
-    let savedMemoryId;
+    let enqueued = false;
     if (suspended > 0) {
       counters.applied += 1;
       counters.suspended += suspended;
-      const text = typeof input === 'string' ? input.slice(0, 4000) : '';
-      if (text.trim() && typeof info.sourceRef === 'string' && typeof info.sourceVersion === 'string') {
+      const queue = info?.binding?.queue;
+      const sourceRef = typeof info.sourceRef === 'string' ? info.sourceRef : undefined;
+      const sourceVersion = typeof info.sourceVersion === 'string' ? info.sourceVersion : undefined;
+      const text = typeof input === 'string' ? input.slice(0, 8000) : '';
+      if (queue && typeof queue.enqueue === 'function' && sourceRef && sourceVersion && text.trim()) {
         try {
-          const saved = store.put({id: randomUUID(), text, sourceRef: info.sourceRef, sourceVersion: info.sourceVersion, kind: 'decision', origin: 'user'});
-          savedMemoryId = saved.id;
-        } catch { /* the old version is already suspended; saving the new fact is best effort */ }
+          queue.enqueue({
+            requestId: `correction-v1:${fingerprint({session: info.binding.sessionRef, message: info.candidate?.id, generation: store.generation()})}`,
+            scopeRef: info.binding.scopeRef,
+            sessionRef: info.binding.sessionRef,
+            sourceRef,
+            sourceVersion,
+            fragmentRef: 'user-text-v1',
+            inputRef: `${sourceRef}/text`,
+            inputClass: 'conversation_fragment',
+            input: text,
+            routeRef: info.binding.routeRef,
+            generation: store.generation(),
+            purpose: 'memory_extract',
+          });
+          enqueued = true;
+        } catch { failed += 1; }
       }
     }
     if (failed > 0) counters.failed += 1;
@@ -75,7 +91,7 @@ export function createCorrectionManager({attribution, now = () => new Date()} = 
       turn: latest.turn,
       suspended,
       failed,
-      savedMemoryId,
+      enqueued,
       at: now().toISOString(),
     });
   }

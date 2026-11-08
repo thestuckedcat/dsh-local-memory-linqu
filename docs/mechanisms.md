@@ -9,7 +9,7 @@
 - **编号**：`MEM-*` 只用于文档关联，不新增后台服务或配置项。历史编号沿用其首次定义含义（`MEM-QUEUE-01..04`、`MEM-LIFE-01..02`、`MEM-WORK-01..05`、`MEM-ADMIT-01..03`、`MEM-RECALL-01..02`、`MEM-HOOK-LIFE-01`、`MEM-HOOK-WINDOW-01`、`MEM-EXEC-01..05`、`MEM-STREAM-01`）。M1 新增编号为 `MEM-SCOPE-01`、`MEM-PROJ-01..03`、`MEM-GRANT-01..02`、`MEM-SCHED-01..03`、`MEM-BRIDGE-01..02`、`MEM-FINAL-01..03`、`MEM-CORPUS-01`、`MEM-REMIND-01`、`MEM-REPORT-01`、`MEM-MGMT-01..02`、`MEM-CAT-01`、`MEM-DATA-01`、`MEM-UI-01`、`MEM-INSTALL-01`。
 - **实现状态标记**：【已实现】代码存在且有运行证据；【已实现·弱证据】代码存在但只有组件或夹具级证据；【设计未实现】设计合同或待办要求、代码不存在；【未验证】代码存在但没有运行证据。
 - **路径**：除特别注明外均相对 `E:\dsh\plugin\05-local-memory`。行号引用是写作时的位置，不随代码演进保证。
-- **不声称**：本文不声称完整 05 产品验收。M2 已交付 abstract/共享/适用性子集（v0.3.0），但 **MEM-204（能力事件代次消费）仍未实现**；M3（非 C 冷档）、`MEM-405`（年终维度模板）、M5 的更新/迁移与完整卸载旅程仍为**设计未实现**；真实业务 Provider、完整 GUI 视觉与 OS 级出口仍未验证。
+- **不声称**：本文不声称完整 05 产品验收。M2 已交付 abstract/共享/适用性子集（v0.3.0），MEM-204 已有**能力事件消费器与未来 `capability/event` seam**（真实 03 outbox 未接）；M3 只有 **layout/journal 骨架**（实际搬移/冷召回未实现）、`MEM-405`（年终维度模板）、M5 的更新/迁移与完整卸载旅程仍为**设计未实现**；真实业务 Provider、完整 GUI 视觉与 OS 级出口仍未验证。
 
 ---
 
@@ -401,11 +401,11 @@ flowchart TD
 | M2 组件全回归 318/318 通过 | [evidence/m2-node26.tap](../evidence/m2-node26.tap)、[evidence/m2-verification.json](../evidence/m2-verification.json) | 24 个测试文件、318 项（新增 `abstracts` 17、`sharing` 8、`m2-management` 26；既有用例扩展见 §6.2），Node 26.13.0；同一次运行含真实安装库最终门回归探针 3/3；物料摘要零漂移（项数见该证据文件的 artifacts） | catalog v1→v2、abstract 生成/失效、共享授权/自动跟随/撤权/删除断开、适用性、管理 API 用户动作、客户端静态与渲染冒烟、M1 最终门未回归 | 真实业务 Provider、真实 profile 内 M2 写入旅程、浏览器视觉、MEM-204 |
 | M2 安装观测 | [evidence/m2-install-verification.json](../evidence/m2-install-verification.json) | 桌面 profile 重载后插件行光纤 active；真实数据根 catalog `user_version=2` 且 M2 表存在；`status` 路由 `state:ready` 并含 abstracts/sharing 计数；新工具 `memory_abstracts`/`memory_shared_search` 已出现在运行会话；客户端槽位占用者 `local-memory` order 10 active | 安装态能打开旧 catalog 并完成迁移，Host 半与模型工具在真实进程加载，客户端入口仍注册 | 未在真实 profile 执行 grant/revoke/refresh 写入旅程；第四 tab 需页面重载后才能看到；不等于视觉验收 |
 | M2 独立评审 | [docs/m2-independent-review.md](m2-independent-review.md) | 对 v0.3.0 增量代码、边界、证据与声明做独立复核；结论与遗留项以该文件为准 | 交付声明经过非作者复核 | 评审不能替代真实 Provider/GUI/运行时长验证 |
-| v0.4.0 组件/安装证据 385/385（评审修复后） | [evidence/v0.4.0-verification.json](../evidence/v0.4.0-verification.json)、[.tap](../evidence/v0.4.0-node26.tap) | 36 个测试文件、385 项；真实安装库最终门 3/3；live `state:ready`；真实 store content v3/authority v2；TAP sha256 与 41 个构件哈希（生成于独立评审修复后的干净 HEAD） | v0.4 增量代码/测试/安装态观测 | 真实 Provider/GUI/OS 出口、自动派发、M3 实际搬移；独立评审 1 Critical/9 Important/9 Minor 见 [评审](v0.4.0-independent-review.md)，作者修复见 [响应](v0.4.0-independent-review-response.md)，**尚未独立复评** |
+| v0.4.0 组件/安装证据 387/387（评审修复后） | [evidence/v0.4.0-verification.json](../evidence/v0.4.0-verification.json)、[.tap](../evidence/v0.4.0-node26.tap) | 36 个测试文件、387/387；真实安装库最终门 3/3；live `state:ready`；真实 store content v3/authority v2；TAP sha256 与 41 个构件哈希（生成于独立评审修复后的干净 HEAD） | v0.4 增量代码/测试/安装态观测 | 真实 Provider/GUI/OS 出口、自动派发、M3 实际搬移；独立评审 1 Critical/9 Important/9 Minor 见 [评审](v0.4.0-independent-review.md)，作者修复见 [响应](v0.4.0-independent-review-response.md)，**尚未独立复评** |
 
 ### 6.2 测试覆盖（按文件，便于回归定位）
 
-`tests/` 共 **36 个测试文件**；v0.3.0 历史基线 318 项，v0.4.0 修复后当前 **385 项**（Node 26.13.0）。v0.3.0 文件分布保留历史：`abstracts` 17、`backend` 17、`configuration` 12、`execution-authorization` 13、`final-projection` 22、`harness-provider` 26+1、`harness-sdk` 4、`host-grants` 16、`jobs` 14+1、`lifecycle` 11、`m2-management` 26、`management` 16、`migration` 2、`plugin-entry` 11、`project-registry` 9、`projects` 13、`proof-reminders` 8、`reports` 10、`scheduler` 10、`session-hooks` 25、`sharing` 8、`source-lock` 5、`work-management` 11、`work-summary` 12；v0.4.0 新增 `attribution`、`capability-events`、`idle-gate`、`consolidation-*`、`correction`、`excerpt-lifecycle`、`storage-layout` 等，详见当前 `tests/`。
+`tests/` 共 **36 个测试文件**；v0.3.0 历史基线 318 项，v0.4.0 修复后当前 **387/387**（Node 26.13.0）。v0.3.0 文件分布保留历史：`abstracts` 17、`backend` 17、`configuration` 12、`execution-authorization` 13、`final-projection` 22、`harness-provider` 26+1、`harness-sdk` 4、`host-grants` 16、`jobs` 14+1、`lifecycle` 11、`m2-management` 26、`management` 16、`migration` 2、`plugin-entry` 11、`project-registry` 9、`projects` 13、`proof-reminders` 8、`reports` 10、`scheduler` 10、`session-hooks` 25、`sharing` 8、`source-lock` 5、`work-management` 11、`work-summary` 12；v0.4.0 新增 `attribution`、`capability-events`、`idle-gate`、`consolidation-*`、`correction`、`excerpt-lifecycle`、`storage-layout` 等，详见当前 `tests/`。
 
 ### 6.3 证据不能证明什么（明确边界）
 
