@@ -114,7 +114,7 @@ M4退出：从合成开发对话形成草稿→缺证提示→仅引用/经授�
 - [x] **EXP-T3 结论归因底座（Phase B）**：召回短引用 `记1..`、系统 prompt 引用规则、`agent/turn-stopping` 解析与实时复核、≤100 码点映射、`memory.attribution` 只读操作、`conversation.chat.turnTail` slot（active）。边界：归因当前仅进程内存储，重启丢失；assistant 正文无可替换 slot，内联可点击角标未实现，turnTail 显示映射文本。
 - [ ] **EXP-T2/T3 真实模型闭环**：真实 Provider 输出引用、行内标记校验、超限重生成、点击定位记忆与旧角标更正；待真实 Host/Provider 验证。
 - [ ] **EXP-T4 自然语言纠正与后台反思**：尚未实现。
-- [ ] **EXP-T5 自动后台巩固与证据摘录**：尚未实现（需 schema v3/证据摘录/独立 purpose/空闲调度）。
+- [ ] **EXP-T5 自动后台巩固与证据摘录**：**存储底座已实现**（content v3/authority v2 迁移、excerpt 登记/读取/遗忘、v3 snapshot 安全子集；`tests/consolidation-storage.test.mjs` 13项、真实profile store已迁移）。仍缺：独立 purpose/queue/授权/预算/批量候选生成/自动发布/UI；excerpt 的删除传播与 maxExcerpts 尚未接。
 - [ ] **EXP-T6 真实集成**：小 bar/归因/纠正的真实 Host 连续性、失效上下文清理与普通聊天连续性未验证。
 
 ## 4. 接口与状态合同（v0.2.0已实现子集）
