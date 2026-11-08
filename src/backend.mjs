@@ -5,11 +5,11 @@ import {fileURLToPath} from 'node:url';
 import {verifySourceLock} from './source-lock.mjs';
 import {checkedText,checkedPath,digest} from './scope.mjs';
 import {EXTENSION_SCHEMA,LEGACY_SIGNATURE,CONTENT_SIGNATURE,CONTENT_V3_SCHEMA,CONTENT_V3_SIGNATURE,AUTHORITY_V2_SIGNATURE,AUTHORITY_SCHEMA_VERSION,CONTENT_SCHEMA_VERSION,schemaSignature,migrateConsolidationSchema} from './schema.mjs';
-import {registerStore,contextOf,initializeAuthority,assertAuthority,write,scopeState,checkEpoch,advance,entryState,assertSources,setEntry,memoryDigest,memoryLive,reconcile,registerExcerpt,readExcerpt,forgetExcerpt,listExcerptsForMemory,restoreSnapshot} from './store-internals.mjs';
+import {registerStore,contextOf,initializeAuthority,assertAuthority,write,scopeState,checkEpoch,advance,entryState,assertSources,setEntry,memoryDigest,memoryLive,reconcile,registerExcerpt,readExcerpt,forgetExcerpt,listExcerptsForMemory,suspendMemoryForCorrection,restoreSnapshot} from './store-internals.mjs';
 import {shape} from './validation.mjs';
 import {forget,archive,restoreArchived,correctMemory} from './lifecycle.mjs';
 export {createScope} from './scope.mjs';
-export {registerExcerpt,readExcerpt,forgetExcerpt,listExcerptsForMemory,restoreSnapshot};
+export {registerExcerpt,readExcerpt,forgetExcerpt,listExcerptsForMemory,suspendMemoryForCorrection,restoreSnapshot};
 verifySourceLock(fileURLToPath(new URL('../',import.meta.url)));
 const {cjkBigrams,cjkClause,hasCjk}=await import('../vendor/kovey/cjk.js');
 
@@ -142,6 +142,7 @@ class MemoryStore{
  readExcerpt(id){return readExcerpt(this,id);}
  forgetExcerpt(id){return forgetExcerpt(this,id);}
  listExcerpts(args){return listExcerptsForMemory(this,args);}
+ suspendForCorrection(args){return suspendMemoryForCorrection(this,args);}
  correct(args){return correctMemory(this,args);}
  forget(args){return forget(this,args);}
  archive(args){return archive(this,args);}

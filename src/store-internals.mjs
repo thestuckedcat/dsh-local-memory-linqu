@@ -250,3 +250,16 @@ export function purgeDerivedForMemory(ctx,memoryId){
  }
  return {candidates:candidates.length,versions:versions.length,headCleared};
 }
+
+/** Stop using a memory version for recall after an explicit user correction; body stays until normal delete/archive. */
+export function suspendMemoryForCorrection(store,{id,expectedGeneration,reason='user_correction'}={}){
+ const ctx=contextOf(store);const memoryId=checkedText(id,'memory reference',256);
+ return write(ctx,()=>{
+  const entry=entryState(ctx,'memories',memoryId);
+  if(!entry||entry.state!=='active')throw new Error('Memory is not active');
+  checkEpoch(ctx,expectedGeneration);advance(ctx,{lifecycle:true});
+  ctx.db.prepare("UPDATE ledger.entries SET state='stale' WHERE scope_ref=? AND collection='memories' AND id=?").run(ctx.scopeRef,memoryId);
+  purgeExcerptsForMemory(ctx,memoryId);purgeDerivedForMemory(ctx,memoryId);
+  return Object.freeze({suspended:true,id:memoryId,reason:checkedText(reason,'correction reason',256),generation:scopeState(ctx).epoch});
+ });
+}

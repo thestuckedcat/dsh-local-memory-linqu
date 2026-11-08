@@ -15,6 +15,7 @@ import {createManagementOperations, createManagementHttp} from './management.mjs
 import {createWorkOperations} from './work-management.mjs';
 import {createM2Operations} from './m2-management.mjs';
 import {createAttributionManager} from './attribution.mjs';
+import {createCorrectionManager} from './correction.mjs';
 import {createCapabilityEventConsumer} from './capability-events.mjs';
 import {createBusyGate} from './idle-gate.mjs';
 import {createExperienceOperations} from './experience-operations.mjs';
@@ -121,10 +122,14 @@ export function apply(ctx, rawConfig = {}) {
   let sharing;
   let m2Operations;
   let attribution;
+  let correction;
   let capability;
   let busyGate;
   let disposed = false;
   /** Read-only experience phase for the Memory Center/composer bar; never dispatches work. */
+  function correctionStatus() {
+    return correction?.status() ?? Object.freeze({detected: 0, applied: 0, unresolved: 0, failed: 0, suspended: 0});
+  }
   function experienceStatus() {
     const snapshot = scheduler ? schedulerFacade.status() : Object.freeze({state: 'unavailable', running: 0, pendingScopes: []});
     const pending = Array.isArray(snapshot.pendingScopes) ? snapshot.pendingScopes.length : 0;
@@ -273,6 +278,7 @@ export function apply(ctx, rawConfig = {}) {
     });
     sharing = createSharingManager({catalog: registry.catalog, registry, abstracts});
     attribution = createAttributionManager({registry});
+    correction = createCorrectionManager({attribution});
     capability = createCapabilityEventConsumer({catalog: registry.catalog, registry});
     busyGate = createBusyGate({agents: ctx.agents, now: () => Date.now(), quietMs: 30_000});
     const workOperations = createWorkOperations({registry, config, reports, approval: ctx.approval, sessions: ctx.sessions});
@@ -302,6 +308,7 @@ export function apply(ctx, rawConfig = {}) {
         experience: experienceStatus(),
         attribution: attribution.status(),
         capability: capability.status(),
+        corrections: correctionStatus(),
         background: busyGate.status(),
       }),
     });
@@ -361,7 +368,10 @@ export function apply(ctx, rawConfig = {}) {
         try { attribution.noteRecall(info); } catch { noteDiagnostic('attribution_recall_failed'); }
         return recorded;
       },
-      onMessageAdmitted: (info) => enqueueAnnualDraft(info),
+      onMessageAdmitted: (info) => {
+      enqueueAnnualDraft(info);
+      try { correction?.onMessageAdmitted(info); } catch { noteDiagnostic('correction_failed'); }
+    },
     });
 
     // Optional prompt/citation seam: the Host must expose systemPrompt; if it does not, the
@@ -418,6 +428,7 @@ export function apply(ctx, rawConfig = {}) {
             recallIntegration: status.recallIntegration,
             cold: status.cold,
             experience: experienceStatus(),
+            corrections: correctionStatus(),
             automaticDisabled: status.automaticDisabled ?? false,
             degraded: status.degraded,
             lastDiagnostic: status.lastDiagnostic,

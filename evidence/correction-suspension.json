@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-09",
+  "scope": "Phase C explicit natural-language correction suspension (no background reflection/root-cause model)",
+  "suite": {
+    "tests": 375,
+    "pass": 375,
+    "fail": 0,
+    "command": ".\\runtime\\node.exe --test tests/*.test.mjs"
+  },
+  "newTests": {
+    "tests/correction.test.mjs": 3
+  },
+  "behavior": [
+    "narrow explicit correction intent detection (Chinese/English phrases); ordinary discussion does not trigger",
+    "on admission, the correction targets only memory ids actually cited by the assistant in the latest completed turn (attribution.latestCited)",
+    "each cited memory entry becomes stale in the same transaction/epoch advance; recall/list/search exclude it; body is not deleted or archived",
+    "excerpts and derived candidates/versions depending on the corrected memory are purged invalidated via the existing propagation helpers",
+    "status.corrections exposes detected/applied/unresolved/failed/suspended counters; no long reflection text is written into chat",
+    "if no cited memory or another session, the correction is unresolved and nothing is mutated"
+  ],
+  "realInstall": {
+    "state": "ready",
+    "experience": "idle",
+    "corrections": {
+      "detected": 0,
+      "applied": 0,
+      "unresolved": 0,
+      "failed": 0,
+      "suspended": 0
+    },
+    "note": "plugin reloaded with the correction manager; no real correction conversation was run"
+  },
+  "limitations": [
+    "No background reflection/root-cause analysis: it does not compare original sources, distinguish outdated vs misunderstanding, or produce a reflection record.",
+    "No separation of verified facts vs hypotheses for correction root causes; only the user message continues through normal extraction (if any).",
+    "The chat small bar does not yet show a dedicated “memory corrected” state; only status counters change.",
+    "No cross-restart test of attribution citations: attribution is in-process and latestCited is lost on restart.",
+    "No real Host conversation/assistant marker test; unit tests use a synthetic attribution + temporary store.",
+    "Correction target scope is the latest cited turn only; ambiguous/uncited corrections remain unresolved without a chat clarification."
+  ]
+}

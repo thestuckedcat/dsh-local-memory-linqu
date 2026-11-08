@@ -62,6 +62,8 @@ test('activation registers tools, command, HTTP route and a ready status', async
   assert.ok(result.value.capability, 'status exposes the capability consumer state');
   assert.equal(typeof result.value.capability.holds, 'number');
   assert.equal(typeof result.value.capability.cursors, 'number');
+  assert.ok(result.value.corrections, 'status exposes correction counters');
+  assert.equal(typeof result.value.corrections.detected, 'number');
   assert.ok(result.value.background, 'status exposes the foreground idle gate');
   assert.ok(['idle', 'quieting', 'busy', 'unknown'].includes(result.value.background.state));
   assert.equal(result.value.background.quietMs, 30000);

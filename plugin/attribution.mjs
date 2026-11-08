@@ -136,6 +136,18 @@ export function createAttributionManager({registry, now = () => new Date()} = {}
     }
     return Object.freeze({state: 'available', turn, mapping: entry.mapping, items: Object.freeze(live)});
   }
+  /** Latest turn where the assistant actually cited at least one live memory; correction targets only those. */
+  function latestCited(sessionId) {
+    if (typeof sessionId !== 'string') return undefined;
+    let latest;
+    for (const entry of turns.values()) {
+      if (entry.sessionId !== sessionId || entry.state !== 'available' || !Array.isArray(entry.items) || entry.items.length === 0) continue;
+      if (!latest || String(entry.at) > String(latest.at)) latest = entry;
+    }
+    if (!latest) return undefined;
+    const records = latest.items.map((item) => latest.records.get(item.ref)).filter(Boolean).map((record) => Object.freeze({id: record.id, ref: record.ref, generation: record.generation, scopeRef: record.scopeRef}));
+    return Object.freeze({turn: latest.turn, records: Object.freeze(records)});
+  }
   function status() {
     let available = 0, unavailable = 0, overLimit = 0;
     for (const entry of turns.values()) {
@@ -145,5 +157,5 @@ export function createAttributionManager({registry, now = () => new Date()} = {}
     }
     return Object.freeze({turns: turns.size, available, unavailable, overLimit});
   }
-  return Object.freeze({noteRecall, handleTurnStopping, read, status});
+  return Object.freeze({noteRecall, handleTurnStopping, read, latestCited, status});
 }
