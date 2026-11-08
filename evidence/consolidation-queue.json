@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-09",
+  "scope": "Phase D consolidation queue persistence/lifecycle (no provider execution/candidate/publish/UI)",
+  "suite": {
+    "tests": 363,
+    "pass": 363,
+    "fail": 0,
+    "command": ".\\runtime\\node.exe --test tests/*.test.mjs"
+  },
+  "newTests": {
+    "tests/consolidation-queue.test.mjs": 3
+  },
+  "behavior": [
+    "enqueue allocates jobId/permissionId, builds manifest/InputSnapshot through inputs, writes batch permission, job row and canonical input in one store transaction",
+    "idempotent request replay returns the same JobRef; same request id with different caller payload is OPERATION_CONFLICT",
+    "expected epoch/scopeRevision/headRevision are checked before job creation; excerpts mode refused until wired",
+    "pending/get/list with bounded limit/cursor; per-scope queued+running capacity 2",
+    "cancel is terminal/idempotent and clears consolidation_inputs; recoverInterrupted turns running into outcome_unknown and clears inputs",
+    "source/subject bodies remain absent from authority; manifest/route/policy digests and input chars are pinned in the job row"
+  ],
+  "limitations": [
+    "No runJob/provider purpose/prompt/candidate/publish/discard/confirmRemoteQuiescence; no model call is made.",
+    "No management API/tools/UI or Host scheduler wiring; queue is exercised directly with temporary stores.",
+    "Excerpt mode and excerpt permission/expiry integration are not implemented; policy revision is created locally (1).",
+    "No profile-level shared dispatch/budget broker yet; only a per-scope queued+running cap of 2 is enforced."
+  ]
+}
