@@ -115,7 +115,7 @@ test('a memory mutation before publish blocks the candidate and version read fai
   const {candidateId, first} = await readyCandidate(f);
   const candidate = f.versions.getCandidate(candidateId);
   f.store.correct({id: first.id, text: 'Descriptor reclamation requires the completion barrier.', sourceVersion: 'v2', expectedGeneration: f.store.generation()});
-  assert.throws(() => f.versions.publish({requestId: 'publish-1', candidateId, expectedDigest: candidate.digest, expectedEpoch: f.store.generation(), expectedScopeRevision: f.store.revision(), expectedHeadRevision: 0}), (error) => error.code === 'MC_DEPENDENCY_CHANGED' || error.code === 'MC_EPOCH_CHANGED');
+  assert.throws(() => f.versions.publish({requestId: 'publish-1', candidateId, expectedDigest: candidate.digest, expectedEpoch: f.store.generation(), expectedScopeRevision: f.store.revision(), expectedHeadRevision: 0}), (error) => error.code === 'MC_DEPENDENCY_CHANGED' || error.code === 'MC_EPOCH_CHANGED' || error.code === 'MC_CANDIDATE_UNAVAILABLE');
 });
 
 test('memory.derived exposes the published head with full original texts and unverified markers', async (t) => {
@@ -141,4 +141,30 @@ test('memory.derived exposes the published head with full original texts and unv
   assert.match(result.value.groups[0].materials[0].text, /reclamation/i);
   assert.equal(result.value.groups[0].materials[0].textAvailable, true);
   assert.ok(result.value.warnings.includes('semantic_support_unverified'));
+});
+
+test('explicit memory deletion purges derived candidate/version bodies and clears the head', async (t) => {
+  const f = fixture(t);
+  const {candidateId, first} = await readyCandidate(f);
+  const candidate = f.versions.getCandidate(candidateId);
+  const published = f.versions.publish({requestId: 'publish-delete', candidateId, expectedDigest: candidate.digest, expectedEpoch: f.store.generation(), expectedScopeRevision: f.store.revision(), expectedHeadRevision: 0});
+  f.store.forget({id: first.id, expectedGeneration: f.store.generation()});
+  assert.equal(f.versions.head().versionId, null);
+  assert.equal(f.versions.head().revision, 2);
+  assert.throws(() => f.versions.getVersion(published.versionId), (error) => error.code === 'MC_VERSION_UNAVAILABLE');
+  const bodies = contextOf(f.store).db.prepare('SELECT count(*) AS n FROM consolidation_bodies WHERE id IN (?,?)').get(candidateId, published.versionId).n;
+  assert.equal(bodies, 0);
+  const entries = contextOf(f.store).db.prepare("SELECT state FROM ledger.entries WHERE scope_ref='A' AND collection IN ('consolidation_candidates','consolidation_versions') AND id IN (?,?)").all(candidateId, published.versionId);
+  assert.equal(entries.length, 2);
+  for (const entry of entries) assert.equal(entry.state, 'deleted');
+});
+
+test('correcting a memory also invalidates its derived views', async (t) => {
+  const f = fixture(t);
+  const {candidateId, first} = await readyCandidate(f);
+  const candidate = f.versions.getCandidate(candidateId);
+  f.versions.publish({requestId: 'publish-correct', candidateId, expectedDigest: candidate.digest, expectedEpoch: f.store.generation(), expectedScopeRevision: f.store.revision(), expectedHeadRevision: 0});
+  f.store.correct({id: first.id, text: 'Descriptor reclamation requires the completion barrier.', sourceVersion: 'v2', expectedGeneration: f.store.generation()});
+  assert.equal(f.versions.head().versionId, null);
+  assert.equal(f.store.list({limit: 10}).length, 2);
 });

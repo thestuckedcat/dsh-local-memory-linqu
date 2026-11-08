@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-09",
+  "scope": "Derived-view deletion/correction propagation and head invalidation",
+  "suite": {
+    "tests": 372,
+    "pass": 372,
+    "fail": 0,
+    "command": ".\\runtime\\node.exe --test tests/*.test.mjs"
+  },
+  "newTests": {
+    "tests/consolidation-versions.test.mjs": 2
+  },
+  "behavior": [
+    "explicit memory deletion purges candidate and version bodies, marks candidate/version entries deleted, marks the candidate job stale, and clears a head pointing at the invalid version",
+    "correcting a memory follows the same propagation and invalidates its derived views",
+    "head revision is advanced on invalidation with version_id=NULL, so historical CAS cannot reuse the invalidated head",
+    "read paths (getVersion/getCandidate) remain fail-closed after propagation; memory.derived returns head=null when no valid version remains",
+    "original memory deletion/correction behavior and unrelated memories are unchanged"
+  ],
+  "limitations": [
+    "Archive/restore is not treated as deletion propagation in this increment; derived read still fail-closes on non-active memory dependencies.",
+    "Only memory dependencies are propagated; excerpt dependency invalidation is not implemented.",
+    "No retention/GC policy for non-head historical versions or operation tombstones; only invalid derived bodies are purged.",
+    "No real installed-profile published derived view was available to exercise deletion propagation end-to-end in the GUI.",
+    "No browser visual verification of the derived card/update after propagation."
+  ]
+}

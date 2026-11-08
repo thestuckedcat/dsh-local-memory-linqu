@@ -230,3 +230,23 @@ export function listExcerptsForMemory(store,{memoryId,limit=20}={}){
  return Object.freeze(rows.map(row=>Object.freeze({fragmentId:row.fragmentId,sourceRef:row.sourceRef,sourceVersion:row.sourceVersion,recordGeneration:row.recordGeneration,state:row.state,generation:row.generation})));
 }
 function integerLimit(value,min,max,label){if(!Number.isSafeInteger(value)||value<min||value>max)throw new Error('Invalid '+label);return value;}
+
+/** Deletion/correction propagation: purge candidate/version bodies derived from a memory and clear an invalid head. */
+export function purgeDerivedForMemory(ctx,memoryId){
+ const owners=ctx.db.prepare("SELECT owner_kind AS kind,owner_id AS id FROM ledger.consolidation_dependencies WHERE scope_ref=? AND base_kind='memory' AND base_id=?").all(ctx.scopeRef,memoryId);
+ const candidates=[],versions=[];
+ for(const owner of owners){if(owner.kind==='candidate')candidates.push(owner.id);else if(owner.kind==='version')versions.push(owner.id);else if(owner.kind==='excerpt'){/* excerpts have their own purge path */}}
+ let headCleared=false;
+ for(const id of candidates){
+  ctx.db.prepare('DELETE FROM consolidation_bodies WHERE id=? AND scope_ref=?').run(id,ctx.scopeRef);
+  ctx.db.prepare("UPDATE ledger.entries SET state='deleted' WHERE scope_ref=? AND collection='consolidation_candidates' AND id=?").run(ctx.scopeRef,id);
+  ctx.db.prepare("UPDATE ledger.consolidation_jobs SET state='stale',reason='source_deleted',candidate_id=NULL WHERE scope_ref=? AND candidate_id=?").run(ctx.scopeRef,id);
+ }
+ for(const id of versions){
+  ctx.db.prepare('DELETE FROM consolidation_bodies WHERE id=? AND scope_ref=?').run(id,ctx.scopeRef);
+  ctx.db.prepare("UPDATE ledger.entries SET state='deleted' WHERE scope_ref=? AND collection='consolidation_versions' AND id=?").run(ctx.scopeRef,id);
+  const head=ctx.db.prepare('SELECT * FROM ledger.consolidation_head WHERE scope_ref=?').get(ctx.scopeRef);
+  if(head&&head.version_id===id){ctx.db.prepare('UPDATE ledger.consolidation_head SET revision=revision+1,version_id=NULL WHERE scope_ref=?').run(ctx.scopeRef);headCleared=true;}
+ }
+ return {candidates:candidates.length,versions:versions.length,headCleared};
+}
