@@ -49,7 +49,7 @@ function fixture(t) {
     try { store.close(); } catch { /* closed */ }
     rmSync(root, {recursive: true, force: true, maxRetries: 10, retryDelay: 50});
   });
-  return {store, registry, provider, operations, inputs: createConsolidationInputs(store, {registry})};
+  return {store, registry, provider, operations, config, inputs: createConsolidationInputs(store, {registry})};
 }
 function memory(store, id, text) {
   return store.put({id, sourceRef: `session-A/${id}`, sourceVersion: 'v1', kind: 'lesson', text, origin: 'user'});
@@ -101,4 +101,24 @@ test('persisted publication permission lets a new worker instance recover and pu
   const ticked = await restarted.tick({canDispatch: () => true});
   assert.equal(ticked.results[0].state, 'published');
   assert.equal(restarted.status().published, 1);
+});
+
+test('an opt-in dirty marker auto-enqueues and publishes when the foreground is idle', async (t) => {
+  const f = fixture(t);
+  memory(f.store, 'memory-1', 'Descriptor reclamation waits for completion.');
+  memory(f.store, 'memory-2', 'Ownership barrier precedes reclamation.');
+  let resets = 0;
+  const autoConfig = {...f.config, consolidation: {enabled: true, routeRef: 'registered-A', dirtyCountThreshold: 2, maxWaitHours: 1, maxMemories: 8}};
+  const auto = createConsolidationOperations({
+    config: autoConfig,
+    registry: f.registry,
+    provider: f.provider,
+    now: () => new Date('2026-11-09T00:00:00.000Z'),
+    dirty: {due: () => ({due: true, firstAt: '2026-11-09T00:00:00.000Z'}), reset: () => { resets += 1; }},
+  });
+  const ticked = await auto.tick({canDispatch: () => true});
+  assert.equal(ticked.state, 'ticked');
+  assert.equal(ticked.results[0].state, 'published');
+  assert.equal(auto.status().autoEnqueued, 1);
+  assert.equal(resets, 1);
 });

@@ -125,3 +125,19 @@ test('temporary path helpers in the test directory are usable data roots', (t) =
   writeFileSync(join(value.dataRoot, 'probe.txt'), 'ok');
   assert.equal(readFileSync(join(value.dataRoot, 'probe.txt'), 'utf8'), 'ok');
 });
+
+test('consolidation config is disabled by default and validates its route and bounds', () => {
+  const defaults = config();
+  assert.equal(defaults.consolidation.enabled, false);
+  assert.equal(defaults.consolidation.routeRef, 'memory-default');
+  assert.equal(defaults.consolidation.dirtyCountThreshold, 10);
+  assert.equal(defaults.consolidation.maxWaitHours, 1);
+  assert.equal(defaults.consolidation.maxMemories, 8);
+  const enabled = config({consolidation: {enabled: true, dirtyCountThreshold: 3, maxWaitHours: 2, maxMemories: 4}});
+  assert.equal(enabled.consolidation.enabled, true);
+  assert.equal(enabled.consolidation.dirtyCountThreshold, 3);
+  assert.equal(enabled.consolidation.maxMemories, 4);
+  assert.throws(() => config({consolidation: {routeRef: 'missing-route'}}), (error) => error?.code === 'INVALID_CONFIG');
+  assert.throws(() => config({consolidation: {dirtyCountThreshold: 0}}), (error) => error?.code === 'INVALID_CONFIG');
+  assert.throws(() => config({consolidation: {maxMemories: 17}}), (error) => error?.code === 'INVALID_CONFIG');
+});

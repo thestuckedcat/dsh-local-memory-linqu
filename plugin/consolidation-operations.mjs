@@ -46,12 +46,12 @@ function grantPublication(store, candidateId, manifestDigest, now) {
   });
 }
 
-export function createConsolidationOperations({config, registry, provider, now = () => new Date()} = {}) {
+export function createConsolidationOperations({config, registry, provider, dirty, now = () => new Date()} = {}) {
   if (!config || typeof config !== 'object') throw new Error('Normalized configuration required');
   if (!registry || typeof registry.getProject !== 'function' || typeof registry.storeFor !== 'function' || typeof registry.bindingForScope !== 'function') throw new Error('Trusted registry required');
   if (!provider || typeof provider.bind !== 'function' || typeof provider.execute !== 'function') throw new Error('Controlled provider required');
   const pending = new Map();
-  const counters = {enqueued: 0, published: 0, failed: 0, lastError: undefined};
+  const counters = {enqueued: 0, autoEnqueued: 0, published: 0, failed: 0, lastError: undefined};
   let running = false;
   function resolve(input, context) {
     const raw = input && typeof input === 'object' && !Array.isArray(input) ? input : {};
@@ -79,6 +79,41 @@ export function createConsolidationOperations({config, registry, provider, now =
     const ids = listed.map((item) => item.id).slice(0, MAX_SELECTION);
     if (ids.length < MIN_SELECTION) throw failure('CONSOLIDATE_SELECTION', `At least ${MIN_SELECTION} active memories are required.`);
     return ids;
+  }
+  function autoEnqueue() {
+    if (!config.consolidation?.enabled || !dirty) return 0;
+    let count = 0;
+    let projects;
+    try { projects = registry.list(); } catch { return 0; }
+    for (const project of projects) {
+      if (project.state !== 'active') continue;
+      for (const repository of enabledRepos(project)) {
+        let store, inputs, versions, queue;
+        try {
+          store = registry.storeFor(repository.scopeRef);
+          if ([...pending.values()].some((entry) => entry.store === store)) continue;
+          const due = dirty.due(store, {threshold: config.consolidation.dirtyCountThreshold, maxWaitMs: config.consolidation.maxWaitHours * 3600_000});
+          if (!due.due) continue;
+          const ids = store.list({limit: 16, stateFilter: 'active'}).map((item) => item.id).slice(0, config.consolidation.maxMemories);
+          if (ids.length < MIN_SELECTION) { dirty.reset(store); continue; }
+          const route = provider.bind(config.consolidation.routeRef || config.extraction.routeRef, 'memory_consolidate');
+          inputs = createConsolidationInputs(store, {registry, now, configDigest: configDigestOf(config)});
+          versions = createConsolidationVersions(store, {inputs});
+          queue = createConsolidationQueue(store, {inputs, provider, now, authorizeExecution: ({jobId}) => ({authorizationVersion: `auto-user-consolidation:${jobId}`})});
+          const head = versions.head();
+          const expected = {expectedEpoch: store.generation(), expectedScopeRevision: store.revision(), expectedHeadRevision: head.revision};
+          const requestId = `auto-consolidate:${fingerprint({projectId: project.projectId, repoId: repository.repoId, memoryIds: ids, change: due.firstAt, ...expected})}`;
+          const job = queue.enqueue({requestId, selection: {memoryIds: ids, excerptIds: [], mode: 'memory_only'}, route, ...expected});
+          const candidateId = `mc-candidate:${job.jobId}`;
+          grantPublication(store, candidateId, job.manifestDigest, now);
+          dirty.reset(store);
+          pending.set(job.jobId, {queue, versions, store, projectId: project.projectId, repoId: repository.repoId, memoryIds: ids, candidateId});
+          counters.autoEnqueued += 1;
+          count += 1;
+        } catch { counters.lastError = 'auto_enqueue_failed'; try { dirty.reset(store); } catch { /* marker cleanup best effort */ } }
+      }
+    }
+    return count;
   }
   function consolidate(input, context) {
     const {projectId, repository} = resolve(input, context);
@@ -108,8 +143,10 @@ export function createConsolidationOperations({config, registry, provider, now =
     return Object.freeze({projectId, repoId: repository.repoId, jobId: job.jobId, state: job.state, queued: true, selected: memoryIds.length});
   }
   async function tick({canDispatch} = {}) {
-    if (running || pending.size === 0) return Object.freeze({state: 'skipped', pending: pending.size});
+    if (running) return Object.freeze({state: 'skipped', pending: pending.size});
     if (typeof canDispatch !== 'function' || !canDispatch()) return Object.freeze({state: 'foreground_busy', pending: pending.size});
+    autoEnqueue();
+    if (pending.size === 0) return Object.freeze({state: 'skipped', pending: 0});
     running = true;
     const results = [];
     try {

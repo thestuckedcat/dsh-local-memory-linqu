@@ -29,6 +29,7 @@ export const DEFAULTS = Object.freeze({
   reminders: Object.freeze({enabled: true, cooldownHours: 24, maxItems: 3}),
   reports: Object.freeze({exportRootRef: null, maxItems: 200}),
   abstracts: Object.freeze({pollMs: 600000, dirtyCountThreshold: 10, ageHours: 24}),
+  consolidation: Object.freeze({enabled: false, routeRef: '', dirtyCountThreshold: 10, maxWaitHours: 1, maxMemories: 8}),
   security: Object.freeze({rejectNonLocalPaths: true}),
 });
 
@@ -147,6 +148,17 @@ export function normalizeConfig(raw, {env = process.env} = {}) {
   if (!routeRefs.has(workRouteRef)) throw new ConfigError('work summary route is not configured');
   if (workRaw.evidenceRoots !== undefined && (!Array.isArray(workRaw.evidenceRoots) || workRaw.evidenceRoots.length > EVIDENCE_ROOT_LIMIT)) throw new ConfigError(`workSummary.evidenceRoots must contain at most ${EVIDENCE_ROOT_LIMIT} paths`);
   const evidenceRoots = (workRaw.evidenceRoots ?? []).map((path, index) => localPath(path, `workSummary.evidenceRoots[${index}]`));
+  const consolidationRaw = input.consolidation === undefined ? DEFAULTS.consolidation : plain(input.consolidation, 'consolidation');
+  keys(consolidationRaw, Object.keys(DEFAULTS.consolidation), 'consolidation');
+  const consolidationRouteRef = consolidationRaw.routeRef === undefined || consolidationRaw.routeRef === '' ? routeRef : text(consolidationRaw.routeRef, 'consolidation route', 128);
+  if (!routeRefs.has(consolidationRouteRef)) throw new ConfigError('consolidation route is not configured');
+  const consolidation = {
+    enabled: bool(consolidationRaw.enabled, 'consolidation.enabled', DEFAULTS.consolidation.enabled),
+    routeRef: consolidationRouteRef,
+    dirtyCountThreshold: integer(consolidationRaw.dirtyCountThreshold, 1, 100, 'consolidation.dirtyCountThreshold', DEFAULTS.consolidation.dirtyCountThreshold),
+    maxWaitHours: integer(consolidationRaw.maxWaitHours, 1, 24, 'consolidation.maxWaitHours', DEFAULTS.consolidation.maxWaitHours),
+    maxMemories: integer(consolidationRaw.maxMemories, 2, 16, 'consolidation.maxMemories', DEFAULTS.consolidation.maxMemories),
+  };
   const recallRaw = input.recall === undefined ? DEFAULTS.recall : plain(input.recall, 'recall');
   keys(recallRaw, Object.keys(DEFAULTS.recall), 'recall');
   const schedulerRaw = input.scheduler === undefined ? DEFAULTS.scheduler : plain(input.scheduler, 'scheduler');
@@ -204,6 +216,7 @@ export function normalizeConfig(raw, {env = process.env} = {}) {
       dirtyCountThreshold: integer(abstractsRaw.dirtyCountThreshold, 1, 100, 'abstracts.dirtyCountThreshold', DEFAULTS.abstracts.dirtyCountThreshold),
       ageHours: integer(abstractsRaw.ageHours, 1, 168, 'abstracts.ageHours', DEFAULTS.abstracts.ageHours),
     },
+    consolidation,
     security: {rejectNonLocalPaths: true},
   };
   config.configDigest = digest(JSON.stringify(config, (key, value) => (key === 'configDigest' ? undefined : value)));
@@ -228,6 +241,7 @@ export function routeApproval(config) {
 /** Map a job purpose to the configured extraction/work-summary route reference. */
 export function routeRefFor(config, purpose) {
   if (purpose === 'work_summary_extract' || purpose === 'work_summary_merge') return config.workSummary.routeRef;
+  if (purpose === 'memory_consolidate') return config.consolidation.routeRef || config.extraction.routeRef;
   return config.extraction.routeRef;
 }
 

@@ -60,13 +60,13 @@ function installedSchemas() {
 
 const artifacts = [
   'src/schema.mjs', 'src/consolidation-schema.mjs', 'src/store-internals.mjs', 'src/backend.mjs', 'src/jobs.mjs',
-  'src/consolidation-inputs.mjs', 'src/consolidation-output.mjs', 'src/consolidation-queue.mjs',
+  'src/consolidation-dirty.mjs', 'src/consolidation-inputs.mjs', 'src/consolidation-output.mjs', 'src/consolidation-queue.mjs',
   'src/consolidation-versions.mjs', 'src/storage-layout.mjs', 'src/cold-archive.mjs', 'src/provider.mjs',
   'plugin/index.mjs', 'plugin/attribution.mjs', 'plugin/experience-operations.mjs', 'plugin/correction.mjs',
   'plugin/idle-gate.mjs', 'plugin/consolidation-operations.mjs', 'plugin/harness-provider.mjs', 'plugin/session-hooks.mjs', 'plugin/management.mjs',
   'client.js', 'package.json', 'locale/en.json', 'locale/zh.json',
   'tests/consolidation-inputs.test.mjs', 'tests/consolidation-output.test.mjs', 'tests/consolidation-queue.test.mjs',
-  'tests/consolidation-versions.test.mjs', 'tests/consolidation-storage.test.mjs', 'tests/correction.test.mjs', 'tests/consolidation-operations.test.mjs',
+  'tests/consolidation-versions.test.mjs', 'tests/consolidation-storage.test.mjs', 'tests/correction.test.mjs', 'tests/consolidation-dirty.test.mjs', 'tests/consolidation-operations.test.mjs',
   'tests/excerpt-lifecycle.test.mjs', 'tests/storage-layout.test.mjs', 'tests/attribution.test.mjs',
   'tests/idle-gate.test.mjs', 'tests/plugin-entry.test.mjs', 'tests/harness-provider.test.mjs',
   'README.md', 'TODO.md', 'docs/mechanisms.md', 'docs/implementation-route.md', 'docs/experience-implementation-plan.md',

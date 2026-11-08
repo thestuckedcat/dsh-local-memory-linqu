@@ -17,6 +17,7 @@ import {createM2Operations} from './m2-management.mjs';
 import {createAttributionManager} from './attribution.mjs';
 import {createCorrectionManager} from './correction.mjs';
 import {createConsolidationOperations} from './consolidation-operations.mjs';
+import {createConsolidationDirty} from '../src/consolidation-dirty.mjs';
 import {createCapabilityEventConsumer} from './capability-events.mjs';
 import {createBusyGate} from './idle-gate.mjs';
 import {createExperienceOperations} from './experience-operations.mjs';
@@ -282,7 +283,8 @@ export function apply(ctx, rawConfig = {}) {
     correction = createCorrectionManager({attribution});
     capability = createCapabilityEventConsumer({catalog: registry.catalog, registry});
     busyGate = createBusyGate({agents: ctx.agents, now: () => Date.now(), quietMs: 30_000});
-    const consolidationOperations = createConsolidationOperations({config, registry, provider: bridge.provider, now: () => new Date()});
+    const consolidationDirty = createConsolidationDirty();
+    const consolidationOperations = createConsolidationOperations({config, registry, provider: bridge.provider, dirty: consolidationDirty, now: () => new Date()});
     try { consolidationOperations.recover(); } catch { noteDiagnostic('consolidation_recovery_failed'); }
     const workOperations = createWorkOperations({registry, config, reports, approval: ctx.approval, sessions: ctx.sessions});
     m2Operations = createM2Operations({registry, abstracts, sharing, sessions: ctx.sessions});
@@ -333,6 +335,7 @@ export function apply(ctx, rawConfig = {}) {
           if (ids.length === 0) return;
           const project = registry.projectForScope(scopeRef);
           if (project?.projectId) abstracts.noteChange(project.projectId, {count: ids.length});
+          try { consolidationDirty.noteChange(registry.storeFor(scopeRef), {count: ids.length}); } catch { noteDiagnostic('consolidation_dirty_failed'); }
         } catch { noteDiagnostic('abstract_dirty_failed'); }
       },
     });
