@@ -16,6 +16,7 @@ import {createWorkOperations} from './work-management.mjs';
 import {createM2Operations} from './m2-management.mjs';
 import {createAttributionManager} from './attribution.mjs';
 import {createCapabilityEventConsumer} from './capability-events.mjs';
+import {createBusyGate} from './idle-gate.mjs';
 import {createExperienceOperations} from './experience-operations.mjs';
 import {installProofReminders} from './proof-reminders.mjs';
 import {normalizeConfig, routeApproval, routeRefFor, configErrorReason} from './configuration.mjs';
@@ -121,6 +122,7 @@ export function apply(ctx, rawConfig = {}) {
   let m2Operations;
   let attribution;
   let capability;
+  let busyGate;
   let disposed = false;
   /** Read-only experience phase for the Memory Center/composer bar; never dispatches work. */
   function experienceStatus() {
@@ -254,6 +256,7 @@ export function apply(ctx, rawConfig = {}) {
     sharing = createSharingManager({catalog: registry.catalog, registry, abstracts});
     attribution = createAttributionManager({registry});
     capability = createCapabilityEventConsumer({catalog: registry.catalog, registry});
+    busyGate = createBusyGate({agents: ctx.agents, now: () => Date.now(), quietMs: 30_000});
     const workOperations = createWorkOperations({registry, config, reports, approval: ctx.approval, sessions: ctx.sessions});
     m2Operations = createM2Operations({registry, abstracts, sharing, sessions: ctx.sessions});
     const experienceOperations = createExperienceOperations({attribution, sessions: ctx.sessions});
@@ -281,6 +284,7 @@ export function apply(ctx, rawConfig = {}) {
         experience: experienceStatus(),
         attribution: attribution.status(),
         capability: capability.status(),
+        background: busyGate.status(),
       }),
     });
     http = createManagementHttp({operations, getOrigin: () => ctx.webServer.getOrigin()});
@@ -352,6 +356,20 @@ export function apply(ctx, rawConfig = {}) {
         text: () => 'When local memory records are injected, cite only a record you actually relied on for a conclusion, using the exact marker 〔记N〕 (for example 〔记1〕). Do not cite records that were merely retrieved, do not invent refs, and do not add your own memory attribution footer; the Memory Center validates and renders it.',
       }), 'local-memory: citation prompt');
     }
+    ctx.effect(() => {
+      const offStatus = ctx.on('agent/status', (payload) => {
+        try { busyGate.noteAgentStatus(payload?.agent?.id ?? payload?.agent, payload?.status); } catch { noteDiagnostic('busy_gate_failed'); }
+      });
+      const offSession = ctx.on('api-session/status', (sessionId, running) => {
+        try { busyGate.noteSessionStatus(sessionId, running); } catch { noteDiagnostic('busy_gate_failed'); }
+      });
+      const offDisposed = ctx.on('agent/disposed', (payload) => {
+        try { busyGate.noteDisposed(payload?.agent?.id ?? payload?.agent); } catch { noteDiagnostic('busy_gate_failed'); }
+      });
+      return () => {
+        for (const off of [offStatus, offSession, offDisposed]) { try { off?.(); } catch { /* local cleanup only */ } }
+      };
+    }, 'local-memory: foreground idle gate (no dispatch)');
     ctx.effect(() => {
       const off = ctx.on('capability/event', (event) => {
         try { capability.consume(event); } catch { noteDiagnostic('capability_event_failed'); }

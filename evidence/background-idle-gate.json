@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-09",
+  "scope": "MEM-BG-1 BG-S03 foreground idle gate (observation only; no background dispatch)",
+  "suite": {
+    "tests": 333,
+    "pass": 333,
+    "fail": 0
+  },
+  "behavior": [
+    "all live agents must be known idle; unknown initial agent state fails closed",
+    "30s quiet window restarts on running/idle transitions; no event is treated as idleness proof",
+    "agent/status, api-session/status and agent/disposed Host events are observed read-only",
+    "status.background exposes state/running/unknown/quietForMs; no model call or queue is added"
+  ],
+  "limitations": [
+    "No real background consolidation dispatcher exists; this gate only answers canDispatch().",
+    "The Host may not deliver agent/status for pre-existing agents before activity; unknown stays conservative.",
+    "A real idle observation on a live installed Host was not produced by a background job; only unit tests and status shape."
+  ]
+}
