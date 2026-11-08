@@ -139,7 +139,7 @@ docs/                        设计、阶段机制、评审、共享合同副本
 | 流接口修复与现场复验 | `llm/stream` 监听器改为同步返回 `AsyncIterable`；重启桌面 Harness 后普通流式对话恢复；安装库回归 34/34 | `docs/stream-contract-fix.md`、`evidence/stream-contract-*.tap` |
 | 端到端闭环（测试内 FakeHost：登记→审批→提炼→持久化→召回→最终门→删除后阻断→重启/晚到结果） | 通过 | `tests/plugin-entry.test.mjs` 等 |
 
-**v0.4.0 补充证据（2026-11-09）**：当前 HEAD 全量 391/391 通过（独立评审修复后）；真实安装库最终门 3/3、live `state:ready`、content v3/authority v2、TAP sha256 与 41 个构件哈希见 [v0.4.0-verification.json](evidence/v0.4.0-verification.json)。独立评审 1 Critical/9 Important/9 Minor 见 [审查报告](docs/v0.4.0-independent-review.md)，修复响应见 [response](docs/v0.4.0-independent-review-response.md)；作者修复尚未经独立复评。
+**v0.4.0 补充证据（2026-11-09）**：当前 HEAD 全量 391/391 通过（独立评审修复后）；真实安装库最终门 3/3、live `state:ready`、content v3/authority v2、TAP sha256 与 43 个构件哈希见 [v0.4.0-verification.json](evidence/v0.4.0-verification.json)。独立评审 1 Critical/9 Important/9 Minor 见 [审查报告](docs/v0.4.0-independent-review.md)，修复响应见 [response](docs/v0.4.0-independent-review-response.md)；作者修复尚未经独立复评。
 
 **未证明边界**：v0.4.0 仍无真实 Provider 业务调用、完整 GUI 视觉、OS 级出口、自动空闲派发、真实 03 事件源、M3 实际搬冷/冷召回、浏览器 slot 现场复核；MEM-204 仅有消费器与未来 `capability/event` 接缝；M3 只有 layout/journal 骨架。
 
