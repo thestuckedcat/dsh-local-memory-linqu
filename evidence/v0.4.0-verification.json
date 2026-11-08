@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "date": "2026-11-09",
-  "startedAtUtc": "2026-11-08T17:16:09.855Z",
-  "durationMs": 39501.7097,
+  "startedAtUtc": "2026-11-08T17:18:47.584Z",
+  "durationMs": 38798.2104,
   "purpose": "v0.4.0 experience/background delivery evidence: reading-first UI, attribution, excerpts, consolidation manifest/validator/queue/runJob/candidate/publish/derived views, correction suspension, M3 layout/journal skeleton; local full suite plus the real installed-library final-gate regression probe and live install observation",
   "runtime": {
     "node": "26.13.0",
@@ -16,8 +16,8 @@
   "suite": {
     "tap": "evidence/v0.4.0-node26.tap",
     "exitCode": 0,
-    "tests": 398,
-    "pass": 398,
+    "tests": 399,
+    "pass": 399,
     "fail": 0,
     "cancelled": 0,
     "skipped": 0,
@@ -48,7 +48,7 @@
           "state": "running",
           "running": 0,
           "pendingScopes": [],
-          "lastTickAt": "2026-11-08T17:16:49.271Z",
+          "lastTickAt": "2026-11-08T17:19:25.652Z",
           "lastError": null
         },
         "grants": {
@@ -58,7 +58,7 @@
           "recoveryConfirmations": 0,
           "manualConfirmations": 0,
           "revoked": false,
-          "authorizationVersion": "grant-v1:22b20735-119c-47ca-9cff-88f8ce892111:1"
+          "authorizationVersion": "grant-v1:131c6154-3975-4d2b-8339-3193084acf6e:1"
         },
         "provider": "active",
         "config": {
@@ -114,7 +114,7 @@
           "running": 0,
           "pendingScopes": 0,
           "automaticDisabled": false,
-          "updatedAt": "2026-11-08T17:16:49.285Z"
+          "updatedAt": "2026-11-08T17:19:26.305Z"
         },
         "attribution": {
           "turns": 0,
@@ -141,9 +141,9 @@
           "unknown": 7,
           "idle": 0,
           "agents": 7,
-          "quietForMs": 48482,
+          "quietForMs": 45045,
           "quietMs": 30000,
-          "at": "2026-11-08T17:16:49.286Z"
+          "at": "2026-11-08T17:19:26.305Z"
         },
         "consolidation": {
           "pending": 0,
@@ -151,7 +151,8 @@
           "enqueued": 0,
           "autoEnqueued": 0,
           "published": 0,
-          "failed": 0
+          "failed": 0,
+          "autoBudgetRemaining": 20
         }
       }
     },
@@ -251,7 +252,7 @@
     },
     {
       "path": "plugin/consolidation-operations.mjs",
-      "sha256": "3447ef2c031c09fe917d60a48e44a23496aaaba81c8d8c7a2f0e591e50d710c7"
+      "sha256": "98763f3ce25b02b630bc7588fda9d9bd86d50a035f1db397574f7870588b9a10"
     },
     {
       "path": "plugin/harness-provider.mjs",
@@ -311,7 +312,7 @@
     },
     {
       "path": "tests/consolidation-operations.test.mjs",
-      "sha256": "28ac27dcd6dd1f87f853361a79dafec5653fb06c322a2a3b4253a999f6d01cea"
+      "sha256": "719cd8eaf1b63c0d944534b09903d87e862fabb49e20b1a9959b77583d31bcc6"
     },
     {
       "path": "tests/excerpt-lifecycle.test.mjs",
@@ -339,7 +340,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "0c126d02ad717c1e7bbae226a17f16987b5da106c33de37d1d508648c3927b85"
+      "sha256": "a2c1791916754d5b8edee357a540e050481be3d1ffe2ac019780fc8301cb9717"
     },
     {
       "path": "TODO.md",
@@ -347,7 +348,7 @@
     },
     {
       "path": "docs/mechanisms.md",
-      "sha256": "96e146489ffb3d78af52902d9dc5d855c389a8f97c5691a4f2a25dca71d6f62d"
+      "sha256": "0834cb3b462882ed4affc09f1a813a103731395c4befbc0396d54113c5f7ef08"
     },
     {
       "path": "docs/implementation-route.md",
@@ -359,9 +360,9 @@
     }
   ],
   "artifactsHashBasis": "SHA256 computed from the clean HEAD tree before this evidence file was written; compare with git show <git.head>:<path>",
-  "tapSha256": "d40ac7f9ad3f39d6b4ed46899dd3427893509c0ada614ddd502c141bf53ae3d8",
+  "tapSha256": "fff99bed9e712ae82fad254f1c1eda5c6d583e14d31a92c3c7707101c1d78552",
   "git": {
-    "head": "b405135bea2ebfde4aa3661d309812867d54a73e",
+    "head": "fdf6d06883dfd547a7b7b37b8438990990fb0ec8",
     "cleanAtStart": true,
     "cleanAtEnd": true
   },
