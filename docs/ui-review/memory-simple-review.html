@@ -1,0 +1,119 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'"><title>本地记忆体验</title><style>body{margin:0;padding:16px;background:transparent}</style></head><body><div id="memory-simple" aria-label="本地记忆体验预览">
+  <style>
+    #memory-simple{--m-bg:light-dark(#fff,#181b20);--m-text:light-dark(#222936,#edf0f4);--m-muted:light-dark(#5d6877,#a9b2bf);--m-line:light-dark(#e2e6eb,#353b45);--m-soft:light-dark(#f4f6f8,#232831);--m-accent:light-dark(#245f97,#9dcaf3);--m-hint:light-dark(#eaf3fb,#233849);color-scheme:light dark;color:var(--m-text);font:14px/1.65 system-ui,"Microsoft YaHei",sans-serif;background:var(--m-bg);border:1px solid var(--m-line);border-radius:12px;overflow-wrap:anywhere}
+    #memory-simple *{box-sizing:border-box}
+    #memory-simple [hidden]{display:none!important}
+    #memory-simple h2,#memory-simple h3,#memory-simple p{margin:0;font-size:inherit;font-weight:400}
+    #memory-simple h2,#memory-simple h3{font-weight:500}
+    #memory-simple button,#memory-simple input{font:inherit;color:inherit}
+    #memory-simple button{background:transparent;border:1px solid var(--m-line);border-radius:7px;padding:5px 10px}
+    #memory-simple button[aria-selected=true]{background:var(--m-soft);color:var(--m-accent)}
+    #memory-simple button:focus-visible,#memory-simple input:focus-visible{outline:2px solid var(--m-accent);outline-offset:3px}
+    #memory-simple .ms-top{padding:15px 20px;border-bottom:1px solid var(--m-line);padding-right:108px}
+    #memory-simple .ms-muted{color:var(--m-muted);font-size:12px}
+    #memory-simple .ms-columns{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr)}
+    #memory-simple .ms-chat,#memory-simple .ms-center{padding:20px;min-width:0}
+    #memory-simple .ms-center{border-left:1px solid var(--m-line)}
+    #memory-simple .ms-person{color:var(--m-muted);font-size:12px;margin-bottom:6px}
+    #memory-simple .ms-bubble{background:var(--m-soft);padding:12px 14px;border-radius:10px;margin-bottom:22px}
+    #memory-simple .ms-answer p{margin:9px 0}
+    #memory-simple .ms-ref{vertical-align:super;font-size:11px;color:var(--m-accent);padding:0 4px;border:0;min-height:22px}
+    #memory-simple .ms-attribution{font-size:12px;color:var(--m-muted);margin-top:14px!important;padding-top:9px;border-top:1px solid var(--m-line)}
+    #memory-simple .ms-bar{display:flex;align-items:center;gap:7px;color:var(--m-muted);font-size:12px;padding:7px 0;margin-top:20px}
+    #memory-simple .ms-dot{width:6px;height:6px;background:var(--m-accent);border-radius:50%;flex-shrink:0}
+    #memory-simple .ms-composer{display:flex;gap:8px;margin-top:12px}
+    #memory-simple .ms-composer input{min-width:0;flex:1;border:1px solid var(--m-line);border-radius:7px;padding:9px;background:var(--m-bg);font-size:16px}
+    #memory-simple .ms-composer button{background:var(--m-soft);flex-shrink:0}
+    #memory-simple .ms-tabs{display:flex;gap:6px;margin:12px 0}
+    #memory-simple .ms-list{display:grid;gap:0}
+    #memory-simple .ms-item{display:block;text-align:left;border:0;border-bottom:1px solid var(--m-line);border-radius:0;padding:12px 0;width:100%}
+    #memory-simple .ms-item[aria-pressed=true]{box-shadow:inset 3px 0 var(--m-accent);padding-left:10px;background:var(--m-soft)}
+    #memory-simple .ms-item span{display:block}
+    #memory-simple .ms-detail{margin-top:20px;padding-top:14px;border-top:1px solid var(--m-line)}
+    #memory-simple .ms-detail p{margin-top:7px}
+    #memory-simple .ms-detail details{margin-top:10px;font-size:12px;color:var(--m-muted)}
+    #memory-simple .ms-detail summary{color:var(--m-accent)}
+    #memory-simple .ms-next{margin-top:18px}
+    @media(max-width:680px){#memory-simple .ms-columns{grid-template-columns:minmax(0,1fr)}#memory-simple .ms-center{border-left:0;border-top:1px solid var(--m-line)}#memory-simple .ms-chat,#memory-simple .ms-center{padding:16px}#memory-simple .ms-composer{flex-wrap:wrap}#memory-simple .ms-composer input{flex-basis:210px}}
+    @media(pointer:coarse){#memory-simple button{min-height:44px}#memory-simple .ms-ref{padding:4px 8px}}
+  </style>
+  <header class="ms-top"><h2>Harness · 本地记忆</h2><p class="ms-muted">交互示意 · 合成数据，未连接运行插件</p></header>
+  <div class="ms-columns">
+    <section class="ms-chat" aria-label="对话">
+      <p class="ms-person">你</p>
+      <div class="ms-bubble">驱动和用户态组件联调前，要先准备什么？</div>
+      <div class="ms-answer" aria-label="回答">
+        <p class="ms-person">Agent</p>
+        <p>① 按目标内核6.1准备构建环境。<button type="button" class="ms-ref cursor-interaction" data-memory="M1" data-version="1" aria-label="结论一参考记忆一版本一">记1</button></p>
+        <p>② 测试记录同时写明驱动与用户态组件版本。<button type="button" class="ms-ref cursor-interaction" data-memory="M2" data-version="1" aria-label="结论二参考记忆二版本一">记2</button></p>
+        <p class="ms-attribution" data-footer>记忆影响：①参考记1“内核构建约束”；②参考记2“跨仓测试记录”。</p>
+      </div>
+      <div data-next class="ms-next" hidden>
+        <p class="ms-person">你</p><div class="ms-bubble" data-correction-text></div>
+        <div class="ms-answer"><p class="ms-person">Agent</p>
+          <p>后续按内核6.6准备构建环境。<button type="button" class="ms-ref cursor-interaction" data-memory="M1" data-version="2" aria-label="本条结论参考更正后的记忆一版本二">记1</button></p>
+          <p class="ms-attribution" data-footer>记忆影响：本条参考记1“内核构建约束”（已更正为6.6）。</p>
+        </div>
+      </div>
+      <div class="ms-bar" role="status" aria-live="polite"><span class="ms-dot" aria-hidden="true"></span><span data-status>记忆已同步</span></div>
+      <form class="ms-composer" aria-label="演示自然语言纠正">
+        <input aria-label="纠正内容（合成示例）" value="记1已过时：当前目标内核已改为6.6。" autocomplete="off">
+        <button type="submit" class="cursor-interaction">发送</button>
+      </form>
+    </section>
+    <section class="ms-center" aria-label="记忆中心">
+      <h2>记忆中心</h2><p class="ms-muted">设备项目 · 自动记录与更新</p>
+      <div class="ms-tabs" role="tablist" aria-label="记忆类别">
+        <button type="button" role="tab" id="ms-experience-tab" aria-selected="true" aria-controls="ms-experience" data-tab="experience" class="cursor-interaction">经验记忆</button>
+        <button type="button" role="tab" id="ms-annual-tab" aria-selected="false" aria-controls="ms-annual" data-tab="annual" class="cursor-interaction">年度工作</button>
+      </div>
+      <div id="ms-experience" role="tabpanel" aria-labelledby="ms-experience-tab">
+        <div class="ms-list">
+          <button type="button" class="ms-item cursor-interaction" data-record="M1" aria-pressed="true"><span>内核构建约束</span><span class="ms-muted" data-memory-summary>目标内核6.1 · 构建前核对版本</span></button>
+          <button type="button" class="ms-item cursor-interaction" data-record="M2" aria-pressed="false"><span>跨仓测试记录</span><span class="ms-muted">联调时同时记录驱动与用户态版本</span></button>
+          <button type="button" class="ms-item cursor-interaction" data-record="M3" aria-pressed="false"><span>超时问题排查</span><span class="ms-muted">先保存设备日志，再复现与比较</span></button>
+        </div>
+        <div class="ms-detail" aria-live="polite"><h3 data-detail-title>内核构建约束</h3><p data-detail-body>目标内核6.1，准备构建环境前核对内核版本及配置。</p><p class="ms-muted" data-detail-source>来源：开发对话“构建环境” · 自动提炼，未核验</p><p class="ms-muted" data-detail-time>适用：设备项目 · 本分支 · 更新于11月7日</p>
+          <details data-history hidden><summary>更正与反思</summary><p>原引用：记1 v1，目标内核6.1，来源为11月7日开发对话“构建环境”；现已更正，不再采用。当前记忆：记1 v2，6.6，来源为本次用户纠正。</p><p>当前对话明确指出版本已变更，信息过时是有依据的解释；其他原因未确定。后续引用前核对版本。</p></details>
+        </div>
+      </div>
+      <div id="ms-annual" role="tabpanel" aria-labelledby="ms-annual-tab" hidden><h3>驱动与用户态组件联调</h3><p>完成联调流程整理，形成测试记录要求。</p><p class="ms-muted">来源：开发对话“联调约定”（合成）· 未核验</p><p class="ms-muted">自动工作草稿 · 证明待补充 · 最终报告待审定</p></div>
+    </section>
+  </div>
+  <script>
+  (()=>{
+    const root=document.getElementById('memory-simple');
+    const find=s=>root.querySelector(s);
+    let selected='M1',corrected=false,busy=false;
+    const memories={M2:['跨仓测试记录','测试记录需同时写明驱动和用户态组件版本。','来源：开发对话“联调约定” · 自动提炼，未核验'],M3:['超时问题排查','发生超时时先保存设备日志，再进行受控复现和比较。','来源：开发对话“超时排查” · 自动提炼，未核验']};
+    const show=id=>{
+      selected=id;
+      root.querySelectorAll('[data-record]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.record===id)));
+      const values=id==='M1'?['内核构建约束',`目标内核${corrected?'6.6':'6.1'}，准备构建环境前核对内核版本及配置。`,corrected?'来源：当前对话 · 用户纠正，未独立核验':'来源：开发对话“构建环境” · 自动提炼，未核验']:memories[id];
+      find('[data-detail-title]').textContent=values[0];find('[data-detail-body]').textContent=values[1];find('[data-detail-source]').textContent=values[2];
+      find('[data-detail-time]').textContent=`适用：设备项目 · 本分支 · ${corrected&&id==='M1'?'刚刚更新':'更新于11月7日'}`;
+      find('[data-history]').hidden=!(corrected&&id==='M1');
+    };
+    const tab=kind=>{
+      root.querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.tab===kind)));
+      find('#ms-experience').hidden=kind!=='experience';find('#ms-annual').hidden=kind!=='annual';
+    };
+    root.querySelectorAll('[data-record]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.record)));
+    root.querySelectorAll('[data-memory]').forEach(b=>b.addEventListener('click',()=>{tab('experience');show(b.dataset.memory);find('[data-history]').open=corrected&&b.dataset.memory==='M1'&&b.dataset.version==='1';const target=find(`[data-record="${b.dataset.memory}"]`);target.focus();}));
+    root.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>tab(b.dataset.tab)));
+    find('form').addEventListener('submit',event=>{
+      event.preventDefault();if(busy)return;
+      const text=find('input').value.trim();
+      if(text!=='记1已过时：当前目标内核已改为6.6。'){find('[data-status]').textContent='未修改：演示仅支持原填示例“记1已过时：当前目标内核已改为6.6。”';return;}
+      busy=true;find('[data-status]').textContent='正在更新记忆…';find('form button').disabled=true;
+      setTimeout(()=>{
+        corrected=true;busy=false;find('[data-memory-summary]').textContent='目标内核6.6 · 刚刚更正';
+        find('[data-correction-text]').textContent=text;find('[data-next]').hidden=false;
+        const oldRef=root.querySelector('.ms-answer [data-memory="M1"]');oldRef.textContent='记1·已更正';oldRef.setAttribute('aria-label','结论一使用的记忆一已更正，查看当前版本');
+        show(selected);find('[data-status]').textContent='记忆已更正';find('form button').disabled=false;
+      },600);
+    });
+  })();
+  </script>
+</div>
+</body></html>

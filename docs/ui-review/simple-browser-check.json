@@ -1,0 +1,109 @@
+{
+  "client_date": "2026-11-08",
+  "scope": "MEM-EXP-1 synthetic prototype only",
+  "inputSha256": "c6f96cb4fc34cad1c196098700d24215773dc5df3507082c0c08f37f075a0a1a",
+  "checks": [
+    {
+      "name": "readable_memory_list",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "no_manual_management_workflow",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "status_bar_and_no_process_dump",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "footer_character_limit",
+      "pass": true,
+      "observed": {
+        "lengths": [
+          33,
+          29
+        ],
+        "pass": true
+      }
+    },
+    {
+      "name": "citation_opens_corresponding_memory",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "annual_separate_and_sourced",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "negation_not_misread_as_correction",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "updating_bar_only",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "correction_updates_memory",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "new_answer_uses_current_version",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "old_reference_retains_provenance",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "no_reflection_dump_in_chat",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "fits_320",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "mobile_input_readable",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "fits_760",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "fits_1024",
+      "pass": true,
+      "observed": true
+    }
+  ],
+  "exceptions": [],
+  "httpRequests": [],
+  "screenshots": [
+    "simple-desktop.png",
+    "simple-corrected.png",
+    "simple-mobile.png",
+    "simple-dark.png"
+  ],
+  "tempProfileCleanup": true,
+  "inputUnchanged": true,
+  "noLiveHostOrBusinessApi": true,
+  "limits": [
+    "Synthetic offline UI only; no live plugin integration or model quality verification.",
+    "No page HTTP requests does not certify OS/browser egress."
+  ],
+  "verified": true
+}

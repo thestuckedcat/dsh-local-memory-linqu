@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "client_date": "2026-11-08",
+  "scope": "MEM-EXP-1 design and synthetic UI only",
+  "baseline": {
+    "version": "0.3.0",
+    "m2_artifacts_compared": 33,
+    "m2_artifact_drift": [],
+    "runtime_plugin_modified": false,
+    "installed_profile_modified": false,
+    "business_api_called": false
+  },
+  "review": {
+    "path": "docs/memory-experience-review.md",
+    "closed_findings": 5,
+    "open_blocking_findings": 0,
+    "limits": "Independent document/prototype review, no runtime certification"
+  },
+  "checks": {
+    "browser_pass": true,
+    "browser_check_count": 16,
+    "browser_sha_matches": true,
+    "footer_characters": [
+      33,
+      29
+    ],
+    "conversation_fragment_equal": true,
+    "standalone_embeds_fragment": true,
+    "root_skill_validation": "python -X utf8 quick_validate.py E:/dsh/plugin: Skill is valid!",
+    "component_tests_rerun": false
+  },
+  "artifacts": [
+    {
+      "path": "SKILL.md",
+      "sha256": "391247d8298aa3bf989fbdac62f9522a49bdf1a8cd7e9b0af777beb6fd398e0e"
+    },
+    {
+      "path": "README.md",
+      "sha256": "ec68c7da807f61b6848cf198869a07030d6b57aa1bee2f80fe77a8436f250422"
+    },
+    {
+      "path": "capabilities.json",
+      "sha256": "504c4ef68f2e1a9cb26d73a4ae2bf2bcb261dfa6acf0eb47050f12d4e0e515bf"
+    },
+    {
+      "path": "docs/workflow-guide.md",
+      "sha256": "12d9516ceba3a375924aaa2b31e520275e40daf4823e35162ba3d625ee4b4f66"
+    },
+    {
+      "path": "docs/workflow-changes.md",
+      "sha256": "7ec05f1952bc604d28793839489e4439e78f03413d78c76031cc400c86453ae0"
+    },
+    {
+      "path": "docs/design-delivery.md",
+      "sha256": "8df8b1a24dd06d0f5928f07571db18667acc8296403f8a764f00a60a4d933958"
+    },
+    {
+      "path": "docs/product-decisions.md",
+      "sha256": "fd57c7ef4dd26a065686e850baafa9c0d1765209b057b9b1c76df65f110da1a6"
+    },
+    {
+      "path": "05-local-memory/docs/product-form.md",
+      "sha256": "fc4a36e6fe3fa9537d99e099dd38885a8e7a381b6c66096ac301b3df0fe6bba4"
+    },
+    {
+      "path": "05-local-memory/docs/memory-experience-contract.md",
+      "sha256": "17abfb863264796a1f34b0554430178e45f8eab0a6aed4accd36bb06503b2bdd"
+    },
+    {
+      "path": "05-local-memory/docs/memory-experience-review.md",
+      "sha256": "64dd1e1065763b1da9d69b07ad25eeb75da9590a6394294a85c3629982c5b481"
+    },
+    {
+      "path": "05-local-memory/docs/ui-review/memory-simple-fragment.html",
+      "sha256": "3252a687b720060c26e2fa0bee0b5cbe90466ee3a50a5aa68f58448e1c8247a5"
+    },
+    {
+      "path": "05-local-memory/docs/ui-review/memory-simple-review.html",
+      "sha256": "c6f96cb4fc34cad1c196098700d24215773dc5df3507082c0c08f37f075a0a1a"
+    },
+    {
+      "path": "05-local-memory/docs/ui-review/simple-browser-check.mjs",
+      "sha256": "9620746cc46cbcb8130846324648f0d87d625dc4de69023f402e1fb41f923b31"
+    },
+    {
+      "path": "05-local-memory/docs/ui-review/simple-browser-check.json",
+      "sha256": "dfa614ef7f06b1ffe615465067a558f1ec8a8742fc3112f5fc79d4d268aae5d5"
+    },
+    {
+      "path": "05-local-memory/docs/history/2026-11-08-manual-memory/memory-consolidation-design-r2.md",
+      "sha256": "914369cf773f9077794c2ad5b50bd58e22ca7f0b6c68b77316293e59f037269f"
+    },
+    {
+      "path": "05-local-memory/docs/history/2026-11-08-manual-memory/memory-consolidation-plan-r2.md",
+      "sha256": "27a5e39fc7e0e8a5533171c7caa996839b045c435f6b5dd531d5fb1f18bc42be"
+    },
+    {
+      "path": "05-local-memory/docs/history/2026-11-08-manual-memory/memory-center-ui-design-0.2.md",
+      "sha256": "488589c9e4363e99ea16601b5cb6eeedad32aa846c9ca54922d83f58c68b3419"
+    }
+  ],
+  "limits": [
+    "Automatic extraction/consolidation/correction, true output attribution, status bar/citations and stale-history removal remain unimplemented/unverified in the real Host.",
+    "Prototype only accepts one fixed synthetic correction; not a natural-language understanding test.",
+    "Old R2/UI0.2 reviews cover historical bytes; manual workflow is superseded.",
+    "No page HTTP requests does not certify OS or browser egress."
+  ],
+  "verified": true
+}

@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "client_date": "2026-11-08",
+  "scope": "consolidation design and synthetic memory-center UI review, not plugin implementation",
+  "baseline": {
+    "version": "0.3.0",
+    "commit": "d75472f30aea5c7842143497637c4363e2a26d15",
+    "m2_artifacts_compared": 33,
+    "m2_artifact_drift": [],
+    "tracked_module_changes": "",
+    "old_implementation_evidence_modified": false
+  },
+  "review": {
+    "consolidation": "R2 independently reviewed, no open Critical/Important design findings",
+    "ui": "0.2, four Important and four Minor closed",
+    "user_visual_selection": null
+  },
+  "checks": {
+    "missing_local_links": [],
+    "unclosed_fences": [],
+    "current_review_hashes_match": true,
+    "prototype_literal_fragment_match": true,
+    "browser_checks_pass": 19,
+    "browser_check": "docs/ui-review/browser-check.json",
+    "business_api_called": false,
+    "runtime_plugin_client_modified": false,
+    "component_tests_rerun": false
+  },
+  "limits": [
+    "Implementation, migration, model quality/cost, real Host tools and OS egress remain unverified for the consolidation feature.",
+    "Browser observations cover synthetic prototype only; complete keyboard and screen-reader acceptance and live Host UI still pending.",
+    "A/B direction awaits explicit user review; default or interaction does not constitute approval."
+  ],
+  "visualization": {
+    "path": "C:\\Users\\admin\\.codex\\visualizations\\2026\\11\\02\\01a19cde-008c-7420-b014-ec129c986e5a\\memory-center-review.html",
+    "sha256": "0fba9818093a9807c0152c8bfd144c512c4fffaa101370dc9ddc112da2dd4be1",
+    "bytes": 40798
+  },
+  "files": [
+    {
+      "path": "05-local-memory/docs/memory-consolidation-design.md",
+      "sha256": "914369cf773f9077794c2ad5b50bd58e22ca7f0b6c68b77316293e59f037269f",
+      "bytes": 69541
+    },
+    {
+      "path": "05-local-memory/docs/superpowers/plans/2026-11-08-memory-consolidation.md",
+      "sha256": "27a5e39fc7e0e8a5533171c7caa996839b045c435f6b5dd531d5fb1f18bc42be",
+      "bytes": 32167
+    },
+    {
+      "path": "05-local-memory/docs/memory-consolidation-review.md",
+      "sha256": "62129221e34c664350d40063018bb28d2f1e1ad46fc9d5cc4607c54492e03cc8",
+      "bytes": 14998
+    },
+    {
+      "path": "05-local-memory/docs/memory-center-ui-design.md",
+      "sha256": "488589c9e4363e99ea16601b5cb6eeedad32aa846c9ca54922d83f58c68b3419",
+      "bytes": 23668
+    },
+    {
+      "path": "05-local-memory/docs/memory-center-ui-review.md",
+      "sha256": "faaa6cbdddcac710cc190c3a0b02f15cc820f149b6d9f4d9aa73689dc2afaaa8",
+      "bytes": 18888
+    },
+    {
+      "path": "05-local-memory/docs/ui-review/memory-center-review.html",
+      "sha256": "a2d67494e63f6aa5579a7297e80569020bde8c549ff99a2e9c9453e029593f56",
+      "bytes": 43859
+    },
+    {
+      "path": "05-local-memory/docs/ui-review/check-browser.mjs",
+      "sha256": "05bcc52e3bc3bdab4db3b7f072a32d4a71d77f6369336c211ea881c53a9fd263",
+      "bytes": 11316
+    },
+    {
+      "path": "05-local-memory/docs/ui-review/browser-check.json",
+      "sha256": "21dfd8e18868b6618bd1184b574e6f3e524ffefe7bdb258a6aa51835ca945a68",
+      "bytes": 2684
+    },
+    {
+      "path": "docs/design-delivery.md",
+      "sha256": "e8f6123656b4215355e8a943c2bbb7c11c581a23f2167a68f5c2168137982117",
+      "bytes": 7619
+    },
+    {
+      "path": "capabilities.json",
+      "sha256": "4aa57b650f81d088398adfd9ee81c763f53c26c9e69d5bad58d8b8dd3c954f60",
+      "bytes": 19202
+    },
+    {
+      "path": "05-local-memory/docs/ui-review/candidate-review.png",
+      "sha256": "91551ec74f118f888bb66e310b18e466867ea61ad2c54eca2dc398b3e2f65c20",
+      "bytes": 125075
+    },
+    {
+      "path": "05-local-memory/docs/ui-review/desktop-compact.png",
+      "sha256": "7248ea2fc2cd1cf59e5386e6619ab81761efea93fae8c39c76732eac9b34a65b",
+      "bytes": 109527
+    },
+    {
+      "path": "05-local-memory/docs/ui-review/desktop-dark.png",
+      "sha256": "79f2c153571f4f8ce8532334342ec610657d1727b881d29473740d4fb0a4e2ff",
+      "bytes": 121141
+    },
+    {
+      "path": "05-local-memory/docs/ui-review/desktop-reading.png",
+      "sha256": "832c4c593088884922078885a381321d6f2f1611a2f440c6e21fcc69aad9f4b9",
+      "bytes": 120082
+    },
+    {
+      "path": "05-local-memory/docs/ui-review/mobile-compact.png",
+      "sha256": "e9da5cb024e6dc1bdf6b1a1a9fe73e18b620440f993f4dfb0d1d5bf0b30db075",
+      "bytes": 47345
+    },
+    {
+      "path": "05-local-memory/docs/ui-review/mobile-detail.png",
+      "sha256": "ac2538b35de8193c29217a74db248b2d2338729150b51e5bf09ffe0902d07d08",
+      "bytes": 51697
+    }
+  ]
+}

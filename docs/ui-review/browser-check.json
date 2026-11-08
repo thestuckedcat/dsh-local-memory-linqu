@@ -1,0 +1,132 @@
+{
+  "client_date": "2026-11-08",
+  "scope": "isolated synthetic UI only",
+  "inputSha256": "a2d67494e63f6aa5579a7297e80569020bde8c549ff99a2e9c9453e029593f56",
+  "scriptParse": true,
+  "checks": [
+    {
+      "name": "reading_initial",
+      "pass": true,
+      "observed": {
+        "tabs": 4,
+        "rows": 5,
+        "pass": true
+      }
+    },
+    {
+      "name": "record_selection",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "search_filters_rows",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "candidate_diff",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "compact_direction",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "compact_mobile_fits",
+      "pass": true,
+      "observed": {
+        "viewport": 320,
+        "scroll": 320,
+        "pass": true
+      }
+    },
+    {
+      "name": "hidden_selection_cleared",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "mobile_editable_font",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "batch_open_focus",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "back_preserves_filter",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "snapshot_filter_restored",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "mobile_detail",
+      "pass": true,
+      "observed": {
+        "open": true,
+        "pass": true
+      }
+    },
+    {
+      "name": "organize_open_focus",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "candidate_sources_closed",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "detail_toolbar_collapsed",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "reading_width_760",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "compact_width_760",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "reading_width_1024",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "compact_width_1024",
+      "pass": true,
+      "observed": true
+    }
+  ],
+  "exceptions": [],
+  "httpRequests": [],
+  "screenshots": [
+    "desktop-reading.png",
+    "candidate-review.png",
+    "desktop-compact.png",
+    "mobile-compact.png",
+    "mobile-detail.png",
+    "desktop-dark.png"
+  ],
+  "tempProfileCleanup": true,
+  "noLiveHostOrBusinessApi": true,
+  "inputUnchanged": true,
+  "limits": [
+    "Synthetic offline prototype only; no live plugin/UI or Host integration acceptance.",
+    "No page HTTP requests were observed; this does not certify OS or whole-browser egress."
+  ],
+  "verified": true
+}

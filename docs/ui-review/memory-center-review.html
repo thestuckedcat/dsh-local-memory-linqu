@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; base-uri 'none'; form-action 'none'"><title>记忆中心 · 设计评审原型</title><style>
+:root{color-scheme:light dark}body{margin:0;background:light-dark(#edf0f5,#111318);color:light-dark(#202633,#edf0f6);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif} .offline-wrap{max-width:1180px;margin:24px auto;padding:0 16px 24px}.offline-review{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}.offline-review p{margin:0;color:light-dark(#49566a,#bac4d4)}.offline-directions{display:flex;gap:8px;flex-wrap:wrap}.offline-directions button{font:inherit;min-height:42px;padding:7px 14px;border:1px solid light-dark(#8190a5,#75839a);border-radius:7px;color:inherit;background:light-dark(#fff,#1d2026);cursor:pointer}.offline-directions button[aria-pressed=true]{background:light-dark(#2453b9,#b7ceff);color:light-dark(#fff,#15213c);border-color:transparent}.offline-directions button:focus-visible{outline:3px solid light-dark(#2453b9,#9bbaff);outline-offset:3px}.offline-instruction{font-size:12px;margin-top:14px;color:light-dark(#5d697b,#a2afc0)}@media(max-width:500px){.offline-wrap{margin:12px auto;padding:0 10px 16px}.offline-directions{width:100%}.offline-directions button{flex:1}}
+</style></head><body><main class="offline-wrap"><div class="offline-review"><p>记忆中心 · 视觉方向评审（未确认）</p><div class="offline-directions" role="group" aria-label="视觉方向"><button type="button" data-direction="清爽阅读" aria-pressed="true">A · 清爽阅读</button><button type="button" data-direction="紧凑管理" aria-pressed="false">B · 紧凑管理</button></div></div>
+<div id="memory-center-review" class="viz-carousel" aria-label="记忆中心设计方向" data-previous-label="上一种设计" data-next-label="下一种设计">
+  <section data-variant="清爽阅读" aria-label="清爽阅读设计">
+    <div id="mc-reading" class="mc-product mc-reading" aria-label="清爽阅读的记忆中心"></div>
+  </section>
+  <section data-variant="紧凑管理" aria-label="紧凑管理设计" hidden>
+    <div id="mc-managing" class="mc-product mc-managing" aria-label="紧凑管理的记忆中心"></div>
+  </section>
+</div>
+<style>
+#memory-center-review { width:100%; }
+#memory-center-review > section { min-height:780px; }
+#memory-center-review .mc-product {
+  --mc-base:var(--dsw-alias-bg-base,light-dark(#f8f9fb,#15171b));
+  --mc-surface:var(--dsw-alias-bg-layer-1,light-dark(#ffffff,#1d2026));
+  --mc-layer:var(--dsw-alias-bg-layer-2,light-dark(#f0f3f7,#272c34));
+  --mc-text:var(--dsw-alias-label-primary,light-dark(#202633,#edf0f6));
+  --mc-secondary:var(--dsw-alias-label-secondary,light-dark(#49566a,#bac4d4));
+  --mc-muted:var(--dsw-alias-label-tertiary,light-dark(#5d697b,#a2afc0));
+  --mc-border:var(--dsw-alias-border-l1,light-dark(#dce2ea,#3c4350));
+  --mc-control-border:var(--dsw-alias-border-l2,light-dark(#8190a5,#75839a));
+  --mc-brand:var(--dsw-alias-brand-primary,light-dark(#2453b9,#9bbaff));
+  --mc-primary:var(--dsw-alias-button-primary-fill,light-dark(#2453b9,#b7ceff));
+  --mc-on-primary:var(--dsw-alias-label-primary-foreground,light-dark(#ffffff,#15213c));
+  --mc-hover:var(--dsw-alias-interactive-bg-hover,light-dark(#f1f4f9,#2a303b));
+  --mc-selected:var(--dsw-alias-interactive-bg-hover-solid,light-dark(#eaf0fc,#293b5d));
+  --mc-success:var(--dsw-alias-state-success-primary,light-dark(#196544,#82d4aa));
+  --mc-warn:var(--dsw-alias-state-warn-primary,light-dark(#815715,#e9c17c));
+  --mc-error:var(--dsw-alias-state-error-primary,light-dark(#ae3030,#ffacac));
+  color:var(--mc-text); background:var(--mc-base); font:400 14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;
+  border:1px solid var(--mc-border); border-radius:12px; min-width:0; overflow-wrap:anywhere;
+}
+#memory-center-review .mc-product * { box-sizing:border-box; }
+#memory-center-review .mc-product [hidden] { display:none!important; }
+#memory-center-review .mc-product h1,#memory-center-review .mc-product h2,#memory-center-review .mc-product h3,#memory-center-review .mc-product p { margin:0; }
+#memory-center-review .mc-product h1 { font-size:23px; font-weight:650; letter-spacing:-.35px; }
+#memory-center-review .mc-product h2 { font-size:18px; line-height:1.4; font-weight:600; }
+#memory-center-review .mc-product h3 { font-size:14px; font-weight:600; }
+#memory-center-review .mc-product button,#memory-center-review .mc-product input,#memory-center-review .mc-product select { font:inherit; }
+#memory-center-review .mc-product button { cursor:pointer; }
+#memory-center-review .mc-product button:disabled { cursor:not-allowed; color:var(--mc-muted); background:var(--mc-layer); opacity:.8; }
+#memory-center-review .mc-product button,#memory-center-review .mc-product input,#memory-center-review .mc-product select { touch-action:manipulation; }
+#memory-center-review .mc-product :focus-visible { outline:3px solid var(--mc-brand); outline-offset:3px; }
+#memory-center-review .mc-product .mc-review { display:flex; gap:8px 16px; align-items:center; flex-wrap:wrap; padding:10px 22px; background:var(--mc-layer); color:var(--mc-secondary); font-size:12px; border-radius:12px 12px 0 0; }
+#memory-center-review .mc-product .mc-review strong { font-weight:600; color:var(--mc-text); }
+#memory-center-review .mc-product .mc-head { padding:22px 24px 18px; display:flex; justify-content:space-between; gap:16px; align-items:end; }
+#memory-center-review .mc-product .mc-eyebrow { color:var(--mc-muted); font-size:12px; margin-bottom:5px; }
+#memory-center-review .mc-product .mc-subtitle { color:var(--mc-secondary); margin-top:4px; }
+#memory-center-review .mc-product .mc-field { display:flex; flex-direction:column; gap:5px; color:var(--mc-secondary); font-size:12px; min-width:0; }
+#memory-center-review .mc-product select,#memory-center-review .mc-product input[type=search] { color:var(--mc-text); background:var(--mc-surface); border:1px solid var(--mc-control-border); border-radius:6px; min-height:38px; padding:7px 10px; max-width:100%; min-width:0; }
+#memory-center-review .mc-product .mc-tabs { display:flex; gap:20px; padding:0 24px; border-bottom:1px solid var(--mc-border); flex-wrap:wrap; }
+#memory-center-review .mc-product .mc-tab { color:var(--mc-secondary); border:0; border-bottom:2px solid transparent; background:transparent; padding:10px 0; min-height:44px; }
+#memory-center-review .mc-product .mc-tab[aria-current=page] { color:var(--mc-brand); border-bottom-color:var(--mc-brand); font-weight:600; }
+#memory-center-review .mc-product .mc-tab:hover { color:var(--mc-brand); }
+#memory-center-review .mc-product .mc-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:end; padding:16px 24px; }
+#memory-center-review .mc-product .mc-search { flex:1 1 190px; }
+#memory-center-review .mc-product .mc-search input { width:100%; }
+#memory-center-review .mc-product .mc-filter { flex:0 1 150px; }
+#memory-center-review .mc-product .mc-button { padding:7px 12px; border:1px solid var(--mc-control-border); color:var(--mc-text); background:var(--mc-surface); border-radius:6px; min-height:38px; }
+#memory-center-review .mc-product .mc-button:hover:not(:disabled) { background:var(--mc-hover); }
+#memory-center-review .mc-product .mc-button.mc-primary { color:var(--mc-on-primary); background:var(--mc-primary); border-color:var(--mc-primary); }
+#memory-center-review .mc-product .mc-button.mc-primary:hover:not(:disabled) { filter:brightness(.94); }
+#memory-center-review .mc-product .mc-button.mc-quiet { background:transparent; border-color:transparent; color:var(--mc-secondary); }
+#memory-center-review .mc-product .mc-statusline { min-height:28px; color:var(--mc-muted); padding:0 24px 10px; display:flex; gap:10px; align-items:center; flex-wrap:wrap; font-size:12px; }
+#memory-center-review .mc-product .mc-workspace { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,.94fr); border-top:1px solid var(--mc-border); min-height:500px; }
+#memory-center-review .mc-product .mc-list-panel { min-width:0; background:var(--mc-surface); border-radius:0 0 0 12px; }
+#memory-center-review .mc-product .mc-list-heading { padding:15px 20px; display:flex; align-items:center; justify-content:space-between; gap:8px; border-bottom:1px solid var(--mc-border); }
+#memory-center-review .mc-product .mc-list-heading h2 { font-size:13px; color:var(--mc-secondary); }
+#memory-center-review .mc-product .mc-list-heading span { color:var(--mc-muted); font-size:12px; }
+#memory-center-review .mc-product .mc-record { border-bottom:1px solid var(--mc-border); position:relative; padding:18px 20px; }
+#memory-center-review .mc-product .mc-record[aria-current=true] { background:var(--mc-selected); box-shadow:inset 3px 0 var(--mc-brand); }
+#memory-center-review .mc-product .mc-record:hover { background:var(--mc-hover); }
+#memory-center-review .mc-product .mc-record-top { display:flex; justify-content:space-between; align-items:start; gap:8px; }
+#memory-center-review .mc-product .mc-record-button { padding:0; border:0; background:transparent; color:var(--mc-text); text-align:left; font-weight:600; min-height:28px; }
+#memory-center-review .mc-product .mc-record-button::after { content:""; position:absolute; inset:0; }
+#memory-center-review .mc-product .mc-record-button:focus-visible { outline:0; }
+#memory-center-review .mc-product .mc-record:focus-within { outline:3px solid var(--mc-brand); outline-offset:-3px; }
+#memory-center-review .mc-product .mc-excerpt { margin-top:7px; color:var(--mc-secondary); font-size:13px; }
+#memory-center-review .mc-product .mc-meta-line { display:flex; align-items:center; gap:5px 10px; flex-wrap:wrap; color:var(--mc-muted); font-size:12px; margin-top:9px; }
+#memory-center-review .mc-product .mc-badge { display:inline-block; font-size:12px; padding:2px 7px; border:1px solid var(--mc-border); border-radius:4px; color:var(--mc-secondary); background:var(--mc-surface); white-space:normal; flex-shrink:0; }
+#memory-center-review .mc-product .mc-badge[data-tone=warn] { color:var(--mc-warn); }
+#memory-center-review .mc-product .mc-badge[data-tone=success] { color:var(--mc-success); }
+#memory-center-review .mc-product .mc-badge[data-tone=error] { color:var(--mc-error); }
+#memory-center-review .mc-product .mc-detail { min-width:0; background:var(--mc-surface); border-left:1px solid var(--mc-border); border-radius:0 0 12px 0; padding:22px; }
+#memory-center-review .mc-product .mc-detail-top { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px; color:var(--mc-muted); font-size:12px; }
+#memory-center-review .mc-product .mc-back { display:none; }
+#memory-center-review .mc-product .mc-detail-title { margin-bottom:11px; }
+#memory-center-review .mc-product .mc-detail-summary { color:var(--mc-secondary); margin-top:12px; line-height:1.75; }
+#memory-center-review .mc-product .mc-section { border-top:1px solid var(--mc-border); padding-top:18px; margin-top:20px; }
+#memory-center-review .mc-product .mc-section h3 { margin-bottom:9px; }
+#memory-center-review .mc-product .mc-description { display:grid; grid-template-columns:74px minmax(0,1fr); gap:7px 12px; margin:0; font-size:13px; }
+#memory-center-review .mc-product .mc-description dt { color:var(--mc-muted); }
+#memory-center-review .mc-product .mc-description dd { margin:0; }
+#memory-center-review .mc-product .mc-source { display:flex; flex-direction:column; gap:4px; padding:11px 12px; background:var(--mc-layer); border-radius:6px; margin-top:9px; }
+#memory-center-review .mc-product .mc-source small { font-size:12px; color:var(--mc-muted); }
+#memory-center-review .mc-product .mc-note { color:var(--mc-muted); font-size:12px; margin-top:10px; }
+#memory-center-review .mc-product .mc-warning { color:var(--mc-warn); }
+#memory-center-review .mc-product .mc-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:18px; }
+#memory-center-review .mc-product .mc-footer { padding:11px 24px; border-top:1px solid var(--mc-border); color:var(--mc-muted); font-size:12px; }
+#memory-center-review .mc-product .mc-empty { color:var(--mc-secondary); padding:40px 22px; }
+#memory-center-review .mc-product .mc-table { border-collapse:collapse; table-layout:fixed; width:100%; text-align:left; }
+#memory-center-review .mc-product .mc-table caption { text-align:left; padding:13px 14px; font-size:12px; color:var(--mc-secondary); }
+#memory-center-review .mc-product .mc-table th { font-size:12px; color:var(--mc-muted); font-weight:500; padding:10px; background:var(--mc-layer); border-bottom:1px solid var(--mc-border); }
+#memory-center-review .mc-product .mc-table td { padding:12px 10px; border-bottom:1px solid var(--mc-border); vertical-align:top; font-size:13px; }
+#memory-center-review .mc-product .mc-table .mc-select-cell { width:38px; text-align:center; }
+#memory-center-review .mc-product .mc-table .mc-state-cell { width:92px; }
+#memory-center-review .mc-product .mc-table .mc-date-cell { width:64px; color:var(--mc-muted); font-size:12px; }
+#memory-center-review .mc-product .mc-table input[type=checkbox] { accent-color:var(--mc-brand); width:17px; height:17px; cursor:pointer; }
+#memory-center-review .mc-product .mc-table tr[data-selected=true] { background:var(--mc-selected); }
+#memory-center-review .mc-product .mc-table .mc-record-button { font-size:13px; font-weight:500; position:relative; line-height:1.5; }
+#memory-center-review .mc-product .mc-table .mc-record-button::after { display:none; }
+#memory-center-review .mc-product .mc-table .mc-record-button:focus-visible { outline:3px solid var(--mc-brand); outline-offset:3px; }
+#memory-center-review .mc-product .mc-table small { display:block; color:var(--mc-muted); font-size:12px; margin-top:3px; }
+#memory-center-review .mc-managing .mc-head { padding-bottom:14px; }
+#memory-center-review .mc-managing .mc-workspace { grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); }
+#memory-center-review .mc-managing .mc-detail { padding:18px; }
+#memory-center-review .mc-product .mc-batch { display:flex; align-items:center; flex-wrap:wrap; gap:8px; padding:9px 14px; border-bottom:1px solid var(--mc-border); font-size:12px; }
+#memory-center-review .mc-product .mc-batch .mc-button { padding:3px 7px; min-height:30px; font-size:12px; }
+#memory-center-review .mc-product .mc-compare { display:grid; gap:10px; margin-top:12px; }
+#memory-center-review .mc-product .mc-compare-block { padding:12px; background:var(--mc-layer); border-radius:6px; }
+#memory-center-review .mc-product .mc-compare-block strong { display:block; font-size:12px; color:var(--mc-secondary); font-weight:600; margin-bottom:5px; }
+#memory-center-review .mc-product .mc-compare-block p { font-size:13px; }
+#memory-center-review .mc-product .mc-decision { padding:10px 12px; background:var(--mc-selected); color:var(--mc-secondary); margin-top:12px; border-radius:6px; font-size:13px; }
+@media(max-width:760px) {
+  #memory-center-review > section { min-height:850px; }
+  #memory-center-review .mc-product { font-size:16px; }
+  #memory-center-review .mc-product input[type=search],#memory-center-review .mc-product select { font-size:16px; }
+  #memory-center-review .mc-product .mc-head { padding:18px 16px 14px; flex-wrap:wrap; align-items:start; }
+  #memory-center-review .mc-product .mc-review { padding:9px 16px; }
+  #memory-center-review .mc-product .mc-head .mc-field { width:100%; }
+  #memory-center-review .mc-product .mc-tabs { padding:0 16px; gap:0; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
+  #memory-center-review .mc-product .mc-tab { text-align:left; padding:9px 0; }
+  #memory-center-review .mc-product .mc-toolbar { padding:14px 16px; }
+  #memory-center-review .mc-product .mc-statusline { padding:0 16px 10px; }
+  #memory-center-review .mc-product .mc-workspace { grid-template-columns:minmax(0,1fr); min-height:420px; }
+  #memory-center-review .mc-product .mc-detail { display:none; border-left:0; padding:18px 16px; border-radius:0 0 12px 12px; }
+  #memory-center-review .mc-product.mc-detail-open .mc-detail { display:block; }
+  #memory-center-review .mc-product.mc-detail-open .mc-list-panel { display:none; }
+  #memory-center-review .mc-product.mc-detail-open .mc-toolbar,#memory-center-review .mc-product.mc-detail-open .mc-statusline { display:none; }
+  #memory-center-review .mc-product .mc-back { display:inline-block; }
+  #memory-center-review .mc-product .mc-record { padding:16px; }
+  #memory-center-review .mc-product .mc-description { grid-template-columns:68px minmax(0,1fr); }
+  #memory-center-review .mc-product .mc-table .mc-date-cell { display:none; }
+  #memory-center-review .mc-product .mc-table .mc-state-cell { width:85px; }
+  #memory-center-review .mc-product .mc-footer { padding:11px 16px; }
+}
+@media(pointer:coarse) {
+  #memory-center-review .mc-product .mc-button,#memory-center-review .mc-product select,#memory-center-review .mc-product input[type=search],#memory-center-review .mc-product .mc-record-button { min-height:44px; }
+  #memory-center-review .mc-product .mc-table .mc-select-cell { width:46px; }
+  #memory-center-review .mc-product .mc-table .mc-select-cell label { display:flex; min-height:44px; align-items:center; justify-content:center; }
+}
+</style>
+<script>
+(() => {
+  'use strict';
+  const root = document.getElementById('memory-center-review');
+  if (!root) return;
+  const tabs = [['experience','经验记忆'],['annual','年度工作记录'],['tasks','处理任务'],['sharing','项目摘要与共享']];
+  const records = {
+    experience:[
+      {id:'DEMO-E01',title:'延迟变高时，先核对实际请求批次',state:'未核验',tone:'warn',origin:'模型提炼',date:'11-08',type:'排查经验',text:'先固定输入长度与并发，再比较调度前后的实际批次和耗时。仅凭吞吐变化无法判断瓶颈位置。',source:'示例对话 · 批处理排查',locator:'示例消息 18–23',version:'示例 revision r42',evidence:'来源可追溯；内容仍未核验',tags:'调度 · 性能排查'},
+      {id:'DEMO-E02',title:'缓冲区释放前，需要确认异步操作已结束',state:'未核验',tone:'warn',origin:'本人保存',date:'11-07',type:'边界规则',text:'释放缓冲区之前，确认所有依赖它的异步操作已完成；所有权交接和完成回执需要一起检查。',source:'示例对话 · 异步边界',locator:'示例消息 8–12',version:'示例 revision r40',evidence:'本人保存也不等于已核验；当前经验均按未核验处理',tags:'异步 · 生命周期'},
+      {id:'DEMO-E03',title:'结果来自旧构建时，先停止推断',state:'未核验',tone:'warn',origin:'本人保存',date:'11-06',type:'验证经验',text:'先记录构建标识和运行产物，再解释测量结果；无法对应目标版本的结果应保留为待验证。',source:'示例对话 · 构建核对',locator:'示例消息 31–34',version:'示例 revision r39',evidence:'待补一次实际产物核对',tags:'验证 · 构建'},
+      {id:'DEMO-E04',title:'旧版调度参数只保留作历史参考',state:'已归档',tone:'',origin:'模型提炼',date:'10-29',type:'历史经验',text:'归档后内容保留、可恢复，不参与自动召回。归档不等同于未实现的冷记忆压缩。',source:'示例对话 · 历史参数',locator:'示例消息 4–6',version:'示例 revision r32',evidence:'归档示例；内容仍未核验。恢复、纠正与删除不在本原型中执行',tags:'历史参考'},
+      {id:'DEMO-E05',title:'比较两次测量前，记录并核对构建标识',state:'未核验',tone:'warn',origin:'本人保存',date:'11-05',type:'验证经验',text:'在比较两次测量之前，核对运行产物是否对应预期构建；记录构建标识，无法核对时不把差异写成已验证结论。',source:'示例对话 · 构建核对补充',locator:'示例消息 2–5',version:'示例 revision r38',evidence:'来源独立保留；内容仍未核验',tags:'验证 · 构建'}
+    ],
+    annual:[
+      {id:'DEMO-A01',title:'完成异步资源边界的问题定位',state:'结果待补证明',tone:'warn',date:'11-08',type:'问题探索',text:'背景：一次异步路径出现资源释放顺序问题。本人贡献：缩小复现范围并梳理完成回执。结果：形成可核对的修复建议；效果尚待证明。',source:'示例对话 · 问题探索小结',locator:'示例消息 40–44',version:'2026 年度 · 合成草稿',evidence:'缺少结果证明；正文未读取',tags:'问题探索 · 个人贡献'},
+      {id:'DEMO-A02',title:'为示例需求补齐验收路径',state:'待确认',tone:'',date:'11-05',type:'需求推进',text:'梳理示例需求的输入约束与失败路径，整理成一页验收材料。本条是自动草稿形态演示，本人贡献与时间仍待确认。',source:'示例对话 · 需求验收',locator:'示例消息 12–19',version:'2026 年度 · 合成草稿',evidence:'已有引用名；尚未核对证明内容',tags:'需求 · 验收材料'},
+      {id:'DEMO-A03',title:'整理示例项目的阶段交付',state:'贡献已确认',tone:'success',date:'10-30',type:'项目小结',text:'这条合成记录中的本人贡献已确认；结果与证明仍需单独核对。记录确认不等于报告审定，也不代表所有断言均已证实。',source:'示例对话 · 阶段总结',locator:'示例消息 1–7',version:'2026 年度 · 合成记录',evidence:'示例引用：阶段记录.md；正文未读取，结果尚待核对',tags:'项目 · 阶段交付'}
+    ],
+    tasks:[
+      {id:'DEMO-C01',title:'整理候选：合并两条验证经验',state:'设计候选',tone:'warn',date:'11-08',type:'整理记忆 · 设计中',text:'两条经验描述了同一验证前提。候选展示建议表述、原记录及保留的来源，等待一次独立评审。此功能尚未实现。',source:'示例经验 DEMO-E03 ＋ DEMO-E05',sourceIds:['DEMO-E03','DEMO-E05'],proposedText:'解释或比较测量结果前，先记录构建标识与运行产物，并核对它们是否对应预期版本。无法核对时，将结果保留为待验证，不把差异写成已验证结论。',locator:'2 条原记录 · 2 个示例来源',version:'候选批次 DEMO-B01',evidence:'原内容保持不变；下方动作只改变演示状态',tags:'待评审 · 前后对比',candidate:true},
+      {id:'DEMO-T01',title:'经验提炼：等待处理',state:'排队中',tone:'',date:'11-08',type:'经验提炼',text:'展示已入队任务的阅读方式。这里没有实际队列、Provider 或模型请求。',source:'示例对话 · 调度排查',locator:'示例消息 24–28',version:'示例任务 DEMO-T01',evidence:'所有状态均为合成数据',tags:'经验 · 等待'},
+      {id:'DEMO-T02',title:'年度草稿：结果需要核对',state:'结果未知',tone:'warn',date:'11-07',type:'年度草稿',text:'结果未知时，需要先确认上一轮是否已经产生结果，不能直接重复发送。此处仅展示状态与说明。',source:'示例对话 · 年度草稿',locator:'示例消息 9–15',version:'示例任务 DEMO-T02',evidence:'禁止把未知状态显示成完成',tags:'年度 · 待核对'}
+    ],
+    sharing:[
+      {id:'DEMO-S01',title:'示例项目 · Atlas',state:'当前项目',tone:'',date:'11-08',type:'项目摘要',text:'示例项目聚焦异步资源管理和调度验证。摘要用于先判断相关性，再按授权查找明细；本原型不会访问真实项目。',source:'3 条示例经验的摘要',locator:'本地抽取式摘要 · 合成内容',version:'示例摘要 revision a4',evidence:'来源版本与可用性在详情中呈现',tags:'当前 · 本地摘要'},
+      {id:'DEMO-S02',title:'示例项目 · Boreal',state:'已共享索引',tone:'success',date:'11-06',type:'共享来源',text:'这份合成摘要展示另一个项目与当前问题的关联。共享索引意味着允许按关系检索相关明细，不意味着复制全部原文。',source:'示例共享关系 DEMO-SH02',locator:'来源 Boreal → 目标 Atlas',version:'示例摘要 revision b7',evidence:'示例用户授权记录；不是实际授权',tags:'共享 · 相关明细'},
+      {id:'DEMO-S03',title:'示例项目 · Cedar（已退休）',state:'适用性待核',tone:'warn',date:'10-21',type:'历史摘要',text:'退休项目保留记忆，来源适用性需要核对。这不是冷记忆压缩或恢复功能的实现。',source:'示例历史项目摘要',locator:'项目已退休 · 记忆独立保留',version:'示例摘要 revision c2',evidence:'历史内容不自动提升为当前结论',tags:'历史 · 待核对'}
+    ]
+  };
+  const saved = window.openai && window.openai.widgetState;
+  const savedPrivate = saved && saved.privateContent && typeof saved.privateContent === 'object' ? saved.privateContent : {};
+  const instances = [];
+  const escape = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+  function storeState() {
+    if (!window.openai || typeof window.openai.setWidgetState !== 'function') return;
+    const snapshots = {};
+    instances.forEach(item => { snapshots[item.id] = {tab:item.state.tab,selected:item.state.selected,query:item.state.query,filter:item.state.filter,detailOpen:item.state.detailOpen,decision:item.state.decision}; });
+    window.openai.setWidgetState({modelContent:{prototype:'记忆中心设计评审',data:'合成数据',decisions:instances.map(item => ({direction:item.mode==='reading'?'清爽阅读':'紧凑管理',candidate:item.state.decision}))},privateContent:snapshots}).catch(() => {});
+  }
+  function init(id, mode) {
+    const product = document.getElementById(id);
+    const previous = savedPrivate[id] || {};
+    const tab = tabs.some(item => item[0]===previous.tab) ? previous.tab : 'experience';
+    const state = {tab,selected:records[tab].some(item=>item.id===previous.selected)?previous.selected:records[tab][0].id,query:typeof previous.query==='string'?previous.query:'',filter:typeof previous.filter==='string'?previous.filter:'all',detailOpen:!!previous.detailOpen,decision:['adopt','keep'].includes(previous.decision)?previous.decision:'pending',checked:new Set(),showExcerpt:true,showDates:true};
+    const instance = {id,state,mode}; instances.push(instance);
+    product.innerHTML = `<div class="mc-review"><strong>设计评审 · ${mode==='reading'?'清爽阅读':'紧凑管理'}</strong><span>合成数据 / 仅本地演示 / 不连接记忆 API</span></div>
+      <header class="mc-head"><div><div class="mc-eyebrow">Harness / 本地能力</div><h1>记忆中心</h1><p class="mc-subtitle">找到经验，看清来源，再决定如何使用。</p></div><label class="mc-field">当前项目<select data-control="project" aria-label="当前示例项目"><option>示例项目 · Atlas</option><option>示例项目 · Boreal</option></select></label></header>
+      <nav class="mc-tabs" aria-label="记忆中心分区">${tabs.map(item=>`<button class="mc-tab cursor-interaction" type="button" data-tab="${item[0]}">${item[1]}</button>`).join('')}</nav>
+      <div class="mc-toolbar"><label class="mc-field mc-search">搜索当前分区<input data-control="search" type="search" placeholder="标题、内容或来源" aria-label="搜索当前分区"></label><label class="mc-field mc-filter">状态<select data-control="filter" aria-label="按状态筛选"></select></label><button type="button" class="mc-button mc-primary cursor-interaction" data-action="organize">整理记忆（设计预览）</button></div>
+      <div class="mc-statusline"><span data-control="result-count" role="status" aria-live="polite"></span><span data-control="context-note"></span></div>
+      <div class="mc-workspace"><section class="mc-list-panel" aria-label="记录列表"><div data-control="list"></div></section><section class="mc-detail" aria-label="选中记录详情"><div data-control="detail"></div></section></div>
+      <footer class="mc-footer"><span data-control="notice" role="status" aria-live="polite">评审原型：切换方向不会确认产品选择；所有数据均为合成。</span></footer>`;
+    const search=product.querySelector('[data-control=search]');
+    const filter=product.querySelector('[data-control=filter]');
+    search.value=state.query;
+    const badge = item => `<span class="mc-badge" data-tone="${item.tone}">${escape(item.state)}</span>`;
+    function announce(text) {product.querySelector('[data-control=notice]').textContent=text;}
+    function resetFilters() {state.query='';state.filter='all';state.checked.clear();search.value='';}
+    function updateFilter() {
+      const values = Array.from(new Set(records[state.tab].map(item=>item.state)));
+      filter.innerHTML='<option value="all">全部状态</option>'+values.map(value=>`<option value="${escape(value)}">${escape(value)}</option>`).join('');
+      filter.value=values.includes(state.filter)?state.filter:'all';state.filter=filter.value;
+    }
+    function switchTab(tab) {state.tab=tab;resetFilters();state.selected=records[tab][0].id;state.detailOpen=false;updateFilter();render();storeState();}
+    function visibleItems() {
+      const q=state.query.trim().toLocaleLowerCase();
+      return records[state.tab].filter(item=>(state.filter==='all'||item.state===state.filter)&&(!q||[item.title,item.text,item.source,item.tags].some(value=>value.toLocaleLowerCase().includes(q))));
+    }
+    function visibleControl(element) {return !!(element&&!element.disabled&&element.getClientRects().length);}
+    function focusList() {
+      const trigger=product.querySelector(`[data-record="${state.selected}"]`);
+      if(visibleControl(trigger))trigger.focus();
+      else if(visibleControl(search))search.focus();
+    }
+    function openDetail(recordId) {
+      if(!visibleItems().some(item=>item.id===recordId)) {
+        state.detailOpen=false;render();focusList();announce('所选记录不在当前结果中，请在列表重新选择。');return;
+      }
+      state.selected=recordId;state.detailOpen=true;render();
+      const back=product.querySelector('[data-action=back]');
+      if(matchMedia('(max-width:760px)').matches&&visibleControl(back))back.focus();
+    }
+    function closeDetail() {state.detailOpen=false;render();focusList();}
+    function detail(item) {
+      if (!item) return '<div class="mc-detail-top"><span>没有选中当前结果</span><button class="mc-button mc-quiet mc-back cursor-interaction" type="button" data-action="back">返回列表</button></div><div class="mc-empty">选择一条当前结果，查看内容和来源。</div>';
+      const candidate = item.candidate;
+      const originals=candidate?item.sourceIds.map(sourceId=>records.experience.find(record=>record.id===sourceId)):[];
+      const actions = candidate ? `<div class="mc-actions"><button class="mc-button mc-primary cursor-interaction" type="button" data-action="adopt">演示：采用候选</button><button class="mc-button cursor-interaction" type="button" data-action="keep">演示：保留原文</button></div><p class="mc-note">只改变本页演示状态，不保存、删除或合并任何真实记忆。</p>` : state.tab==='tasks' ? `<div class="mc-actions"><button class="mc-button" type="button" disabled>取消任务 · 当前不可用</button></div><p class="mc-note">v0.3.0 取消返回 CANCEL_UNAVAILABLE。结果未知时不提供直接重发。</p>` : state.tab==='annual' ? `<div class="mc-actions"><button class="mc-button cursor-interaction" type="button" data-action="proof">查看证明引用演示</button></div><p class="mc-note">证明正文审批链尚未打通，本原型不读取任何正文；年度维度模板待提供。</p><p class="mc-note">报告审定单独绑定报告版本与来源版本；本页仅展示工作记录，记录状态不代表报告已审定。</p>` : `<div class="mc-actions"><button class="mc-button cursor-interaction" type="button" data-action="source">查看来源信息</button></div><p class="mc-note">演示只展示阅读子集，不打开会话或本地文件。已有纠正、归档、恢复、删除将保留在详情局部动作中。</p>`;
+      const body=candidate?`<p class="mc-detail-summary">${escape(item.text)}</p><div class="mc-compare">${originals.map((original,index)=>`<div class="mc-compare-block" data-original="${original.id}"><strong>原记录 ${index+1} · ${escape(original.id)} · 完整原文</strong><p>${escape(original.text)}</p><p class="mc-note">${escape(original.source)} · ${escape(original.locator)} · ${escape(original.version)}</p></div>`).join('')}<div class="mc-compare-block"><strong>候选表述 · 1 条建议</strong><p>${escape(item.proposedText)}</p></div></div><p class="mc-note">变化：合并重复表述，保留记录构建标识、核对运行产物和“无法核对 → 待验证、不作已验证结论”的条件。${originals.length} 条完整原文及其独立来源分别保留。此处仅供设计评审，没有执行去重或压缩。</p><div class="mc-decision">${state.decision==='adopt'?'演示状态：已采用候选（仅当前原型）':state.decision==='keep'?'演示状态：保留两条原文（仅当前原型）':'待评审：候选不会自动替换原记录'}</div>`:`<p class="mc-detail-summary">${escape(item.text)}</p>`;
+      const sources=candidate?originals.map(original=>`<div class="mc-source" data-candidate-source="${original.id}"><span>${escape(original.id)} → ${escape(original.source)}</span><small>${escape(original.locator)} · ${escape(original.version)}</small></div>`).join(''):`<div class="mc-source"><span>${escape(item.source)}</span><small>${escape(item.locator)}</small></div>`;
+      return `<div class="mc-detail-top"><span>${escape(item.type)}</span><button class="mc-button mc-quiet mc-back cursor-interaction" type="button" data-action="back">返回列表</button></div><h2 class="mc-detail-title">${escape(item.title)}</h2>${badge(item)}${body}<section class="mc-section"><h3>${candidate?'保留的来源':'来源与依据'}</h3>${sources}<p class="mc-note ${item.tone==='warn'?'mc-warning':''}">${escape(item.evidence)}</p></section><section class="mc-section"><h3>记录信息</h3><dl class="mc-description"><dt>记录标识</dt><dd>${escape(item.id)} · 合成</dd>${item.origin?`<dt>来源方式</dt><dd>${escape(item.origin)}</dd><dt>核验状态</dt><dd>未核验</dd>`:''}<dt>版本依据</dt><dd>${escape(item.version)}</dd><dt>更新时间</dt><dd>2026-${escape(item.date)}</dd><dt>适用范围</dt><dd>${candidate?'当前示例项目的经验记忆':state.tab==='annual'?'年度独立分区，不混入经验召回':state.tab==='sharing'?'按项目与共享许可判断，不扩大检索范围':item.state==='已归档'?'内容保留、可恢复；不参与自动召回':'当前示例项目'}</dd></dl></section>${actions}`;
+    }
+    function render() {
+      const active=document.activeElement;
+      const focusKey=active&&product.contains(active)?['record','action','check'].map(key=>active.dataset[key]?[key,active.dataset[key]]:null).find(Boolean):null;
+      const q=state.query.trim().toLocaleLowerCase();
+      const items=visibleItems();
+      const visibleIds=new Set(items.map(item=>item.id));
+      state.checked=new Set(Array.from(state.checked).filter(recordId=>visibleIds.has(recordId)));
+      if(state.detailOpen&&!visibleIds.has(state.selected))state.detailOpen=false;
+      product.classList.toggle('mc-detail-open',state.detailOpen);
+      product.querySelectorAll('[data-tab]').forEach(button=>button.setAttribute('aria-current',button.dataset.tab===state.tab?'page':'false'));
+      product.querySelector('[data-action=organize]').hidden=state.tab!=='experience';
+      product.querySelector('[data-control=result-count]').textContent=`${items.length} 条${q?'搜索结果':'示例记录'}`;
+      product.querySelector('[data-control=context-note]').textContent=state.tab==='tasks'?'整理候选为设计中；其余任务状态为演示':state.tab==='annual'?'年度草稿与证明独立管理':state.tab==='sharing'?'先看摘要，再按许可查看相关明细':'按来源判断是否可用；核验状态不是模型置信分';
+      const list=product.querySelector('[data-control=list]');
+      let markup;
+      if (!items.length) markup='<div class="mc-empty"><h2>没有匹配的记录</h2><p class="mc-note">尝试缩短关键词，或将状态切回“全部状态”。</p></div>';
+      else if(mode==='reading') markup=`<div class="mc-list-heading"><h2>${escape(tabs.find(tab=>tab[0]===state.tab)[1])}</h2><span>内容与来源优先</span></div>`+items.map(item=>`<article class="mc-record" aria-current="${item.id===state.selected}"><div class="mc-record-top"><button class="mc-record-button cursor-interaction" type="button" data-record="${item.id}" aria-label="查看${escape(item.title)}">${escape(item.title)}</button>${badge(item)}</div>${state.showExcerpt?`<p class="mc-excerpt">${escape(item.text.slice(0,66))}${item.text.length>66?'…':''}</p>`:''}<div class="mc-meta-line">${item.origin?`<span>${escape(item.origin)}</span>`:''}<span>${escape(item.source)}</span><span>${escape(item.date)}</span></div></article>`).join('');
+      else markup=`<div class="mc-batch"><span>已选 ${state.checked.size} 条</span><button class="mc-button cursor-interaction" type="button" data-action="selected" ${state.checked.size?'':'disabled'}>查看首条所选</button><button class="mc-button mc-quiet cursor-interaction" type="button" data-action="clear-selected" ${state.checked.size?'':'disabled'}>清空选择</button></div><table class="mc-table"><caption>按状态横向比较；选择仅用于评审演示</caption><thead><tr><th class="mc-select-cell" scope="col"><span aria-label="选择">选</span></th><th scope="col">记录 / 来源</th><th class="mc-state-cell" scope="col">状态</th>${state.showDates?'<th class="mc-date-cell" scope="col">更新</th>':''}</tr></thead><tbody>${items.map(item=>`<tr data-selected="${item.id===state.selected}"><td class="mc-select-cell"><label><input type="checkbox" data-check="${item.id}" aria-label="选择${escape(item.title)}" ${state.checked.has(item.id)?'checked':''}></label></td><td><button class="mc-record-button cursor-interaction" type="button" data-record="${item.id}" aria-current="${item.id===state.selected?'true':'false'}">${escape(item.title)}</button><small>${escape(item.source)}</small></td><td class="mc-state-cell">${badge(item)}</td>${state.showDates?`<td class="mc-date-cell">${escape(item.date)}</td>`:''}</tr>`).join('')}</tbody></table>`;
+      list.innerHTML=markup;
+      product.querySelector('[data-control=detail]').innerHTML=detail(items.find(item=>item.id===state.selected));
+      if(focusKey){const replacement=product.querySelector(`[data-${focusKey[0]}="${focusKey[1]}"]`);if(visibleControl(replacement))replacement.focus({preventScroll:true});else if(product.getClientRects().length){const back=product.querySelector('[data-action=back]');if(state.detailOpen&&visibleControl(back))back.focus();else focusList();}}
+    }
+    product.addEventListener('click', event=> {
+      const button=event.target.closest('button');
+      if(!button||!product.contains(button))return;
+      if(button.dataset.tab) {switchTab(button.dataset.tab);return;}
+      if(button.dataset.record) {openDetail(button.dataset.record);storeState();return;}
+      const action=button.dataset.action;
+      if(action==='organize') {switchTab('tasks');openDetail('DEMO-C01');announce('设计预览：展示已有合成候选，没有分析真实记忆。');}
+      if(action==='back')closeDetail();
+      if(action==='adopt'||action==='keep') {state.decision=action;render();announce(action==='adopt'?'演示：候选已采用；未修改任何真实数据。':'演示：保留原文；未修改任何真实数据。');}
+      if(action==='source')announce('合成来源已在“来源与依据”展示；没有打开真实会话或文件。');
+      if(action==='proof')announce('示例引用：阶段记录.md；正文审批链尚未接通，没有读取证明正文。');
+      if(action==='selected')openDetail(state.checked.values().next().value);
+      if(action==='clear-selected') {state.checked.clear();render();}
+      storeState();
+    });
+    product.addEventListener('change',event=>{
+      if(event.target===filter) {state.filter=filter.value;state.checked.clear();state.detailOpen=false;render();storeState();}
+      if(event.target.dataset.check) {const item=event.target.dataset.check;event.target.checked?state.checked.add(item):state.checked.delete(item);render();announce(`已选择 ${state.checked.size} 条示例记录；未执行批量修改。`);}
+      if(event.target.dataset.control==='project') {announce(`已切到${event.target.value}的演示视角；记录仍是同一组明确标注的合成数据。`);}
+    });
+    search.addEventListener('input',()=>{state.query=search.value;state.checked.clear();state.detailOpen=false;render();storeState();});
+    product.addEventListener('keydown',event=>{if(event.key==='Escape'&&state.detailOpen&&matchMedia('(max-width:760px)').matches){event.preventDefault();closeDetail();storeState();}});
+    updateFilter();render();
+    if(globalThis.Tweak) {
+      const tweak=new Tweak({container:product,onChange:render});
+      if(mode==='reading')tweak.addToggle(state,'showExcerpt',{label:'在列表中显示内容摘要'});
+      else tweak.addToggle(state,'showDates',{label:'显示更新时间列'});
+    }
+    return {apply(snapshot){if(!snapshot||typeof snapshot!=='object')return;if(tabs.some(item=>item[0]===snapshot.tab)){state.tab=snapshot.tab;state.selected=records[state.tab].some(item=>item.id===snapshot.selected)?snapshot.selected:records[state.tab][0].id;}state.query=typeof snapshot.query==='string'?snapshot.query:'';state.filter=typeof snapshot.filter==='string'?snapshot.filter:'all';search.value=state.query;state.checked.clear();state.detailOpen=!!snapshot.detailOpen;state.decision=['adopt','keep'].includes(snapshot.decision)?snapshot.decision:'pending';updateFilter();render();}};
+  }
+  const reading=init('mc-reading','reading');
+  const managing=init('mc-managing','managing');
+  window.addEventListener('openai:set_globals',event=>{const widget=event.detail&&event.detail.globals&&event.detail.globals.widgetState;const snapshots=widget&&widget.privateContent;if(snapshots){reading.apply(snapshots['mc-reading']);managing.apply(snapshots['mc-managing']);}});
+})();
+</script>
+<p class="offline-instruction">所有内容为合成演示。可切分区、搜索、查看详情；“整理记忆”只预览设计候选，不连接 API、不修改真实数据。刷新后本地演示状态重置。方向切换不代表你已确认选择。</p></main><script>
+(()=>{const root=document.getElementById('memory-center-review');document.querySelectorAll('[data-direction]').forEach(button=>button.addEventListener('click',()=>{root.querySelectorAll(':scope > section[data-variant]').forEach(section=>section.hidden=section.dataset.variant!==button.dataset.direction);document.querySelectorAll('[data-direction]').forEach(peer=>peer.setAttribute('aria-pressed',String(peer===button)));}));})();
+</script></body></html>

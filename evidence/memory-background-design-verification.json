@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "client_date": "2026-11-08",
+  "scope": "MEM-BG-1 revision 3: document coverage and independent static review only",
+  "design_revision": 3,
+  "review": {
+    "path": "docs/memory-background-review.md",
+    "reviewed_design_sha256": "31ab133cfc4357032409de1fd2fc69dd9ec36ddfabca897e415f94281fe2586c",
+    "current_hash_bound": true,
+    "open_design_blockers": 0
+  },
+  "coverage": [
+    "two long-term memory levels and separate evidence/context/storage roles",
+    "extraction, project abstraction, consolidation and cold reorganization",
+    "AutoDream versus general dreaming attribution",
+    "permission-scoped discovery and auto-follow",
+    "cold tier, project retirement and explicit deletion",
+    "readable list and detail pane, no manual management",
+    "status bar and <=100-character conclusion attribution",
+    "natural corrections and evidence-based reflection",
+    "independent annual drafts and proof references",
+    "automatic idle scheduling, yielding and restart",
+    "approved Provider and local data boundaries"
+  ],
+  "checks": {
+    "missing_local_links": [],
+    "m2_artifacts_compared": 33,
+    "m2_artifact_drift": [],
+    "prior_snapshot_expected_document_drift": [
+      "docs/design-delivery.md"
+    ],
+    "prior_index_bytes_archived": true,
+    "r1_bytes_archived": true,
+    "r2_bytes_archived": true,
+    "runtime_plugin_modified": false,
+    "profile_modified": false,
+    "business_model_api_called": false,
+    "runtime_tests_rerun": false
+  },
+  "artifacts": [
+    {
+      "path": "05-local-memory/docs/memory-background-plan.md",
+      "sha256": "31ab133cfc4357032409de1fd2fc69dd9ec36ddfabca897e415f94281fe2586c"
+    },
+    {
+      "path": "05-local-memory/docs/memory-background-review.md",
+      "sha256": "b0afb784ad8a3730457f43f39c6fe8b959ea429b927219d6ae6c40f0f0bcc549"
+    },
+    {
+      "path": "docs/design-delivery.md",
+      "sha256": "c64ddd8aab3f0e1c0007e91aed6ea30465a6c3f5a3d4d7c13f6cdb2afb5f42ff"
+    },
+    {
+      "path": "05-local-memory/docs/history/memory-background-plan-r1.md",
+      "sha256": "73f7c3e2e00b6d8982c0329a67e050d29ec90a8f513b9413e9ce2ef9c9a77e87"
+    },
+    {
+      "path": "05-local-memory/docs/history/memory-background-plan-r2.md",
+      "sha256": "72898d43db7defaa34e69599b5a444fa228cd8ff567c06911db47be8166f916f"
+    },
+    {
+      "path": "05-local-memory/docs/history/design-delivery-before-bg3.md",
+      "sha256": "8df8b1a24dd06d0f5928f07571db18667acc8296403f8a764f00a60a4d933958"
+    }
+  ],
+  "verified": true,
+  "limits": [
+    "Static design/coverage only. New semantic, UI, archive, correction and Host mechanisms remain unimplemented or unverified as described.",
+    "Older reviews and verification snapshots retain their original hashes; current design-delivery index change is intentional and prior bytes are archived.",
+    "This is not the completed-product mechanism report or runtime acceptance."
+  ]
+}
