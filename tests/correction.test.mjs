@@ -75,7 +75,7 @@ test('correction re-extraction is accepted by the real job queue identity checks
   const record = memory(store);
   const provider = createControlledProvider({resolveRoute: () => routeA, invoke: async () => extraction()});
   const queue = createJobQueue(store, {provider, authorizeExecution: authorizeTestExecution});
-  queue.enqueue(job(store));
+  queue.enqueue({...job(store), sourceRef: 'session-A/event/1/message/abc', sourceVersion: 'version-A'});
   const correction = createCorrectionManager({attribution: attributionFor({id: record.id, ref: '记1', generation: record.generation, scopeRef: 'A'})});
   const result = correction.onMessageAdmitted({
     candidate: {input: '这里已经改了：需要 completion barrier。', id: 'msg-correction'},

@@ -161,6 +161,6 @@ M1不等待03/04/08：合成事件、来源和本地入口可独立验收；M2�
 | MEM-TODO-2 / 2026-11-07 | 用户要求继续实现、自测并同步仓库；M1方案落地为v0.2.0安装包，新增M1/MEM-201/M4子集/M5部分勾选与验收状态列 | M1、MEM-201、MEM-401..404、MEM-504已实现；M2/M3/405与M5剩余项未完成；证据见`evidence/m1-*`、`docs/mechanisms.md`、`docs/m1-independent-review.md` |
 | MEM-TODO-3 / 2026-11-08 | 继续M2：v0.3.0交付abstract/共享/退休适用性（MEM-202/203），catalog v2迁移、7个管理操作、2个模型工具、第4个tab；保留MEM-204/M3/405/M5未完成勾选 | MEM-201/202/203已实现；全量318/318+真实安装库最终门3/3；真实数据根catalog v2；证据见`evidence/m2-*`、`docs/m2-design.md`、`docs/m2-independent-review.md` |
 | MEM-TODO-4 / 2026-11-09 | Phase A/B体验底座与MEM-204消费器落地；设计文档MEM-EXP-1/MEM-BG-1已提交，新增composer小bar、turnTail归因、阅读优先列表与capability事件消费 | Phase A/B与MEM-204消费器已实现；真实模型引用/纠正/后台巩固/证据摘录/冷档仍未实现；证据见`evidence/experience-phase-ab.json`、`evidence/capability-events.json` |
-| MEM-TODO-5 / 2026-11-09 | 继续执行 MEM-EXP-1/MEM-BG-1 修订3 与 M3 可行边界；实现摘录闭环、manifest/许可/校验/队列/runJob候选/发布版本、派生视图与删除传播、显式纠正挂起、M3 layout/journal 骨架 | 代码与测试见提交历史；全量398/398；证据见 `evidence/consolidation-*.json`、`evidence/correction-suspension.json`、`evidence/m3-storage-layout.json`。仍缺自动调度/反思根因/M3搬移/GUI与真实Provider验收 |
+| MEM-TODO-5 / 2026-11-09 | 继续执行 MEM-EXP-1/MEM-BG-1 修订3 与 M3 可行边界；实现摘录闭环、manifest/许可/校验/队列/runJob候选/发布版本、派生视图与删除传播、显式纠正挂起、M3 layout/journal 骨架 | 代码与测试见提交历史；全量399/399；证据见 `evidence/consolidation-*.json`、`evidence/correction-suspension.json`、`evidence/m3-storage-layout.json`。仍缺自动调度/反思根因/M3搬移/GUI与真实Provider验收 |
 
 
