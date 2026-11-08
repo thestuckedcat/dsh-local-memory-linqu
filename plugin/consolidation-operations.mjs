@@ -52,6 +52,17 @@ export function createConsolidationOperations({config, registry, provider, dirty
   if (!provider || typeof provider.bind !== 'function' || typeof provider.execute !== 'function') throw new Error('Controlled provider required');
   const pending = new Map();
   const counters = {enqueued: 0, autoEnqueued: 0, published: 0, failed: 0, lastError: undefined};
+  let autoBudgetDay;
+  let autoBudgetCount = 0;
+  function autoBudgetLimit() {
+    const value = config.limits?.dailyRequests;
+    return Number.isSafeInteger(value) && value > 0 ? value : 20;
+  }
+  function autoBudgetAvailable() {
+    const day = new Intl.DateTimeFormat('en-CA', {timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit'}).format(now());
+    if (day !== autoBudgetDay) { autoBudgetDay = day; autoBudgetCount = 0; }
+    return autoBudgetCount < autoBudgetLimit();
+  }
   let running = false;
   function resolve(input, context) {
     const raw = input && typeof input === 'object' && !Array.isArray(input) ? input : {};
@@ -93,7 +104,7 @@ export function createConsolidationOperations({config, registry, provider, dirty
           store = registry.storeFor(repository.scopeRef);
           if ([...pending.values()].some((entry) => entry.store === store)) continue;
           const due = dirty.due(store, {threshold: config.consolidation.dirtyCountThreshold, maxWaitMs: config.consolidation.maxWaitHours * 3600_000});
-          if (!due.due) continue;
+          if (!due.due || !autoBudgetAvailable()) continue;
           const ids = store.list({limit: 16, stateFilter: 'active'}).map((item) => item.id).slice(0, Math.min(5, config.consolidation.maxMemories));
           if (ids.length < MIN_SELECTION) { dirty.reset(store); continue; }
           const route = provider.bind(config.consolidation.routeRef || config.extraction.routeRef, 'memory_consolidate');
@@ -105,10 +116,12 @@ export function createConsolidationOperations({config, registry, provider, dirty
           const requestId = `auto-consolidate:${fingerprint({projectId: project.projectId, repoId: repository.repoId, memoryIds: ids, change: due.firstAt, ...expected})}`;
           const job = queue.enqueue({requestId, selection: {memoryIds: ids, excerptIds: [], mode: 'memory_only'}, route, ...expected});
           const candidateId = `mc-candidate:${job.jobId}`;
-          grantPublication(store, candidateId, job.manifestDigest, now);
+          try { grantPublication(store, candidateId, job.manifestDigest, now); }
+          catch (error) { try { queue.cancel({requestId: `cancel-auto:${job.jobId}`, jobId: job.jobId, expectedEpoch: store.generation()}); } catch { /* best effort */ } throw error; }
           dirty.reset(store);
           pending.set(job.jobId, {queue, versions, store, projectId: project.projectId, repoId: repository.repoId, memoryIds: ids, candidateId});
           counters.autoEnqueued += 1;
+          autoBudgetCount += 1;
           count += 1;
         } catch { counters.lastError = 'auto_enqueue_failed'; try { dirty.reset(store); } catch { /* marker cleanup best effort */ } }
       }
@@ -223,7 +236,9 @@ export function createConsolidationOperations({config, registry, provider, dirty
   }
   function status() {
     const {lastError, ...rest} = counters;
-    return Object.freeze({pending: pending.size, running, ...rest, ...(lastError ? {lastError} : {})});
+    const day = new Intl.DateTimeFormat('en-CA', {timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit'}).format(now());
+    if (day !== autoBudgetDay) { autoBudgetDay = day; autoBudgetCount = 0; }
+    return Object.freeze({pending: pending.size, running, ...rest, autoBudgetRemaining: Math.max(0, autoBudgetLimit() - autoBudgetCount), ...(lastError ? {lastError} : {})});
   }
   return Object.freeze({recover, 'memory.consolidate': (input, context) => {
     try { return {ok: true, value: consolidate(input, context)}; }

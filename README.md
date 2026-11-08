@@ -4,7 +4,7 @@
 >
 > v0.3.0 基线完成 **M1**、**M2 的 MEM-201/202/203**、管理界面/年度工作记录基础子集；v0.4.0 增量已交付 MEM-204 消费器、阅读优先/归因/小 bar、证据摘录、整理输入/校验/队列/候选/版本、派生视图与删除传播、显式纠正挂起、M3 layout/journal 骨架。**未完成**：自动空闲派发/profile 预算、反思根因、版本 search/list/GC、M3 实际搬移与冷召回、年度维度模板（MEM-405）、完整 GUI/真实 Provider/OS 出口/独立评审。完整边界见 [TODO.md](TODO.md)、[机制说明](docs/mechanisms.md) 与 [实施路线](docs/implementation-route.md)。
 >
-> **2026-11-09 进行中：v0.4.0 体验/后台增量**：已实现阅读优先列表、composer 小 bar、turnTail 归因、MEM-204 能力事件消费器、content v3/authority v2 与真实 profile 迁移、证据摘录自动捕获/删除清理、`mc-output-v1` 严格校验、整理 manifest/用户批次许可、持久整理队列、`memory_consolidate` purpose/prompt、runJob 候选落库、CAS 发布/版本读取、派生视图只读 API 与阅读卡片、删除/纠正传播、显式自然语言纠正挂起、M3 layout/journal 骨架。**仍缺**：自动空闲派发/profile 预算 broker、发布与候选 UI、版本 search/list/历史保留/GC、纠正后台根因反思、M3 实际搬移/冷召回/崩溃恢复、真实 Provider/03 事件/视觉验收与独立评审；不得把本版本称为完整 05 交付。全量 **398/398** 通过（Node 26.13.0，独立评审修复后），真实安装库最终门探针 3/3、live `state:ready`、content v3/authority v2、TAP sha256 与 45 个构件哈希见 [v0.4.0-verification.json](evidence/v0.4.0-verification.json)。
+> **2026-11-09 进行中：v0.4.0 体验/后台增量**：已实现阅读优先列表、composer 小 bar、turnTail 归因、MEM-204 能力事件消费器、content v3/authority v2 与真实 profile 迁移、证据摘录自动捕获/删除清理、`mc-output-v1` 严格校验、整理 manifest/用户批次许可、持久整理队列、`memory_consolidate` purpose/prompt、runJob 候选落库、CAS 发布/版本读取、派生视图只读 API 与阅读卡片、删除/纠正传播、显式自然语言纠正挂起、M3 layout/journal 骨架。**仍缺**：自动空闲派发/profile 预算 broker、发布与候选 UI、版本 search/list/历史保留/GC、纠正后台根因反思、M3 实际搬移/冷召回/崩溃恢复、真实 Provider/03 事件/视觉验收与独立评审；不得把本版本称为完整 05 交付。全量 **399/399** 通过（Node 26.13.0，独立评审修复后），真实安装库最终门探针 3/3、live `state:ready`、content v3/authority v2、TAP sha256 与 45 个构件哈希见 [v0.4.0-verification.json](evidence/v0.4.0-verification.json)。
 >
 > **阅读提示（2026-11-09）**：本文 §5–§8 保留 v0.3.0/M2 历史基线；其中“318/318”“MEM-204 未实现”“M3 未实现”“冷档未创建”等表述已过时。v0.4.0 的当前实现/验证边界以本提示、§7 的 v0.4 行、[TODO MEM-TODO-5](TODO.md)、[mechanisms §3.7](docs/mechanisms.md) 与 [v0.4.0 证据](evidence/v0.4.0-verification.json) 为准；独立评审见 [v0.4.0-independent-review.md](docs/v0.4.0-independent-review.md)。
 
@@ -63,7 +63,7 @@ plugin_manager install_bundle target = <本仓库绝对路径>
 | `recall` | 开启，5条/4000字符 | 自动召回开关与投影上限（`maxTokens` 为**预留参数**，当前按字符预算执行） |
 | `projects` | 空 | 安装时静态登记的项目/仓库；也可在记忆中心或 `/memory register` 登记 |
 | `scheduler` | 1000ms 轮询，并发1，10s 超时 | 持久任务调度；启动时恢复中断任务 |
-| `consolidation` | 默认关闭；route 继承 extraction；dirty 10 条或 1h；最多 8 条 | opt-in 自动整理；默认 false，无配置 UI；开启后 idle worker 才可能自动 enqueue/publish |
+| `consolidation` | 默认关闭；route 继承 extraction；dirty 10 条或 1h；最多 8 条（auto 每批≤5） | opt-in 自动整理；默认 false，无配置 UI；开启后 idle worker 才可能自动 enqueue/publish；auto 预算为进程内 `limits.dailyRequests`，非持久 |
 | `limits` | 20次/日、5次/会话等 | 提炼预算；超过即拒绝，不换 Provider |
 | `workSummary` | 开启 | 年度工作记录提炼路由与证明根 |
 | `reminders` | 开启，24h 冷却，最多3项 | 缺证提醒去重/延后/停用 |
@@ -140,7 +140,7 @@ docs/                        设计、阶段机制、评审、共享合同副本
 | 流接口修复与现场复验 | `llm/stream` 监听器改为同步返回 `AsyncIterable`；重启桌面 Harness 后普通流式对话恢复；安装库回归 34/34 | `docs/stream-contract-fix.md`、`evidence/stream-contract-*.tap` |
 | 端到端闭环（测试内 FakeHost：登记→审批→提炼→持久化→召回→最终门→删除后阻断→重启/晚到结果） | 通过 | `tests/plugin-entry.test.mjs` 等 |
 
-**v0.4.0 补充证据（2026-11-09）**：当前 HEAD 全量 398/398 通过（独立评审修复后）；真实安装库最终门 3/3、live `state:ready`、content v3/authority v2、TAP sha256 与 43 个构件哈希见 [v0.4.0-verification.json](evidence/v0.4.0-verification.json)。独立评审 1 Critical/9 Important/9 Minor 见 [审查报告](docs/v0.4.0-independent-review.md)，修复响应见 [response](docs/v0.4.0-independent-review-response.md)；作者修复尚未经独立复评。
+**v0.4.0 补充证据（2026-11-09）**：当前 HEAD 全量 399/399 通过（独立评审修复后）；真实安装库最终门 3/3、live `state:ready`、content v3/authority v2、TAP sha256 与 43 个构件哈希见 [v0.4.0-verification.json](evidence/v0.4.0-verification.json)。独立评审 1 Critical/9 Important/9 Minor 见 [审查报告](docs/v0.4.0-independent-review.md)，修复响应见 [response](docs/v0.4.0-independent-review-response.md)；作者修复尚未经独立复评。
 
 **未证明边界**：v0.4.0 仍无真实 Provider 业务调用、完整 GUI 视觉、OS 级出口、自动空闲派发、真实 03 事件源、M3 实际搬冷/冷召回、浏览器 slot 现场复核；MEM-204 仅有消费器与未来 `capability/event` 接缝；M3 只有 layout/journal 骨架。
 
@@ -152,7 +152,7 @@ docs/                        设计、阶段机制、评审、共享合同副本
 4. **证明正文读取的用户确认**：管理 API 为同步 dispatch，而 `ctx.approval.request` 是异步的；当前 HTTP `work.evidence.review` 会返回 `USER_ACTION_REQUIRED`，需要 Host 层先解析用户确认再调用（或后续提供同步确认接缝）。
 5. **召回消息呈现与失效代价**：首版作为一条带来源的消息显示在对话中，尚未做成可折叠提示卡；召回后的删除会使该会话 fail-closed，需新会话继续；投影元数据淘汰或重装后旧召回消息同样阻断而非放行。
 6. **管理 UI 子项**：年度记录人工纠正/合并、证明正文评审、项目仓库编辑等仍需后续补齐；基础列表/详情/确认/报告导出已可用。年度自动草稿当前按单条来源锚生成，尚未按 requirement/problem 自动聚合（需人工 `work.merge`，本轮 UI 未提供该按钮）。
-6b. **v0.4.0 增量限制**：整理 queue/runJob/publish 已有用户手势管理 API、可选 UI 按钮、持久 publication permission 与重启 recover；另有**默认关闭**的 opt-in dirty 自动触发（`config.consolidation`）。仍无配置 UI、真实 Host 空闲事件验证、profile 预算 broker；派生视图只读、无 candidate/publish UI、版本 search/list/GC；纠正仅显式短语挂起并重新入队提取，无后台根因反思；最新修复尚未独立复评。
+6b. **v0.4.0 增量限制**：整理 queue/runJob/publish 已有用户手势管理 API、可选 UI 按钮、持久 publication permission 与重启 recover；另有**默认关闭**的 opt-in dirty 自动触发（`config.consolidation`）。仍无配置 UI、真实 Host 空闲事件验证、profile 预算 broker；派生视图只读、无 candidate/publish UI、版本 search/list/GC；纠正仅显式短语挂起并重新入队提取，无后台根因反思；最新修复尚未独立复评；worker 执行授权是本地手势/配置派生，不是 Host grant/lease，且无 profile 持久预算 broker。
 7. **任务取消**：当前队列没有 `cancel` 方法，处理任务页的取消动作返回 `CANCEL_UNAVAILABLE`；真正停止只能停用插件/退出进程（可能落 `outcome_unknown`，重启后保持待核）。
 8. **停用不等任务收尾**：dispose 会先 abort 调度并撤权，但不 `await` 在途任务完成；重启后由 `recoverInterrupted` 标为 `unknown`，不重发，数据不复活。
 9. **安装/更新/卸载旅程**：停用会撤销 lease、停止调度、清理注入并保留数据；卸载默认保留 `dataRoot`；更新/迁移/版本门禁仍按总工作区门禁执行。

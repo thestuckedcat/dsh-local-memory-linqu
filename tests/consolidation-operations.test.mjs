@@ -138,3 +138,28 @@ test('recovery moves an interrupted running job to outcome_unknown instead of le
   assert.equal(row.state, 'outcome_unknown');
   assert.equal(row.reason, 'recovered_unknown');
 });
+
+test('disabling consolidation prevents restart recovery of a persisted automatic job', async (t) => {
+  const f = fixture(t);
+  memory(f.store, 'memory-1', 'Descriptor reclamation waits for completion.');
+  memory(f.store, 'memory-2', 'Ownership barrier precedes reclamation.');
+  const autoConfig = {...f.config, consolidation: {enabled: true, routeRef: 'registered-A', dirtyCountThreshold: 2, maxWaitHours: 1, maxMemories: 8}};
+  const auto = createConsolidationOperations({
+    config: autoConfig,
+    registry: f.registry,
+    provider: f.provider,
+    now: () => new Date('2026-11-09T00:00:00.000Z'),
+    dirty: {due: () => ({due: true, firstAt: '2026-11-09T00:00:00.000Z'}), reset: () => {}},
+  });
+  let calls = 0;
+  const first = await auto.tick({canDispatch: () => { calls += 1; return calls === 1; }});
+  assert.equal(first.state, 'ticked');
+  assert.equal(auto.status().pending, 1, 'auto job is queued but not processed when foreground becomes busy');
+  const disabled = createConsolidationOperations({
+    config: {...autoConfig, consolidation: {...autoConfig.consolidation, enabled: false}},
+    registry: f.registry,
+    provider: f.provider,
+    now: () => new Date('2026-11-09T00:00:00.000Z'),
+  });
+  assert.equal(disabled.recover(), 0, 'auto jobs must not recover after the switch is disabled');
+});
