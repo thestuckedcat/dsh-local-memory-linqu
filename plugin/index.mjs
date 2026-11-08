@@ -15,6 +15,7 @@ import {createManagementOperations, createManagementHttp} from './management.mjs
 import {createWorkOperations} from './work-management.mjs';
 import {createM2Operations} from './m2-management.mjs';
 import {createAttributionManager} from './attribution.mjs';
+import {createCapabilityEventConsumer} from './capability-events.mjs';
 import {createExperienceOperations} from './experience-operations.mjs';
 import {installProofReminders} from './proof-reminders.mjs';
 import {normalizeConfig, routeApproval, routeRefFor, configErrorReason} from './configuration.mjs';
@@ -119,6 +120,7 @@ export function apply(ctx, rawConfig = {}) {
   let sharing;
   let m2Operations;
   let attribution;
+  let capability;
   let disposed = false;
   /** Read-only experience phase for the Memory Center/composer bar; never dispatches work. */
   function experienceStatus() {
@@ -251,6 +253,7 @@ export function apply(ctx, rawConfig = {}) {
     });
     sharing = createSharingManager({catalog: registry.catalog, registry, abstracts});
     attribution = createAttributionManager({registry});
+    capability = createCapabilityEventConsumer({catalog: registry.catalog, registry});
     const workOperations = createWorkOperations({registry, config, reports, approval: ctx.approval, sessions: ctx.sessions});
     m2Operations = createM2Operations({registry, abstracts, sharing, sessions: ctx.sessions});
     const experienceOperations = createExperienceOperations({attribution, sessions: ctx.sessions});
@@ -277,6 +280,7 @@ export function apply(ctx, rawConfig = {}) {
         sharing: sharing.status(),
         experience: experienceStatus(),
         attribution: attribution.status(),
+        capability: capability.status(),
       }),
     });
     http = createManagementHttp({operations, getOrigin: () => ctx.webServer.getOrigin()});
@@ -304,6 +308,7 @@ export function apply(ctx, rawConfig = {}) {
       resolveScope: ({session}) => {
         const binding = registry.bindingForSession(session);
         if (!binding) throw new Error('Memory project is not bound');
+        if (capability.isHeld(binding.scopeRef)) throw new Error('Memory scope paused by a capability event');
         const runtime = ensureScope(binding.scopeRef);
         return {
           scopeRef: binding.scopeRef,
@@ -317,6 +322,7 @@ export function apply(ctx, rawConfig = {}) {
       admitMessage: (request) => grants.admitMessage(request),
       createUserMessage: (input) => HOST_SDK.createUserMessage(input),
       onDiagnostic: (entry) => noteDiagnostic(entry),
+      isScopeHeld: (scopeRef) => capability.isHeld(scopeRef),
       limits: {maxRecallRecords: config.recall.maxRecords, maxRecallChars: config.recall.maxChars},
       onRecallMessage: (info) => {
         // The projection contract accepts only its documented fields; strip the additive
@@ -346,6 +352,12 @@ export function apply(ctx, rawConfig = {}) {
         text: () => 'When local memory records are injected, cite only a record you actually relied on for a conclusion, using the exact marker 〔记N〕 (for example 〔记1〕). Do not cite records that were merely retrieved, do not invent refs, and do not add your own memory attribution footer; the Memory Center validates and renders it.',
       }), 'local-memory: citation prompt');
     }
+    ctx.effect(() => {
+      const off = ctx.on('capability/event', (event) => {
+        try { capability.consume(event); } catch { noteDiagnostic('capability_event_failed'); }
+      });
+      return () => { try { off?.(); } catch { /* local cleanup only */ } };
+    }, 'local-memory: capability event transport (future 03 adapter)');
     ctx.effect(() => {
       const off = ctx.on('agent/turn-stopping', (payload) => {
         try { attribution.handleTurnStopping({agent: payload?.agent, turn: payload?.turn}); } catch { noteDiagnostic('attribution_turn_failed'); }

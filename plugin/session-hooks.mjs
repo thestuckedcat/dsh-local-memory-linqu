@@ -18,9 +18,9 @@ function messageDigest(message){return fingerprint({id:message.id,role:message.r
 
 /** Current-event intake and pre-step recall only; never dispatches a model job or scans session history. */
 export function installSessionHooks(ctx,options={}){
- shape(options,['resolveScope','admitMessage','createUserMessage','onDiagnostic','limits','onRecallMessage','onMessageAdmitted'],'session hook options');
- const {resolveScope=()=>undefined,admitMessage=()=>undefined,createUserMessage,onDiagnostic=()=>{},limits={},onRecallMessage=()=>{},onMessageAdmitted=()=>{}}=options;
- if(!ctx?.root||typeof ctx.root!=='object'||typeof ctx.on!=='function'||typeof ctx.effect!=='function'||typeof ctx.sessions?.get!=='function'||typeof ctx.agents?.get!=='function'||![resolveScope,admitMessage,createUserMessage,onDiagnostic,onRecallMessage,onMessageAdmitted].every(fn=>typeof fn==='function'))throw new Error('Trusted session hook services required');
+ shape(options,['resolveScope','admitMessage','createUserMessage','onDiagnostic','limits','onRecallMessage','onMessageAdmitted','isScopeHeld'],'session hook options');
+ const {resolveScope=()=>undefined,admitMessage=()=>undefined,createUserMessage,onDiagnostic=()=>{},limits={},onRecallMessage=()=>{},onMessageAdmitted=()=>{},isScopeHeld=()=>false}=options;
+ if(!ctx?.root||typeof ctx.root!=='object'||typeof ctx.on!=='function'||typeof ctx.effect!=='function'||typeof ctx.sessions?.get!=='function'||typeof ctx.agents?.get!=='function'||![resolveScope,admitMessage,createUserMessage,onDiagnostic,onRecallMessage,onMessageAdmitted,isScopeHeld].every(fn=>typeof fn==='function'))throw new Error('Trusted session hook services required');
  shape(limits,Object.keys(DEFAULTS),'hook limits');
  const policy=Object.fromEntries(Object.keys(DEFAULTS).map(key=>[key,integer(limits[key]??DEFAULTS[key],1,CAPS[key],key)]));
  const root=ctx.root,ownerToken=Symbol(),activation=randomUUID();
@@ -113,6 +113,7 @@ export function installSessionHooks(ctx,options={}){
  function recall(payload,base,before,claimed){
   const session=payload.agent.session,b=binding(session,payload.agent);
   if(!before||!same(before,b)||payload.signal?.aborted)return base;
+  if(isScopeHeld(b.scopeRef))return base;
   const final=new Map();for(const message of base.messages){try{const c=candidate(message);if(c)final.set(c.id,c);}catch{/* Not an admitted text message. */}}
   const frames=[];
   for(const c of claimed){const accepted=final.get(c.id);if(!accepted||accepted.contentHash!==c.contentHash)continue;try{frames.push({session,agent:payload.agent,candidate:c,binding:b,grant:grant(b,c,'recall')});}catch{/* Individual unapproved messages cannot provide a query. */}}

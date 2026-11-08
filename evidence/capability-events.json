@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-09",
+  "scope": "MEM-204 capability-event consumer for 05 (contract v1)",
+  "baseline": {
+    "code": "16866f9 + capability consumer",
+    "testsCommand": ".\\runtime\\node.exe --test tests/*.test.mjs"
+  },
+  "suite": {
+    "tests": 329,
+    "pass": 329,
+    "fail": 0
+  },
+  "live": {
+    "state": "ready",
+    "experiencePhase": "idle",
+    "capability": {
+      "cursors": 0,
+      "holds": 0,
+      "events": 0,
+      "applied": 0
+    }
+  },
+  "behavior": [
+    "contract validation: schema_version/source/kind/outcome/generation/affected_refs",
+    "trusted baseline required before any event applies; baseline clears holds for that scope only",
+    "sequential completed events apply through src/lifecycle consumeCapabilityEvent; duplicate applied events are idempotent",
+    "generation gap, late generation, partial/outcome_unknown, unregistered scope, store failure all create a visible hold and are not applied",
+    "optional getScopeState recheck refuses producer-state mismatch; no fake Host method is assumed",
+    "held scope pauses admission (resolveScope) and recall injection via isScopeHeld",
+    "cursors/holds/event log are persisted in catalog v2 tables, so restart/replay cannot silently advance"
+  ],
+  "tests": [
+    "tests/capability-events.test.mjs (4)",
+    "tests/session-hooks.test.mjs held-scope case",
+    "tests/plugin-entry.test.mjs status assertion (capability field not yet asserted)"
+  ],
+  "limitations": [
+    "The real 03-session-management producer/outbox is not implemented in this repository; the optional capability/event Host bus listener is a future transport seam and has no live emitter.",
+    "No real Host/03 event was consumed; fixtures and temporary stores are the evidence.",
+    "A held scope has no automatic resume until a trusted baseline/getScopeState adapter exists; the small bar/status reports the phase but no management resume UI is added."
+  ]
+}

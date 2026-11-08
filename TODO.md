@@ -1,6 +1,6 @@
 # 05 本地长期记忆：统一产品待办与后续交接
 
-版本 `MEM-TODO-3`，2026-11-08。**M1已实现并完成真实安装/最终请求门验证；M2的MEM-201/202/203已实现并自测（MEM-204未实现）；M3仍未实现，M4/M5只交付可用子集。** 本文是05新增要求和未完工程的现行入口；旧Task 1/2/3报告保留各自受审基线，不由本文改写。安装包与验证证据见[README](README.md)、[M2证据](evidence/m2-verification.json)、[机制说明](docs/mechanisms.md)、[M2独立评审](docs/m2-independent-review.md)。
+版本 `MEM-TODO-4`，2026-11-09。**M1已实现并完成真实安装/最终请求门验证；M2的MEM-201/202/203已实现并自测，MEM-204事件消费器已实现（真实03事件源未接入）；M3仍未实现，M4/M5只交付可用子集。** 本文是05新增要求和未完工程的现行入口；旧Task 1/2/3报告保留各自受审基线，不由本文改写。安装包与验证证据见[README](README.md)、[M2证据](evidence/m2-verification.json)、[机制说明](docs/mechanisms.md)、[M2独立评审](docs/m2-independent-review.md)。
 
 ## 1. 已收束的产品形态
 
@@ -39,7 +39,7 @@
 | 年度草稿/证明提醒/报告/导出 | `src/work-summary.mjs`复用、`plugin/proof-reminders.mjs`、`src/reports.mjs`、`plugin/work-management.mjs` | 草稿/确认/证据/审定/两格式导出与STALE负例通过；证据正文读取仍需异步确认接缝（已知限制） |
 | 验证与机制 | `tests/*.test.mjs`（258项）、`tools/test-m1-host.mjs`、`evidence/m1-*.json`、`docs/mechanisms.md` | 本地Node26 258/258；真实安装库探针3/3；未调用真实业务Provider、未做视觉走查、无OS级出口证明 |
 
-本表不替代M2/M3：abstract共享（MEM-201/202/203）已于v0.3.0交付，但`MEM-204`能力事件代次消费、冷档、跨项目向量/相关性合并仍未实现；年度维度模板仍`pending_reference`。
+本表不替代M2/M3：abstract共享（MEM-201/202/203）已于v0.3.0交付，`MEM-204`能力事件消费器已交付（真实03 outbox未接入）；冷档、跨项目向量/相关性合并仍未实现；年度维度模板仍`pending_reference`。
 
 ### 2.2 2026-11-08 M2实施结果（v0.3.0）
 
@@ -70,14 +70,14 @@ M1可进入后续开发的前提：真实Host绑定证据和负例完成；不�
 
 ### M2：逻辑多仓、共享abstract与独立保留
 
-**2026-11-08 v0.3.0增量：MEM-201/202/203已实现并自测；MEM-204（能力事件代次消费）仍未实现，M2整体不整项完成。**
+**2026-11-08 v0.3.0增量：MEM-201/202/203已实现并自测；MEM-204能力事件消费器已交付（合成事件与临时库验证；真实03事件源未接入），M2整体仍不整项完成。**
 
 - [x] **MEM-201 多仓映射**：已实现`src/projects.mjs`。逻辑`projectId`只负责组织；`RepositoryBinding`含`repoId, canonicalRoot, worktreeRoot, revision, buildVariant, scopeRef, bindingRevision`。沿用`createScope`具体身份与权限过滤，逐scope受控查询后聚合，不把过滤改成全局或宽泛project字符串；新增仓库不扫描全部历史、不迁移/放宽旧scope授权。证据：`tests/projects.test.mjs`、`tests/project-registry.test.mjs`。
 - [x] **MEM-202 abstract与共享关系**：已实现`src/abstracts.mjs`（catalog v2 `abstract_revisions/abstract_state`，本地确定性抽取式二次压缩：basis含记录版本/来源/摘要、counts、generationRoute；basis失效即时重建；新增变动按10条/24h合并刷新）与`src/sharing.mjs`（`share_relations`，用户授权关系、发现abstract、自动跟随source最新有效revision、读取时二次核active关系/原scope/记忆状态/适用性、撤权/删除立即断开、明细不复制）。管理API/模型工具/客户端第4个tab已接入；模型不能 grant/revoke/refresh。证据：`tests/abstracts.test.mjs`、`tests/sharing.test.mjs`、`tests/m2-management.test.mjs`、`tests/plugin-entry.test.mjs` M2用例、`evidence/m2-verification.json`。边界：abstract为本地抽取而非模型语义压缩；不含向量检索。
 - [x] **MEM-203 项目退休**：已实现退休保留记忆/store/abstract与既有共享可读性；新增`registry.applicabilityForProject/applicabilityForScope`：active且源码根存在→`current`，退休或源码根不可用→`historical_unknown`，未登记→`unavailable`；共享明细读取与abstract视图带适用性标记，退休源不自动获得新共享。未单独创建`src/project-lifecycle.mjs`（逻辑并入registry/sharing），作为实现方式差异记录。证据：`tests/project-registry.test.mjs` applicability用例、`tests/sharing.test.mjs` retired 用例。
-- [ ] **MEM-204 失效和消费代次**：新增`plugin/capability-events.mjs`，沿用共同合同v1事件。当前`consumeCapabilityEvent`没有完整producer generation对比，新适配先持久化每producer/scope lastGeneration及eventId；来源恢复时同步记录生产方当前generation，不能只依赖已收到事件的最大值。每次应用迟到移除前，通过本地适配`getScopeState`比较生产方当前状态/代次，避免尚未投递的restore被旧移除覆盖；断档/unknown/partial或无法重核则暂停相关来源使用。适配不是声称Host已提供该方法；03停用时保留待核并靠本地检查。源项目注销不冒充`session_removed`，新kind协商后才能交给支持它的消费者。**catalog v2已预留`capability_cursors/capability_holds/capability_events`表；本增量未接线。**
+- [x] **MEM-204 失效和消费代次**：已新增`plugin/capability-events.mjs`，沿用共同合同v1事件。基线/游标/事件日志持久化于catalog v2 `capability_*` 表；无基线、generation gap、late generation、partial/outcome_unknown、未登记scope、store失败均创建可见hold且不应用；sequential completed事件经`src/lifecycle.consumeCapabilityEvent`落stale；`getScopeState`可选适配拒绝producer mismatch；hold scope通过`isScopeHeld`暂停准入与召回。证据：`tests/capability-events.test.mjs`（4项）、`tests/session-hooks.test.mjs` held-scope用例、`evidence/capability-events.json`。**边界**：真实03-session-management producer/outbox与Host事件传输未实现，`capability/event`监听仅为未来接缝，无真实事件被消费；恢复需可信baseline/getScopeState适配，本版无自动恢复或管理UI。当前`consumeCapabilityEvent`没有完整producer generation对比，新适配先持久化每producer/scope lastGeneration及eventId；来源恢复时同步记录生产方当前generation，不能只依赖已收到事件的最大值。每次应用迟到移除前，通过本地适配`getScopeState`比较生产方当前状态/代次，避免尚未投递的restore被旧移除覆盖；断档/unknown/partial或无法重核则暂停相关来源使用。适配不是声称Host已提供该方法；03停用时保留待核并靠本地检查。源项目注销不冒充`session_removed`，新kind协商后才能交给支持它的消费者。**catalog v2已预留`capability_cursors/capability_holds/capability_events`表；本增量未接线。**
 
-M2退出：合成驱动/用户库两个登记仓库不互相放宽适用性；两个逻辑项目通过摘要发现、许可明细读取；撤权/删除即时断开；项目退休后仍可查看/管理已有记忆。乱序事件和重启重放不复活旧状态（202..204中的最后一项待MEM-204）。
+M2退出：合成驱动/用户库两个登记仓库不互相放宽适用性；两个逻辑项目通过摘要发现、许可明细读取；撤权/删除即时断开；项目退休后仍可查看/管理已有记忆。乱序事件和重启重放不复活旧状态（MEM-204消费器已交付；真实03事件源仍待接入）。
 
 ### M3：非C盘冷档、再次压缩和删除闭环
 
@@ -142,12 +142,12 @@ M4退出：从合成开发对话形成草稿→缺证提示→仅引用/经授�
 | 验收ID | 覆盖待办 | 需要观察的结果 | 2026-11-07状态 |
 |---|---|---|---|
 | MEM-A01 | 101..104 | 真实隔离Host入口闭环；撤权后零后续dispatch/提交；最终请求只含合法所选经验 | **通过（合成Provider边界）**：`tests/plugin-entry.test.mjs`、`evidence/m1-host-probe.json`；真实业务Provider未运行 |
-| MEM-A02 | 201..204 | 多仓范围不放宽；abstract发现/最新明细；撤权/乱序/项目退休的分别处理 | **部分通过（2026-11-08）**：多仓、abstract发现/授权明细/自动跟随/撤权/删除/退休适用性已验；`MEM-204`事件代次与乱序重放未实现 |
+| MEM-A02 | 201..204 | 多仓范围不放宽；abstract发现/最新明细；撤权/乱序/项目退休的分别处理 | **部分通过（2026-11-09）**：多仓、abstract发现/授权明细/自动跟随/撤权/删除/退休适用性已验；MEM-204消费器已验（合成契约事件/持久游标/hold/暂停召回）；真实03事件源与真实Host传输未接入 |
 | MEM-A03 | 301..304 | 非C本地卷、冷档按需展开、崩溃恢复、删除后旧块/备份/共享均不能复活 | **未实现**（删除权威账本沿用既有组件） |
 | MEM-A04 | 401..405 | 草稿来源/证明/本人审定/两格式报告可追溯；缺模板不造维度 | **部分通过**：401..404已有测试；405待模板 |
 | MEM-A05 | 501..504 | 两分区＋任务完整交互、停用/更新/卸载与出口负例、完整机制说明 | **部分通过**：四分区（含M2共享页）静态/冒烟；安装停用负例；机制说明与M1/M2独立评审已完成；完整交互、更新/卸载与出口实测待补 |
 
-M1不等待03/04/08：合成事件、来源和本地入口可独立验收；M2共享不等待向量后端；M4提醒不依赖外部通知；M5组合08前先测试自身生命周期。后置：多Agent MCP、Hindsight/OpenViking等新服务、远端向量、全历史扫描和高级语义检索，不成为首版前提。**v0.3.0已交付M1闭环与M2的abstract/共享/退休适用性，但不是完整05交付**：M2剩余（MEM-204）、M3与M5剩余项仍未实现，安装包不构成这些能力的验收。
+M1不等待03/04/08：合成事件、来源和本地入口可独立验收；M2共享不等待向量后端；M4提醒不依赖外部通知；M5组合08前先测试自身生命周期。后置：多Agent MCP、Hindsight/OpenViking等新服务、远端向量、全历史扫描和高级语义检索，不成为首版前提。**v0.3.0已交付M1闭环与M2的abstract/共享/退休适用性，但不是完整05交付**：MEM-204消费器已实现（真实03源待接）、M3与M5剩余项仍未实现，安装包不构成这些能力的验收。
 
 编码时为上述验收创建真实行为测试，再记录运行时/构件摘要、命令、退出码、断言和覆盖限制；本轮只检查文档与独立评审，不写不存在的测试命令或重新使用旧测试数冒充新增功能成功。
 
@@ -160,3 +160,4 @@ M1不等待03/04/08：合成事件、来源和本地入口可独立验收；M2�
 | MEM-TODO-1 / 2026-11-07 | 汇总已确认PF、删除即清除、年度自动草稿与高层集中确认要求；MEM-101..504/API/A01..A05 | 本文均为后续待办，旧组件仍按原证据计 |
 | MEM-TODO-2 / 2026-11-07 | 用户要求继续实现、自测并同步仓库；M1方案落地为v0.2.0安装包，新增M1/MEM-201/M4子集/M5部分勾选与验收状态列 | M1、MEM-201、MEM-401..404、MEM-504已实现；M2/M3/405与M5剩余项未完成；证据见`evidence/m1-*`、`docs/mechanisms.md`、`docs/m1-independent-review.md` |
 | MEM-TODO-3 / 2026-11-08 | 继续M2：v0.3.0交付abstract/共享/退休适用性（MEM-202/203），catalog v2迁移、7个管理操作、2个模型工具、第4个tab；保留MEM-204/M3/405/M5未完成勾选 | MEM-201/202/203已实现；全量318/318+真实安装库最终门3/3；真实数据根catalog v2；证据见`evidence/m2-*`、`docs/m2-design.md`、`docs/m2-independent-review.md` |
+| MEM-TODO-4 / 2026-11-09 | Phase A/B体验底座与MEM-204消费器落地；设计文档MEM-EXP-1/MEM-BG-1已提交，新增composer小bar、turnTail归因、阅读优先列表与capability事件消费 | Phase A/B与MEM-204消费器已实现；真实模型引用/纠正/后台巩固/证据摘录/冷档仍未实现；证据见`evidence/experience-phase-ab.json`、`evidence/capability-events.json` |

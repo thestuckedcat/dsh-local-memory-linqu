@@ -17,7 +17,7 @@ const hash=msg=>fingerprint({id:msg.id,role:msg.role,rpcId:msg.source.rpcId,cont
 const sessionRef=session=>`${session.id}/${fingerprint({id:session.id,version:session.header.version,createdAt:session.header.createdAt})}`;
 const makeMessage=value=>freeze({id:randomUUID(),role:'user',...structuredClone(value)});
 
-async function setup(t,{limits={},diagnostic}={}){
+async function setup(t,{limits={},diagnostic,isScopeHeld}={}){
  const f=fixture(t),a=f.track(openStore(f.root,{scopeRef:'scope-A'})),b=f.track(openStore(f.root,{scopeRef:'scope-B'}));
  const listeners=new Map(),sessions=new Map(),agents=new Map(),root={},receipts=new Map(),diagnostics=[];
  const h={rootPath:f.root,a,b,scope:a,allowed:true,version:'grant-1',revokeDuringMeter:false,receipts,diagnostics,limits};
@@ -35,7 +35,7 @@ async function setup(t,{limits={},diagnostic}={}){
  h.resolveScope=()=>({scopeRef:h.scope.scopeRef,store:h.scope,queue:h.queueOverride??(h.scope===a?h.qa:h.qb),routeRef:'registered-A',generation:h.scope.generation(),authorizationVersion:h.version});
  h.grant=(message,s=h.session)=>receipts.set(`${sessionRef(s)}:${message.id}`,{scopeRef:h.scope.scopeRef,rpcId:message.source.rpcId,contentHash:hash(message),originRef:`approved-rpc:${message.source.rpcId}`});
  h.admitMessage=args=>{const receipt=receipts.get(`${args.sessionRef}:${args.messageId}`);return h.allowed&&receipt&&receipt.scopeRef===args.scopeRef&&receipt.rpcId===args.rpcId&&receipt.contentHash===args.contentHash?{originRef:receipt.originRef,contentHash:receipt.contentHash,authorizationVersion:h.version}:undefined;};
- h.options={resolveScope:arg=>h.resolveScope(arg),admitMessage:arg=>h.admitMessage(arg),createUserMessage:makeMessage,onDiagnostic:info=>{diagnostics.push(info);return diagnostic?.(info);},limits};
+ h.options={resolveScope:arg=>h.resolveScope(arg),admitMessage:arg=>h.admitMessage(arg),createUserMessage:makeMessage,onDiagnostic:info=>{diagnostics.push(info);return diagnostic?.(info);},limits,...(isScopeHeld?{isScopeHeld}:{})};
  let installSessionHooks;try{({installSessionHooks}=await import('../plugin/session-hooks.mjs'));}catch(e){if(e.code==='ERR_MODULE_NOT_FOUND')assert.fail('Current-message hooks are not implemented');throw e;}
  h.install=(c=ctx,options=h.options)=>installSessionHooks(c,options);h.hooks=h.install();t.after(()=>h.hooks.dispose());
  h.step=(messages,next=()=>Promise.resolve({kind:'enter',messages,custom:'preserve'}),extra={})=>ctx.preStep({agent:h.agent,messages,turn:1,step:1,signal:new AbortController().signal,...extra},next);
@@ -80,6 +80,13 @@ test('post-enqueue permission revocation rolls back jobs, plaintext and budget t
 
 test('a foreign queue is refused before any cross-store write',async t=>{
  const h=await setup(t),msg=input();h.grant(msg);h.queueOverride=h.qb;h.session.append(msg);await h.hooks.drain();assert.deepEqual(h.rows(),{jobs:0,budget:0});assert.equal(h.inputs(),0);
+});
+
+test('a held scope suppresses recall while the ordinary request continues',async t=>{
+ const h=await setup(t,{isScopeHeld:()=>true}),msg=input();h.grant(msg);h.a.put(memory({text:'DMA completion waits for the ownership barrier.'}));
+ const result=await h.step([msg],async()=>({kind:'enter',messages:[msg]}));
+ assert.equal(own(result).length,0);
+ assert.equal(result.messages.length,1);
 });
 
 test('recall preserves the final decision and injects only ordinary active memory once',async t=>{

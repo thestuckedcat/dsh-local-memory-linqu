@@ -59,6 +59,9 @@ test('activation registers tools, command, HTTP route and a ready status', async
   assert.ok(['idle', 'queued', 'remembering', 'paused'].includes(result.value.experience.phase));
   assert.equal(typeof result.value.experience.pendingScopes, 'number');
   assert.equal(typeof result.value.experience.running, 'number');
+  assert.ok(result.value.capability, 'status exposes the capability consumer state');
+  assert.equal(typeof result.value.capability.holds, 'number');
+  assert.equal(typeof result.value.capability.cursors, 'number');
 });
 
 test('closed loop: extraction persists, recall injects, stale projection blocks dispatch', async (t) => {
