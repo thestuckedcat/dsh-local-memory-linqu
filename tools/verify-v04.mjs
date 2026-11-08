@@ -10,10 +10,10 @@ import {DatabaseSync} from 'node:sqlite';
 // content/authority schema observation, and reviewed material hashes. No business Provider call
 // and no profile boot are performed by this script.
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const git = (args) => spawnSync('git', args, {cwd: root, encoding: 'utf8'}).stdout.trim();
-const gitHead = git(['rev-parse', 'HEAD']);
+const git = (args) => spawnSync('git', args, {cwd: root, encoding: 'utf8'}).stdout;
+const gitHead = git(['rev-parse', 'HEAD']).trim();
 const generated = new Set(['evidence/v0.4.0-node26.tap', 'evidence/v0.4.0-verification.json', 'evidence/m1-host-probe.json', 'evidence/m1-host-probe.tap']);
-const statusClean = () => git(['status', '--porcelain']).split(/\r?\n/).filter(Boolean).every((line) => generated.has(line.slice(3).trim()));
+const statusClean = () => { const lines = git(['status', '--porcelain']).replace(/\r/g, '').split('\n').filter(Boolean); return lines.every((line) => generated.has(line.slice(3).trim())); };
 const cleanAtStart = statusClean();
 const sha = (path) => createHash('sha256').update(readFileSync(resolve(root, path))).digest('hex');
 const node = process.execPath;
