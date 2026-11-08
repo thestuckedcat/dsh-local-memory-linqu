@@ -126,7 +126,8 @@ export function createConsolidationOperations({config, registry, provider, now =
     return Object.freeze({state: 'ticked', results: Object.freeze(results)});
   }
   function status() {
-    return Object.freeze({pending: pending.size, running, ...counters});
+    const {lastError, ...rest} = counters;
+    return Object.freeze({pending: pending.size, running, ...rest, ...(lastError ? {lastError} : {})});
   }
   return Object.freeze({'memory.consolidate': (input, context) => {
     try { return {ok: true, value: consolidate(input, context)}; }
