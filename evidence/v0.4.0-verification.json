@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "date": "2026-11-09",
-  "startedAtUtc": "2026-11-08T17:18:47.584Z",
-  "durationMs": 38798.2104,
+  "startedAtUtc": "2026-11-08T17:26:32.548Z",
+  "durationMs": 36850.315,
   "purpose": "v0.4.0 experience/background delivery evidence: reading-first UI, attribution, excerpts, consolidation manifest/validator/queue/runJob/candidate/publish/derived views, correction suspension, M3 layout/journal skeleton; local full suite plus the real installed-library final-gate regression probe and live install observation",
   "runtime": {
     "node": "26.13.0",
@@ -48,7 +48,7 @@
           "state": "running",
           "running": 0,
           "pendingScopes": [],
-          "lastTickAt": "2026-11-08T17:19:25.652Z",
+          "lastTickAt": "2026-11-08T17:27:08.885Z",
           "lastError": null
         },
         "grants": {
@@ -114,7 +114,7 @@
           "running": 0,
           "pendingScopes": 0,
           "automaticDisabled": false,
-          "updatedAt": "2026-11-08T17:19:26.305Z"
+          "updatedAt": "2026-11-08T17:27:09.316Z"
         },
         "attribution": {
           "turns": 0,
@@ -136,14 +136,14 @@
           "suspended": 0
         },
         "background": {
-          "state": "unknown",
-          "running": 0,
-          "unknown": 7,
+          "state": "busy",
+          "running": 1,
+          "unknown": 6,
           "idle": 0,
           "agents": 7,
-          "quietForMs": 45045,
+          "quietForMs": 85586,
           "quietMs": 30000,
-          "at": "2026-11-08T17:19:26.305Z"
+          "at": "2026-11-08T17:27:09.317Z"
         },
         "consolidation": {
           "pending": 0,
@@ -304,7 +304,7 @@
     },
     {
       "path": "tests/correction.test.mjs",
-      "sha256": "94671b18ca643861050521d873b2dd919014f61f0de971ab2626f3542658fe4c"
+      "sha256": "4b2d8c68e868f0d148a202b69000bc806683f3b9f46a92e78a7c446b048885b7"
     },
     {
       "path": "tests/consolidation-dirty.test.mjs",
@@ -340,19 +340,19 @@
     },
     {
       "path": "README.md",
-      "sha256": "a2c1791916754d5b8edee357a540e050481be3d1ffe2ac019780fc8301cb9717"
+      "sha256": "c814e775ef1739d0ca8ed1b468bebb4a71ec109707802c8c86c4d229a8c94617"
     },
     {
       "path": "TODO.md",
-      "sha256": "c346c1fca6d48cd757304f1674a1757dac465c3c793c91d20002c7d0cffd5625"
+      "sha256": "d7c4549eede0aea47c3984260ab514d6dcdcaf169a7de81863e35ca45afb0864"
     },
     {
       "path": "docs/mechanisms.md",
-      "sha256": "0834cb3b462882ed4affc09f1a813a103731395c4befbc0396d54113c5f7ef08"
+      "sha256": "d447c8ccea166ef8d80009bbf8c01c0ca0fb988cc8579bd5921be0006ea8bd62"
     },
     {
       "path": "docs/implementation-route.md",
-      "sha256": "a86a9179fd53af58511b65f8dc8cdc846641cb2a4b0f44e9353d5a4306869e53"
+      "sha256": "9fefb50c2f82a71c2a1b323eab2e91b6fa893a66893743e344c697631804690f"
     },
     {
       "path": "docs/experience-implementation-plan.md",
@@ -360,9 +360,9 @@
     }
   ],
   "artifactsHashBasis": "SHA256 computed from the clean HEAD tree before this evidence file was written; compare with git show <git.head>:<path>",
-  "tapSha256": "fff99bed9e712ae82fad254f1c1eda5c6d583e14d31a92c3c7707101c1d78552",
+  "tapSha256": "d5416c49837a409b7dd475a4fff4dfa53daa9d82aedc9cba25ebd099bbc7ad4e",
   "git": {
-    "head": "fdf6d06883dfd547a7b7b37b8438990990fb0ec8",
+    "head": "37619f341e0f8d3e0f6b516eaaac78b6e0144c1c",
     "cleanAtStart": true,
     "cleanAtEnd": true
   },
