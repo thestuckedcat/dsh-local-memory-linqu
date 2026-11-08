@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-09",
+  "scope": "Phase D candidate read + version publish/head CAS (no search/UI/Host wiring)",
+  "suite": {
+    "tests": 369,
+    "pass": 369,
+    "fail": 0,
+    "command": ".\\runtime\\node.exe --test tests/*.test.mjs"
+  },
+  "newTests": {
+    "tests/consolidation-versions.test.mjs": 3
+  },
+  "behavior": [
+    "getCandidate verifies active candidate entry/body digest and returns groups/basis/route metadata",
+    "publish CAS: exact candidate digest + expected epoch/scopeRevision/headRevision; rejects stale values",
+    "publish copies candidate body/sources/dependencies into a version body, creates an active version entry and advances consolidation_head revision by one",
+    "publish is idempotent by requestId/payload fingerprint; different payload conflicts",
+    "publishing a derived view does not advance store.revision or mutate memory records",
+    "getVersion verifies body digest/dependencies and returns historical flag; memory mutation blocks publish/read fail-closed",
+    "job transitions to published only in the publish transaction"
+  ],
+  "limitations": [
+    "No version search/list pagination, no UI/management API, no model-facing version tool.",
+    "No deletion/GC propagation to version bodies; no historical read policy beyond a simple actor check.",
+    "No excerpt dependencies in versions; only memory dependencies are supported.",
+    "No Host scheduler/profile dispatch wiring; tests use a synthetic provider and temporary stores.",
+    "No real model call or installed-profile consolidation was produced."
+  ]
+}
