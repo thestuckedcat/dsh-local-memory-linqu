@@ -1,10 +1,10 @@
 # dsh-local-memory-linqu · DeepSeek Harness 本地长期记忆
 
-> 版本 `0.3.0`（2026-11-08）。这是05“本地长期记忆”能力的**可安装增量版本**：在 v0.2.0 的 M1 闭环之上，新增 **M2 项目 abstract（二次压缩）、用户授权的跨项目共享、项目退休适用性**，记忆中心增加第 4 个 tab。
+> 版本 `0.4.0`（2026-11-09，进行中）。在 v0.3.0 的 M2 基线上继续实现 MEM-EXP-1 / MEM-BG-1 修订3 的体验与后台增量：阅读优先列表、composer 小 bar、短引用归因、证据摘录、整理 manifest/校验/队列/候选/版本、派生视图与删除传播、显式纠正挂起，以及 M3 的 layout/journal 骨架；自动后台调度、反思根因、M3 实际搬移和完整 GUI 验收仍未完成。
 >
-> 本版本完成统一待办的 **M1（单个登记项目的最小 Host 闭环）**、**M2 的 MEM-201/202/203 子集**，以及管理界面/年度工作记录的基础可用子集；**MEM-204 能力事件、M3 非C盘冷档、年度维度模板（MEM-405）仍未实现**，M4 亦只完成到“自动草稿＋缺证提醒＋人工审定报告＋本地导出”。完整交付边界见 [TODO.md](TODO.md) 与 [实现合同](docs/m1-plugin-design.md)、[M2 设计合同](docs/m2-design.md)。
+> v0.3.0 基线完成 **M1**、**M2 的 MEM-201/202/203**、管理界面/年度工作记录基础子集；v0.4.0 增量已交付 MEM-204 消费器、阅读优先/归因/小 bar、证据摘录、整理输入/校验/队列/候选/版本、派生视图与删除传播、显式纠正挂起、M3 layout/journal 骨架。**未完成**：自动空闲派发/profile 预算、反思根因、版本 search/list/GC、M3 实际搬移与冷召回、年度维度模板（MEM-405）、完整 GUI/真实 Provider/OS 出口/独立评审。完整边界见 [TODO.md](TODO.md)、[机制说明](docs/mechanisms.md) 与 [实施路线](docs/implementation-route.md)。
 >
-> **2026-11-09 进行中：v0.4.0 体验增量（Phase A/B 已实现）**：阅读优先经验列表、composer 小 bar（只读 `status.experience`）、召回短引用与 turnTail 记忆影响映射；设计见 [MEM-EXP-1](docs/memory-experience-contract.md)、[MEM-BG-1](docs/memory-background-plan.md) 与[实施计划](docs/experience-implementation-plan.md)。MEM-204 能力事件消费器已实现（基线/游标/事件日志/hold/暂停召回；真实 03 outbox 未接入）；纠正/后台巩固/证据摘录/冷档仍未实现；归因仅进程内存储，内联可点击角标受 Host 正文 slot 限制未实现。当前本地 346/346 测试（Phase A/B + MEM-204 消费器 + Phase D storage）；真实视觉、真实模型引用、真实 03 事件源与后台巩固/纠正未验收。真实 profile store 已迁移到 content v3/authority v2。
+> **2026-11-09 进行中：v0.4.0 体验/后台增量**：已实现阅读优先列表、composer 小 bar、turnTail 归因、MEM-204 能力事件消费器、content v3/authority v2 与真实 profile 迁移、证据摘录自动捕获/删除清理、`mc-output-v1` 严格校验、整理 manifest/用户批次许可、持久整理队列、`memory_consolidate` purpose/prompt、runJob 候选落库、CAS 发布/版本读取、派生视图只读 API 与阅读卡片、删除/纠正传播、显式自然语言纠正挂起、M3 layout/journal 骨架。**仍缺**：自动空闲派发/profile 预算 broker、发布与候选 UI、版本 search/list/历史保留/GC、纠正后台根因反思、M3 实际搬移/冷召回/崩溃恢复、真实 Provider/03 事件/视觉验收与独立评审；不得把本版本称为完整 05 交付。全量 **379/379** 通过（Node 26.13.0）。
 
 ## 1. 它解决什么
 

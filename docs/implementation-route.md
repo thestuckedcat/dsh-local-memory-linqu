@@ -84,3 +84,20 @@ RestRegular、Hindsight、Mneme、OpenViking等保留为调查对照，当前没
 实施顺序与首个可验交付见[MEM-IMP-1](experience-implementation-plan.md)：Phase A 阅读优先记忆中心 + composer 小 bar + 只读 `status.experience`；Phase B 召回短引用、turn-stopping 归因与 turnTail；Phase C 自然纠正/反思；Phase D 证据摘录、自动后台巩固与空闲调度；Phase E 冷档/MEM-204 与最终机制/证据。Host 接缝已核对：`agent/status`、`agent/turn-stopping`、`systemPrompt.section`、client `conversation.composer.dock`/`conversation.chat.turnTail`；assistant 正文没有可替换 slot，内联 React 角标不伪造。
 
 首个验收动作：Phase A 完成后，`.\runtime\node.exe --test tests/*.test.mjs` 全绿、客户端 slot 注册/渲染冒烟、`status.experience` 只读检查；真实页面需重载 bundle 后人工复核。每个阶段独立提交/证据；未实现或未验证的 Host 行为不得写成已交付。
+
+## 2026-11-09 v0.4.0 实施记录（进行中）
+
+本节记录 MEM-EXP-1 / MEM-BG-1 修订3 与 M3 可行边界的实际落地；设计来源、机制映射与验收边界以[MEM-IMP-1](experience-implementation-plan.md)、[MEM-EXP-1](memory-experience-contract.md)、[MEM-BG-1](memory-background-plan.md)及[TODO](../TODO.md)为准。**没有新增上游代码复用**；全部为本项目自行实现，只复用既有受审的 SQLite/store、Provider bridge、queue/grant 契约思路。
+
+| 阶段/模块 | 实际落地 | 验证与证据 | 明确未做 |
+|---|---|---|---|
+| Phase A/B 体验底座 | 阅读优先列表、composer 小 bar、turnTail 归因、MEM-204 消费器、short refs | `evidence/experience-phase-ab.json`、`evidence/capability-events.json`、`tests/attribution.test.mjs`、`tests/capability-events.test.mjs` | 真实正文角标 slot、真实视觉、真实 03 outbox |
+| 存储/摘录 | content v3 + authority v2、真实 profile 迁移、摘录自动捕获/删除/纠正清理、只读 metadata 列表 | `evidence/consolidation-storage.json`、`tests/consolidation-storage.test.mjs`、`tests/excerpt-lifecycle.test.mjs` | 摘录权限/过期/maxExcerpts、host_fragment assurance |
+| 整理输入/输出 | memory_only manifest、用户 batch permission、读时重核、`mc-output-v1` 严格 validator | `evidence/consolidation-manifest.json`、`evidence/consolidation-output.json`、`tests/consolidation-inputs.test.mjs`、`tests/consolidation-output.test.mjs` | excerpt mode、语义支持验证 |
+| 队列/执行 | 持久队列生命周期、`memory_consolidate` purpose/prompt、runJob、候选正文/来源/dependency | `evidence/consolidation-queue.json`、`evidence/consolidation-runjob.json`、`tests/consolidation-queue.test.mjs`、`tests/harness-provider.test.mjs` | 真实 Host grant、profile 预算 broker、自动空闲派发 |
+| 版本/视图 | CAS 发布、head、只读版本读取、删除/纠正传播、`memory.derived` 阅读卡片 | `evidence/consolidation-versions.json`、`evidence/consolidation-propagation.json`、`evidence/consolidation-derived-ui.json`、`tests/consolidation-versions.test.mjs` | 版本 search/list/历史保留/GC、publish UI |
+| 纠正 | 显式短语检测、最近 cited 记忆挂起、list/search/recall 排除、短状态计数 | `evidence/correction-suspension.json`、`tests/correction.test.mjs` | 后台根因反思、事实/假设分离、真实会话 |
+| M3 骨架 | 数据根/布局校验、冷搬移 journal 状态机与 fail-closed 恢复 | `evidence/m3-storage-layout.json`、`tests/storage-layout.test.mjs` | 实际搬移/冷召回/GC/崩溃恢复/真实卷探针 |
+| 文档 | README/TODO/mechanisms/implementation-route 同步；package 0.4.0 | 本文件与 `docs/mechanisms.md` §3.7、`MEM-MECH-5` | 独立评审、最终证据重生成、真实 Provider/GUI 验收 |
+
+当前全量命令与结果：`.\runtime\node.exe --test tests/*.test.mjs` → **379/379 pass**（Node 26.13.0，2026-11-09）。真实安装库`tools/test-m1-host.mjs`与最新 v0.4.0 证据尚未重跑/重生成；不得用旧 318/318 或 M2 证据替代。

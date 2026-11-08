@@ -1,6 +1,6 @@
 # 05 本地长期记忆插件完整机制说明
 
-版本 `MEM-MECH-4`，日期 2026-11-08。对象：`dsh-local-memory-linqu` 0.3.0（本机已安装的桌面 profile bundle；M1为0.2.0基线，M2为0.3.0增量），Host 基线 DeepSeek Harness 0.2.1-rc.5，build `d4db512a969fccf0c5cc7ec8fe38e9c1d27af916`。
+版本 `MEM-MECH-5`，日期 2026-11-09。对象：`dsh-local-memory-linqu` 0.4.0（进行中；M1为0.2.0基线，M2为0.3.0增量，v0.4.0为体验/后台增量），Host 基线 DeepSeek Harness 0.2.1-rc.5，build `d4db512a969fccf0c5cc7ec8fe38e9c1d27af916`。
 
 本文是[机制说明合同](../../docs/mechanism-document-contract.md)要求的完成交付物，用途是**后续改进 skill 的依据**：说明实际触发、判断规则、工具/状态变化、证据、失败恢复，以及哪些是 skill 可调策略、哪些是 plugin/Host 必须执行的硬边界。历史阶段说明（[Task 2](task2-mechanisms.md)、[Task 3 hooks](task3-hooks-mechanisms.md)、[Task 3 execution](task3-execution-mechanisms.md)、[流接口修复](stream-contract-fix.md)）保留原编号与结论，本文汇总 M1 基线并补充 M2（v0.3.0）增量，不改写历史证据。
 
@@ -272,6 +272,25 @@ flowchart TD
 
 ---
 
+### 3.7 2026-11-09 v0.4.0 体验/后台增量（实施状态）
+
+| 机制编号 | 场景/触发 | 输入与前置条件 | 判断及理由 | 工具/状态变化 | 输出/证据 | 异常/用户提醒 | 可由skill改什么 | 硬边界及验证 |
+|---|---|---|---|---|---|---|---|---|
+| MEM-EXP-READ-01 | 打开记忆中心经验列表/详情 | 项目绑定、`memory.list/get` | 列表只显示标题/摘要/项目/日期/归档标记；详情显示完整正文、来源、未验证；不要求先处理队列 | 只读管理 API；列表/详情不写库 | 阅读优先视图 | 空项目/未绑定提示；不自动登记 | 标题摘要字数、列表密度 | 不隐藏来源/未验证；`tests/plugin-entry.test.mjs`、`tests/management.test.mjs` |
+| MEM-EXP-BAR-01 | 对话 composer 可见空闲/排队/运行 | `status.experience.phase` | 只在可见时每10s轮询；不写消息区；不把失败变成用户队列 | composer.dock slot；只读状态 | 小 bar（暂停/正在记忆/排队/空闲） | 状态不可用时隐藏 | 文案与轮询间隔（不改变后台授权） | 只读、不派发模型；`tests/management.test.mjs` client locale/slot |
+| MEM-EXP-ATTR-01 | 助手结束一轮且召回消息含短引用 | 本轮召回 records、`agent/turn-stopping`、原文标记 | 只接受实际标记与本轮 live generation/source 相符的记录；映射总长≤100 Unicode 码点，超限缩短名称/超限状态；不复制正文到助手消息 | 进程内 turn 映射；turnTail slot | `memory.attribution` 只读视图 | 无效引用→unavailable；无标记→none | 短名长度、映射模板 | 引用不等于内部使用证明；进程内存储，重启丢失；`tests/attribution.test.mjs` |
+| MEM-BG-IDLE-01 | 观察前台是否空闲 | `agent/status`、`api-session/status`、`agent/disposed` | 全部已知空闲且满30s才 `canDispatch()`；未知/运行中 fail-closed；只观测不派发 | 内存 gate；`status.background` | state/running/unknown/quietForMs | 无事件→unknown | 静默窗口（不改变 fail-closed） | 无真实后台调度接入；`tests/idle-gate.test.mjs` |
+| MEM-EXP-EXCERPT-01 | 提炼提交；删除/纠正；用户查看摘录 | 当前输入≤8000；提取 records | 提交时保存≤1500字符最小输入摘录；正文仅 content DB；删除/纠正清正文保 tombstone；归档保留但读不可用 | `registerExcerpt/readExcerpt/forgetExcerpt/listExcerpts` | `memory.excerpts` metadata（不返正文） | 捕获失败不阻断记忆；摘录不可读时 UI 隐藏正文 | TTL/上限尚未接 | 摘录不认证 Host 原文；删除传播已接；`tests/consolidation-storage.test.mjs`、`tests/excerpt-lifecycle.test.mjs` |
+| MEM-CONSOL-INPUT-01 | 用户手势准备整理批次（memory_only） | 2..16 条 active 记忆、绑定/项目/route/config | 固定 generation/bodyDigest/rootSources/epoch/revision/binding；生成 InputSnapshot（不含路径/权限凭据）；用户 batch permission 24h、user-only；读时重核 | manifest/InputSnapshot 纯值；`consolidation_permissions` | manifest/input/inputDigest | 选择/适用性/容量/输入过大 fail-closed | maxMemories/maxInputChars/TTL | 未接队列时不发送；`tests/consolidation-inputs.test.mjs` |
+| MEM-CONSOL-OUTPUT-01 | 模型返回 `mc-output-v1` | 完整 InputSnapshot + manifest | 严格字段/覆盖/引用/verbatim duplicates/source_correction/capacity/secret；只返回本地 candidate metadata，语义支持不做认证 | 纯校验，无写入 | unverified/not_performed/warnings | 任一不符整份拒绝 | statement 上限、warning 集 | 不证明模型判断正确；`tests/consolidation-output.test.mjs` |
+| MEM-CONSOL-QUEUE-01 | 显式 enqueue/取消/恢复 | manifest/permission/expected epoch/revision/head | 同 requestId 幂等，改 payload 冲突；容量2；queued cancel 清输入；running 恢复置 unknown | `consolidation_jobs/operations/inputs` | JobRef/pending/list | stale/冲突/容量满 | 容量、列表页大小 | 无 provider/run 或 Host 调度时不会自行发模型；`tests/consolidation-queue.test.mjs` |
+| MEM-CONSOL-RUN-01 | 执行已排队整理 | controlled provider + 同步可信 execution 授权 + queued input | 无授权不派发；dispatch/candidate 前后重核；输出经 validator；成功后 candidate 正文/来源/dependency 落库，job ready，input 清理，**不推进 memory revision** | content candidate + authority entries/deps | job ready/candidateId | 无效输出 stale；provider unknown→outcome_unknown | 超时/提示 | 未接真实 Host grant/调度；`tests/consolidation-queue.test.mjs`、`tests/harness-provider.test.mjs` |
+| MEM-CONSOL-PUBLISH-01 | 用户/管理发布候选 | candidate digest、expected epoch/revision/head | CAS；复制版本正文/来源/dependency；head revision+1；幂等 request；不改原记忆 | `consolidation_versions/bodies/head` | versionId/revision/digest | 陈旧→stale/conflict；依赖失效拒绝 | 版本保留上限未接 | 无 search/list/UI 发布动作；`tests/consolidation-versions.test.mjs` |
+| MEM-CONSOL-LIFE-01 | 原记忆删除/纠正 | memoryId、依赖关系 | 清 candidate/version 正文、entry tombstone、job stale、失效 head 推进 revision 清指针；读取 fail-closed | authority/content 同事务 | 清理计数/head=null | 已失效版本不可读 | 历史保留/GC 未实现 | 只传播 memory 依赖；`evidence/consolidation-propagation.json` |
+| MEM-EXP-CORRECT-01 | 用户显式纠正短语 | 当前消息 + 最近一轮实际引用记录 | 窄短语检测；只挂起 cited memory entry（stale），立即退出 list/search/recall，清 excerpt/派生；无目标不修改 | epoch advance；`status.corrections` | 计数/短状态 | 无 cited→unresolved | 短语范围（不得扩大授权） | 无后台根因反思/真实会话验收；`tests/correction.test.mjs` |
+| MEM-COLD-LAYOUT-01 | 部署/冷档配置检查 | 数据根、源树、卷类型探针 | 绝对/非UNC/非源码树/非符号链接/固定卷；生产拒绝C:；不创建生产根 | 纯校验+路径规划 | `{layout,volumeType}` | 失败→冷档停用/配置异常 | allowC 仅测试 | 无真实ACL/卷探针；`tests/storage-layout.test.mjs` |
+| MEM-COLD-JOURNAL-01 | 冷搬移 journal | id/scope/sourceDigest/size | prepared→copied_verified→index_switched→source_cleaned；原子写、digest、重复/乱序拒绝；恢复把 corrupt 列出 | JSON journal（无正文） | 状态机视图 | 损坏 fail-closed | 状态实现必须完整 | 未搬正文/未接真实崩溃；`evidence/m3-storage-layout.json` |
+
 ## 4. skill 改进接口：策略与硬边界
 
 ### 4.1 真正生效的可调参数（`plugin/configuration.mjs` 的 `DEFAULTS` 与上限）
@@ -503,6 +522,7 @@ flowchart TD
 | `MEM-MECH-2` | 2026-11-07 | 最终门加固：`MEM-FINAL-02` 未登记 own 召回消息改为 fail-closed 阻断；新增 `MEM-FINAL-03` 注入前必须成功登记投影；证据表补安装行/状态路由/客户端slot与管理API往返、流接口现场复验；限制补年度草稿聚合与停用不等收尾 | 与 `tests/final-projection.test.mjs`、`tests/plugin-entry.test.mjs`、`evidence/m1-verification.json` 一致 |
 | `MEM-MECH-3` | 2026-11-07 | 独立评审 F-01..F-16 响应：`registry.initialize()`改同步（消除unhandledRejection致命退出，F-01）；混合请求own消息fail-closed（F-02）；`memory_status`工具脱敏绝对路径（F-03）；配置冲突停用自动记忆（F-05）；`package.json`补`source-lock.json`（F-09）；偏好变更后重建binding缓存（F-12）；准入回执补`inputDigest`（F-13）；MEM-504待复核后再勾选（F-04）；其余Minor以限制条目记录 | 修复后本地258/258、真实安装库探针3/3；独立评审核复核结论见`docs/m1-independent-review.md` |
 | `MEM-MECH-4` | 2026-11-08 | M2/v0.3.0 增量：catalog v1→v2 显式迁移；`MEM-ABS-01..02` 本地抽取式 abstract（basis 版本绑定、删除即时重建、10条/24h合并、配置阈值生效）；`MEM-SHARE-01..03` 用户授权共享（用户动作、当前 revision、自动跟随、读取二次核、撤权/删除即时断开、不复制明细、模型/宿主显式 target 必须等于绑定）；`MEM-APPL-01` 适用性（current/historical_unknown/unavailable，多仓取最差）；四标签界面与 7 个 M2 管理操作/2 个模型工具；MEM-204 仍未实现；M2 独立评审发现的阈值/绑定/适用性问题已修复，最终结论见评审文件与最新证据 | 与 v0.3.0 代码、`evidence/m2-verification.json`（318/318 + 探针3/3）、`evidence/m2-install-verification.json`、`docs/m2-independent-review.md` 一致 |
+| `MEM-MECH-5` | 2026-11-09 | v0.4.0 增量机制：阅读优先UI/小bar/归因、空闲gate、摘录捕获与清理、整理 manifest/用户许可/严格输出校验/队列/runJob候选/发布版本/派生视图/删除传播、显式纠正挂起、M3 layout/journal 骨架；新机制编号见 §3.7，未实现项逐条标注 | 与 v0.4.0 代码、`evidence/consolidation-*.json`、`evidence/correction-suspension.json`、`evidence/m3-storage-layout.json` 一致；不含自动调度/反思根因/M3搬移 |
 
 **历史关系**：[Task 2](task2-mechanisms.md)、[Task 3 hooks](task3-hooks-mechanisms.md)、[Task 3 execution](task3-execution-mechanisms.md)、[Provider 阶段](task3-provider-mechanisms.md)、[流接口修复](stream-contract-fix.md) 保留其阶段编号与结论，本文不修改其历史证据与措辞；`MEM-QUEUE-02` 的"全根并发 1"与 `MEM-WORK-05` 的"年度导出留 Task 3"两处按当前实现与 §7 说明理解。
 
