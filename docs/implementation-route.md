@@ -76,3 +76,11 @@ RestRegular、Hindsight、Mneme、OpenViking等保留为调查对照，当前没
 当前验收命令：在05目录执行`.\runtime\node.exe --test tests/*.test.mjs`（318/318），`.\runtime\node.exe tools\test-m1-host.mjs`（真实安装库`llm/stream`/最终门探针3/3），`.\runtime\node.exe tools\verify-m2.mjs`（生成`evidence/m2-*`证据）；旧执行授权runner仍保留历史证据身份。测试只用临时合成资源、FakeHost与假adapter；真实安装库探针挂真实Cordis/LlmRuntime但adapter为合成。业务模型请求、完整GUI视觉走查、OS出口、真实profile M2写入旅程尚未验收；M3冷档、MEM-204未实现。历史阶段报告/runner为历史快照，当前验收以`evidence/m2-*`与M2评审为准。
 
 新增年度工作维度的来源是用户要求，不是新合入的框架；模板仍待用户提供。完整项目交付时按[机制说明合同](shared/mechanism-document-contract.md)编写[完整机制](mechanisms.md)，重点为后续skill改进说明触发、判断规则、提醒、工具/证据与硬边界。
+
+## 2026-11-09 v0.4.0 体验/后台增量开工说明
+
+范围：执行 2026-11-08 更新的 [MEM-EXP-1](memory-experience-contract.md) 与 [MEM-BG-1 修订3](memory-background-plan.md)。**本轮不新增上游代码复用**：新能力均为本项目实现，复用既有受审组件（catalog/store、jobs/provider、host-grants、scheduler、management、client slots）。设计文档自身已列出只借鉴机制的外部来源（Anthropic 记忆研究、Claude Code 记忆文档、Managed Agents Dreams）；不引入其托管 API、源码或新服务。
+
+实施顺序与首个可验交付见[MEM-IMP-1](experience-implementation-plan.md)：Phase A 阅读优先记忆中心 + composer 小 bar + 只读 `status.experience`；Phase B 召回短引用、turn-stopping 归因与 turnTail；Phase C 自然纠正/反思；Phase D 证据摘录、自动后台巩固与空闲调度；Phase E 冷档/MEM-204 与最终机制/证据。Host 接缝已核对：`agent/status`、`agent/turn-stopping`、`systemPrompt.section`、client `conversation.composer.dock`/`conversation.chat.turnTail`；assistant 正文没有可替换 slot，内联 React 角标不伪造。
+
+首个验收动作：Phase A 完成后，`.\runtime\node.exe --test tests/*.test.mjs` 全绿、客户端 slot 注册/渲染冒烟、`status.experience` 只读检查；真实页面需重载 bundle 后人工复核。每个阶段独立提交/证据；未实现或未验证的 Host 行为不得写成已交付。
