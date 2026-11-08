@@ -173,9 +173,24 @@ export class FakeHost {
     this.baseStreams += 1;
     const system = (options.messages ?? []).find((message) => message.role === 'system');
     const systemText = system ? system.content.map((block) => block.text ?? '').join('\n') : '';
-    const text = systemText.includes('work-summary') || systemText.includes('work summary')
-      ? JSON.stringify({schema_version: 1, summary: {itemType: 'requirement', title: 'Synthetic annual item', goal: 'Test goal', myContribution: 'I verified the closed loop.', processOrConclusion: 'Candidate only.', result: 'unknown', time: {precision: 'unknown'}}})
-      : JSON.stringify({schema_version: 1, memories: [{text: 'Completion precedes reclamation.', kind: 'lesson'}]});
+    let text;
+    if (systemText.includes('work-summary') || systemText.includes('work summary')) {
+      text = JSON.stringify({schema_version: 1, summary: {itemType: 'requirement', title: 'Synthetic annual item', goal: 'Test goal', myContribution: 'I verified the closed loop.', processOrConclusion: 'Candidate only.', result: 'unknown', time: {precision: 'unknown'}}});
+    } else if (systemText.includes('Consolidate only')) {
+      let refs = [];
+      try {
+        const user = (options.messages ?? []).find((message) => message.role === 'user');
+        const input = JSON.parse(user.content.map((block) => block.text ?? '').join(''));
+        refs = Array.isArray(input.memories) ? input.memories.map((memory) => memory.ref) : [];
+      } catch { refs = []; }
+      text = JSON.stringify({
+        schema_version: 1,
+        groups: refs.length ? [{key: 'g0', type: 'related', memoryRefs: refs, statement: 'Synthetic consolidation statement.', status: 'unverified', support: refs.map((ref) => ({memoryRef: ref, excerptRefs: []})), applicability: 'same_scope_only', freshness: {status: 'unknown', reason: 'synthetic test input'}}] : [],
+        untouched: [],
+      });
+    } else {
+      text = JSON.stringify({schema_version: 1, memories: [{text: 'Completion precedes reclamation.', kind: 'lesson'}]});
+    }
     const chunks = [
       {type: 'block-start', index: 0, blockType: 'text'},
       {type: 'text-delta', index: 0, text: text.slice(0, Math.ceil(text.length / 2))},

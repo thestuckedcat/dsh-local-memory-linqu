@@ -76,7 +76,7 @@ export function createConsolidationVersions(store, {inputs, publication, now = (
       createdAt: parsed.createdAt,
     });
   }
-  function publish({requestId, candidateId, expectedDigest, expectedEpoch, expectedScopeRevision, expectedHeadRevision} = {}) {
+  function publish({requestId, candidateId, expectedDigest, expectedEpoch, expectedScopeRevision, expectedHeadRevision, publication: callPublication} = {}) {
     assertAuthority(ctx);
     const request = checkedText(requestId, 'request id', 256);
     const id = checkedText(candidateId, 'candidate id', 256);
@@ -101,8 +101,9 @@ export function createConsolidationVersions(store, {inputs, publication, now = (
       if (!job || job.state !== 'ready') throw failure('MC_JOB_NOT_READY', 'candidate has no ready job');
       if (!inputs || typeof inputs.assertCurrent !== 'function') throw failure('MC_PERMISSION_UNAVAILABLE', 'batch permission verifier is not attached');
       inputs.assertCurrent(JSON.parse(job.manifest_json), {phase: 'publish'});
-      if (!publication || typeof publication.authorize !== 'function') throw failure('MC_PUBLICATION_UNAVAILABLE', 'publication permission is not attached');
-      const publishedPermission = publication.authorize({candidateId: id, digest, manifestDigest: job.manifest_digest, scopeRef: store.scopeRef});
+      const verifier = callPublication ?? publication;
+      if (!verifier || typeof verifier.authorize !== 'function') throw failure('MC_PUBLICATION_UNAVAILABLE', 'publication permission is not attached');
+      const publishedPermission = verifier.authorize({candidateId: id, digest, manifestDigest: job.manifest_digest, scopeRef: store.scopeRef});
       if (!publishedPermission || typeof publishedPermission.permissionId !== 'string' || !publishedPermission.permissionId) throw failure('MC_PUBLICATION_UNAVAILABLE', 'publication permission was refused');
       requireLiveDependencies(ctx, store.scopeRef, candidate.dependencies);
       const versionId = `mc-version:${job.id}:${head.revision + 1}`;

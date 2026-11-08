@@ -339,3 +339,25 @@ test('M2: abstracts are discoverable, user-granted sharing follows latest, revok
   assert.equal(afterRevoke.ok, false);
   assert.equal(afterRevoke.error.code, 'SHARE_DENIED');
 });
+
+test('user-gesture consolidation API queues a job and exposes worker status', async (t) => {
+  const {host, repo} = fixture(t);
+  const {session} = host.addSession({id: 'session-consolidate', cwd: repo});
+  host.userMessage(session, 'We learned that descriptor completion precedes reclamation.');
+  host.userMessage(session, 'We also learned that ownership barriers precede reclamation.');
+  const project = await waitFor(async () => {
+    const listed = await api(host, 'project.list');
+    const id = listed.ok ? listed.value.projects[0]?.projectId : undefined;
+    if (!id) return undefined;
+    const memories = await api(host, 'memory.list', {projectId: id, limit: 10, stateFilter: 'active'});
+    return memories.ok && memories.value.items.length >= 2 ? {id, items: memories.value.items} : undefined;
+  }, {timeoutMs: 10000, label: 'two extracted memories'});
+  const queued = await api(host, 'memory.consolidate', {projectId: project.id});
+  assert.equal(queued.ok, true, JSON.stringify(queued));
+  assert.equal(queued.value.queued, true, JSON.stringify(queued));
+  assert.match(queued.value.jobId, /^mc-job:/);
+  const status = await api(host, 'status');
+  assert.equal(status.ok, true);
+  assert.equal(status.value.consolidation.enqueued, 1);
+  assert.equal(status.value.consolidation.pending, 1);
+});

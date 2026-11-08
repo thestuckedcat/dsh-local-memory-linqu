@@ -42,7 +42,7 @@ const JOB_PURPOSES = Object.freeze(['memory_extract', 'work_summary_extract', 'w
 const COST_STATUSES = Object.freeze(['reported', 'unknown', 'not_dispatched']);
 const USER_ONLY_OPERATIONS = new Set([
   'project.register', 'project.update', 'project.retire', 'project.preference',
-  'memory.correct', 'memory.archive', 'memory.restore', 'memory.delete',
+  'memory.correct', 'memory.archive', 'memory.restore', 'memory.delete', 'memory.consolidate',
   'task.cancel', 'task.confirmRemoteQuiescence', 'recovery.confirm',
   'work.correct', 'work.confirmClaim', 'work.confirmTime', 'work.evidence.register',
   'work.evidence.review', 'work.merge',

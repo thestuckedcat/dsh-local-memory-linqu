@@ -334,6 +334,9 @@
     "derived.status.unverified": "Unverified",
     "derived.status.hypothesis": "Hypothesis",
     "derived.status.conflict": "Conflict",
-    "derived.status.unknown": "Unknown"
+    "derived.status.unknown": "Unknown",
+    "derived.consolidate": "Consolidate project",
+    "derived.consolidateHint": "Ask the idle worker to consolidate the selected active memories into a derived view. No memory is deleted.",
+    "derived.queued": "Consolidation queued; it updates when the foreground is idle."
   }
 }

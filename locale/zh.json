@@ -334,6 +334,9 @@
     "derived.status.unverified": "未验证",
     "derived.status.hypothesis": "假设",
     "derived.status.conflict": "冲突",
-    "derived.status.unknown": "未知"
+    "derived.status.unknown": "未知",
+    "derived.consolidate": "整理当前项目",
+    "derived.consolidateHint": "请空闲后台把当前有效记忆整理为派生视图；不会删除原记忆。",
+    "derived.queued": "已请求整理；前台空闲后自动更新。"
   }
 }

@@ -16,6 +16,7 @@ import {createWorkOperations} from './work-management.mjs';
 import {createM2Operations} from './m2-management.mjs';
 import {createAttributionManager} from './attribution.mjs';
 import {createCorrectionManager} from './correction.mjs';
+import {createConsolidationOperations} from './consolidation-operations.mjs';
 import {createCapabilityEventConsumer} from './capability-events.mjs';
 import {createBusyGate} from './idle-gate.mjs';
 import {createExperienceOperations} from './experience-operations.mjs';
@@ -281,6 +282,7 @@ export function apply(ctx, rawConfig = {}) {
     correction = createCorrectionManager({attribution});
     capability = createCapabilityEventConsumer({catalog: registry.catalog, registry});
     busyGate = createBusyGate({agents: ctx.agents, now: () => Date.now(), quietMs: 30_000});
+    const consolidationOperations = createConsolidationOperations({config, registry, provider: bridge.provider, now: ctx.now ?? (() => new Date())});
     const workOperations = createWorkOperations({registry, config, reports, approval: ctx.approval, sessions: ctx.sessions});
     m2Operations = createM2Operations({registry, abstracts, sharing, sessions: ctx.sessions});
     const experienceOperations = createExperienceOperations({attribution, sessions: ctx.sessions, registry});
@@ -290,7 +292,7 @@ export function apply(ctx, rawConfig = {}) {
       grants,
       scheduler: schedulerFacade,
       provider: bridge.provider,
-      extras: {...workOperations, ...m2Operations, ...experienceOperations},
+      extras: {...workOperations, ...m2Operations, ...experienceOperations, 'memory.consolidate': consolidationOperations['memory.consolidate']},
       onMemoryChange: (change) => {
         try {
           if (typeof change.projectId === 'string' && change.projectId) abstracts.noteChange(change.projectId, {count: 1});
@@ -310,6 +312,7 @@ export function apply(ctx, rawConfig = {}) {
         capability: capability.status(),
         corrections: correctionStatus(),
         background: busyGate.status(),
+        consolidation: consolidationOperations.status(),
       }),
     });
     http = createManagementHttp({operations, getOrigin: () => ctx.webServer.getOrigin()});
@@ -411,6 +414,16 @@ export function apply(ctx, rawConfig = {}) {
       return () => { try { off?.(); } catch { /* local cleanup only */ } };
     }, 'local-memory: attribution turn observer');
 
+
+    ctx.effect(() => {
+      const timer = setInterval(() => {
+        try {
+          Promise.resolve(consolidationOperations.tick({canDispatch: () => busyGate.canDispatch()})).catch(() => noteDiagnostic('consolidation_tick_failed'));
+        } catch { noteDiagnostic('consolidation_tick_failed'); }
+      }, 1000);
+      timer.unref?.();
+      return () => clearInterval(timer);
+    }, 'local-memory: consolidation idle worker (user-gesture jobs only)');
 
     // Tools: the model may read and propose; user-only actions stay in the memory center UI/commands.
     tool('memory_status', 'Report local memory state: binding, project, scheduler, provider and degraded reasons.', {}, async () => {

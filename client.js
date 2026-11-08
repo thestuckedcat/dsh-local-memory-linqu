@@ -156,6 +156,9 @@ window.__ModuleLoader__.load({
     'derived.semanticNotPerformed': "Semantic support was not machine-verified.",
     'derived.materials': "Original memories: {n}",
     'derived.materialUnavailable': "Original text is no longer available.",
+    'derived.consolidate': "Consolidate project",
+    'derived.consolidateHint': "Ask the idle worker to consolidate the selected active memories into a derived view. No memory is deleted.",
+    'derived.queued': "Consolidation queued; it updates when the foreground is idle.",
     'derived.type.duplicates': "Duplicates",
     'derived.type.related': "Related",
     'derived.type.conflict': "Conflict",
@@ -489,6 +492,9 @@ window.__ModuleLoader__.load({
     'derived.semanticNotPerformed': "语义支持未做机器验证。",
     'derived.materials': "原记忆：{n}",
     'derived.materialUnavailable': "原记忆正文已不可用。",
+    'derived.consolidate': "整理当前项目",
+    'derived.consolidateHint': "请空闲后台把当前有效记忆整理为派生视图；不会删除原记忆。",
+    'derived.queued': "已请求整理；前台空闲后自动更新。",
     'derived.type.duplicates': "重复",
     'derived.type.related': "相关",
     'derived.type.conflict': "冲突",
@@ -1249,6 +1255,19 @@ window.__ModuleLoader__.load({
           if (mounted.current) setBusy(false);
         }
       }
+      async function consolidateProject() {
+        if (!projectId) return;
+        setBusy(true);
+        try {
+          await call('memory.consolidate', {projectId});
+          onNotice(t('derived.queued'));
+          await loadDerived();
+        } catch (error) {
+          onError(reasonOf(error));
+        } finally {
+          if (mounted.current) setBusy(false);
+        }
+      }
       async function saveCorrection() {
         if (!detail || editText.trim() === '') return;
         const value = await mutate('memory.correct', {projectId, id: detail.item.id, text: editText.trim(), expectedGeneration: detail.currentGeneration});
@@ -1285,7 +1304,8 @@ window.__ModuleLoader__.load({
                 key: filter, variant: stateFilter === filter ? 'primary' : 'ghost',
                 onClick: () => { setStateFilter(filter); setSearching(false); },
               }, t(`memory.filter.${filter}`))),
-              h(Button, {variant: 'ghost', onClick: () => reload({silent: false}), disabled: busy || !projectId}, t('page.refresh'))),
+              h(Button, {variant: 'ghost', onClick: () => reload({silent: false}), disabled: busy || !projectId}, t('page.refresh')),
+              h(Button, {variant: 'ghost', onClick: consolidateProject, disabled: busy || !projectId, title: t('derived.consolidateHint')}, t('derived.consolidate'))),
             h('div', {className: 'dshlm-muted'}, t('memory.counts', counts)),
             showLoadError ? h(ErrorBanner, {message: reasonCodeLabel(t, loadError), retryLabel: t('common.retry'), onRetry: () => reload({silent: false})}) : null,
             !projectId ? h(Empty, null, t('page.noProject')) : null,
